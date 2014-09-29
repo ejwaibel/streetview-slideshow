@@ -1,14 +1,36 @@
 'use strict';
 
 $(function() {
-	var $imagesContainer = $('.js-images-container');
+	var $imagesContainer = $('.js-images-container'),
+		$sliders = {
+			heading: $('.js-heading-slider'),
+			fov: $('.js-fov-slider'),
+			pitch: $('.js-pitch-slider')
+		};
 
+	/**
+	 * Setup Foundation components and default values
+	 */
 	$(document).foundation();
+	$sliders.heading.foundation('slider', 'set_value', 0);
+	$sliders.fov.foundation('slider', 'set_value', 90);
+	$sliders.pitch.foundation('slider', 'set_value', 0);
 
+	$('.js-random-address').click(function(e) {
+		var $target = $(e.target),
+			input = $($target.data('selector')),
+			latlong = leopard.getRandomLatLong();
+
+		input.val(latlong.longitude + ',' + latlong.latitude);
+	});
+
+	/**
+	 * Form submit functionality
+	 */
 	$('form').on('submit', function(e) {
-		var heading = $('#api-heading').val(),
-			fov = $('#api-fov').val(),
-			pitch = $('#api-pitch').val(),
+		var heading = $sliders.heading.attr('data-slider'),
+			fov = $sliders.fov.attr('data-slider'),
+			pitch = $sliders.pitch.attr('data-slider'),
 			location, url;
 
 		// TODO: Validate longitude/latitude values
