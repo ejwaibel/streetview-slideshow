@@ -33,24 +33,57 @@
 		</ul>
 	</div>
 	<form>
-		<div class="row">
-			<div class="columns small-6">
+		<div class="row collapse">
+			<div class="columns small-10">
 				<input type="text" id="address-start" name="address-start" class="form-control" aria-labeledby="Starting Address" placeholder="Start (required)" required>
 			</div>
-			<div class="columns small-6">
-				<input type="text" id="address-end" name="address-end" class="form-control" aria-labeledby="Ending Address" placeholder="End (optional)">
+			<div class="columns small-2">
+				<button type="button" class="button postfix js-random-address" data-selector="#address-start">Random</button>
+			</div>
+		</div>
+		<div class="row collapse">
+			<div class="columns small-12">
+				<input type="text" id="address-end" name="address-end" class="form-control" aria-label="Ending Address" placeholder="End (optional)">
 			</div>
 		</div>
 		<div class="row">
-			<div class="columns small-4">
-				<input type="number" id="api-heading" name="api-heading" class="form-control" aria-labeledby="Heading" placeholder="Heading" min="0" max="360">
+			<div class="small-2 columns">
+				<span id="heading-value"></span>
 			</div>
-			<div class="columns small-4">
-				<input type="number" id="api-fov" name="api-fov" class="form-control" aria-labeledby="FOV" placeholder="FOV" min="0" max="120">
+			<div class="columns small-10">
+				<div class="range-slider js-heading-slider" data-slider data-options="start: 0; end: 360; display_selector: #heading-value;">
+				  <span class="range-slider-handle" role="slider" tabindex="0" aria-label="Heading"></span>
+				  <span class="range-slider-active-segment"></span>
+				  <input type="hidden">
+				</div>
+				<!-- <input type="number" id="api-heading" name="api-heading" class="form-control" aria-label="Heading" placeholder="Heading" min="0" max="360"> -->
 			</div>
-			<div class="columns small-4">
-				<input type="number" id="api-pitch" name="api-pitch" class="form-control" aria-labeledby="Pitch" placeholder="Pitch" min="-90"
-				max="90">
+		</div>
+		<div class="row">
+			<div class="small-2 columns">
+				<span id="fov-value"></span>
+			</div>
+			<div class="columns small-10">
+				<div class="range-slider js-fov-slider" data-slider data-options="start: 0; end: 120; display_selector: #fov-value;">
+				  <span class="range-slider-handle" role="slider" tabindex="0" aria-label="FOV"></span>
+				  <span class="range-slider-active-segment"></span>
+				  <input type="hidden">
+				</div>
+				<!-- <input type="number" id="api-fov" name="api-fov" class="form-control" aria-label="FOV" placeholder="FOV" min="0" max="120"> -->
+			</div>
+		</div>
+		<div class="row">
+			<div class="small-2 columns">
+				<span id="pitch-value"></span>
+			</div>
+			<div class="columns small-10">
+				<div class="range-slider js-pitch-slider" data-slider data-options="start: -90; end: 90; display_selector: #pitch-value;">
+				  <span class="range-slider-handle" role="slider" tabindex="0" aria-label="Pitch"></span>
+				  <span class="range-slider-active-segment"></span>
+				  <input type="hidden">
+				</div>
+				<!-- <input type="number" id="api-pitch" name="api-pitch" class="form-control" aria-label="Pitch" placeholder="Pitch" min="-90"
+				max="90"> -->
 			</div>
 		</div>
 		<div class="row">
