@@ -15,12 +15,17 @@
 			width: 250,
 			height: 250
 		},
-		getRandomLatLong: function(from, to, fixed) {
+		getRandom: function(from, to) {
+			return Math.random() * (to - from) + from;
+		},
+		getRandomLatLong: function() {
+			var fixed = 3;
+
 			// .toFixed() returns string, so ' * 1' is a trick to convert to number
 		    return {
-		    	latitude: (Math.random() * (to - from) + from).toFixed(fixed) * 1,
-		    	longitude: (Math.random() * (to - from) + from).toFixed(fixed) * 1
-		    }
+		    	latitude: (this.getRandom(-90, 90)).toFixed(fixed) * 1,
+		    	longitude: (this.getRandom(-180, 180)).toFixed(fixed) * 1
+		    };
 		}
 	};
 
