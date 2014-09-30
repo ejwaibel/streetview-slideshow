@@ -34,12 +34,14 @@ $(function() {
 						key: leopard.api.key
 					})
 				}).done(function(data) {
-					if (data.status !== 'OK') {
+					if (data.status == 'OK') {
+						return addressDfd.resolve(data);
+					} else if (data.status == 'ZERO_RESULTS' || data.status == 'UNKNOWN_ERROR') {
 						latlong = leopard.getRandomLatLong();
 						return getAddress(latlong);
 					}
 
-					addressDfd.resolve(data);
+					addressDfd.reject(data);
 				});
 
 				return true;
@@ -50,6 +52,8 @@ $(function() {
 		// Wait for valid address to be returned
 		addressDfd.done(function(data) {
 			input.val(data.results[0].formatted_address);
+		}).fail(function(data) {
+			input.val(data.status);
 		});
 	});
 
