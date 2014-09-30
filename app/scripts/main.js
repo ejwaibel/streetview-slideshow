@@ -19,9 +19,38 @@ $(function() {
 	$('.js-random-address').click(function(e) {
 		var $target = $(e.target),
 			input = $($target.data('selector')),
-			latlong = leopard.getRandomLatLong();
+			latlong = leopard.getRandomLatLong(),
+			addressDfd = $.Deferred(),
+			/**
+			 * Converts the given latitude/longitude values into a human
+			 * readable address. Continues to loop if the values given
+			 * do not return a valid address.
+			 * @param  {Object} location
+			 */
+			getAddress = function(location) {
+				$.ajax({
+					url: new leopard.tpl(leopard.api.geocode).apply({
+						location: location.latitude + ',' + location.longitude,
+						key: leopard.api.key
+					})
+				}).done(function(data) {
+					if (data.status !== 'OK') {
+						latlong = leopard.getRandomLatLong();
+						return getAddress(latlong);
+					}
 
-		input.val(latlong.longitude + ',' + latlong.latitude);
+					addressDfd.resolve(data);
+				});
+
+				return true;
+			};
+
+		getAddress(latlong);
+
+		// Wait for valid address to be returned
+		addressDfd.done(function(data) {
+			input.val(data.results[0].formatted_address);
+		});
 	});
 
 	/**

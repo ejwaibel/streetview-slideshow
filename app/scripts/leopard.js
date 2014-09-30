@@ -8,7 +8,8 @@
 	var leopard = {
 		api: {
 			key: 'AIzaSyCbPuQGIShYS-IYU1T6eIfhxH9yc-8biCg',
-			direcctions: '',
+			directions: '',
+			geocode: 'https://maps.googleapis.com/maps/api/geocode/json?latlng={{location}}&key={{key}}',
 			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{width}}x{{height}}&location={{location}}{{#heading}}&heading={{heading}}{{/heading}}{{#fov}}&fov={{fov}}{{/fov}}{{#pitch}}&pitch={{pitch}}{{/pitch}}&key={{key}}'
 		},
 		images: {
@@ -18,13 +19,18 @@
 		getRandom: function(from, to) {
 			return Math.random() * (to - from) + from;
 		},
+		/**
+		 * Return a random set of latitude/longitude values that are within
+		 * the square bounds for North America
+		 * @return {Object}
+		 */
 		getRandomLatLong: function() {
 			var fixed = 3;
 
-			// .toFixed() returns string, so ' * 1' is a trick to convert to number
 		    return {
-		    	latitude: (this.getRandom(-90, 90)).toFixed(fixed) * 1,
-		    	longitude: (this.getRandom(-180, 180)).toFixed(fixed) * 1
+		    	// .toFixed() returns string, so ' * 1' is a trick to convert to number
+		    	latitude: (this.getRandom(28.70, 48.85)).toFixed(fixed) * 1,
+		    	longitude: (this.getRandom(-127.50, -55.90)).toFixed(fixed) * 1
 		    };
 		}
 	};
