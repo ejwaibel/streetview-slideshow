@@ -5,6 +5,7 @@
     "jquery": "~2.1.1",
     "foundation": "~5.4.5",
     "foundation-icons": "*",
-    "hogan": "~3.0.2"
+    "hogan": "~3.0.2",
+    "spin.js": "~2.0.1"
   }
 }
