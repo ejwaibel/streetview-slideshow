@@ -19,6 +19,7 @@
     "smarttabs": true,
     "jquery": true,
     "globals": {
+    	"define": true,
     	"Hogan": true,
     	"leopard": true
     }
