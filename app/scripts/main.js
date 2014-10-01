@@ -16,7 +16,7 @@ $(function() {
 	$sliders.fov.foundation('slider', 'set_value', 90);
 	$sliders.pitch.foundation('slider', 'set_value', 0);
 
-	$('.js-random-address').click(function(e) {
+	$('.js-random-address').on('click', function(e) {
 		var $target = $(e.target),
 			input = $($target.data('selector')),
 			latlong = leopard.getRandomLatLong(),
@@ -34,9 +34,9 @@ $(function() {
 						key: leopard.api.key
 					})
 				}).done(function(data) {
-					if (data.status == 'OK') {
+					if (data.status === 'OK') {
 						return addressDfd.resolve(data);
-					} else if (data.status == 'ZERO_RESULTS' || data.status == 'UNKNOWN_ERROR') {
+					} else if (data.status === 'ZERO_RESULTS' || data.status === 'UNKNOWN_ERROR') {
 						latlong = leopard.getRandomLatLong();
 						return getAddress(latlong);
 					}
@@ -47,11 +47,20 @@ $(function() {
 				return true;
 			};
 
+		if ($target.hasClass('disabled')) {
+			return false;
+		}
+
+		$target.spin('small');
+		$target.addClass('disabled');
+
 		getAddress(latlong);
 
 		// Wait for valid address to be returned
 		addressDfd.done(function(data) {
-			input.val(data.results[0].formatted_address);
+			$target.spin(false);
+			$target.removeClass('disabled');
+			input.val(data.results[0].formatted_address); /* jshint ignore: line */
 		}).fail(function(data) {
 			input.val(data.status);
 		});
