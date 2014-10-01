@@ -9,8 +9,9 @@
 
 	<!-- build:css styles/vendor.css -->
 	<!-- bower:css -->
-	<link rel="stylesheet" href="bower_components/foundation/css/foundation.css" />
+	<link rel="stylesheet" href="bower_components/foundation-icon-fonts/foundation-icons.css" />
 	<!-- endbower -->
+	<link rel="stylesheet" href="bower_components/jquery-ui/themes/ui-darkness/jquery-ui.min.css">
 	<!-- endbuild -->
 
 	<!-- build:css({.tmp,app}) styles/main.css -->
@@ -35,16 +36,19 @@
 	</div>
 	<form>
 		<div class="row collapse">
-			<div class="columns small-10">
+			<div class="columns small-11">
 				<input type="text" id="address-start" name="address-start" class="form-control" aria-labeledby="Starting Address" placeholder="Start (required)" required>
 			</div>
-			<div class="columns small-2">
+			<div class="columns small-1">
 				<button type="button" class="button postfix js-random-address" data-selector="#address-start">Random</button>
 			</div>
 		</div>
 		<div class="row collapse">
-			<div class="columns small-12">
+			<div class="columns small-11">
 				<input type="text" id="address-end" name="address-end" class="form-control" aria-label="Ending Address" placeholder="End (optional)">
+			</div>
+			<div class="columns small-1">
+				<button type="button" class="button postfix js-random-address" data-selector="#address-end">Random</button>
 			</div>
 		</div>
 		<div class="row">
@@ -117,6 +121,7 @@
 	<script src="bower_components/jquery-placeholder/jquery.placeholder.js"></script>
 	<script src="bower_components/foundation/js/foundation.js"></script>
 	<script src="bower_components/spin.js/spin.js"></script>
+	<script src="bower_components/jquery-ui/jquery-ui.js"></script>
 	<!-- endbower -->
 	<script src="bower_components/hogan/lib/template.js"></script>
 	<script src="bower_components/hogan/lib/compiler.js"></script>
