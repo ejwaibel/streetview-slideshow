@@ -1,21 +1,45 @@
 'use strict';
 
 $(function() {
-	var $imagesContainer = $('.js-images-container'),
-		$sliders = {
-			heading: $('.js-heading-slider'),
-			fov: $('.js-fov-slider'),
-			pitch: $('.js-pitch-slider')
+	var $sliders = {
+			heading: $('#heading-slider'),
+			fov: $('#fov-slider'),
+			pitch: $('#pitch-slider')
+		},
+		getSliderValue = function(name) {
+			return $sliders[name].slider('value');
+		},
+		sliderUpdate = function( event, ui ) {
+			$(event.target).parents('.js-container-slider').find('.js-slider-value').text( ui.value );
 		};
 
 	/**
 	 * Setup Foundation components and default values
 	 */
 	$(document).foundation();
-	$sliders.heading.foundation('slider', 'set_value', 0);
-	$sliders.fov.foundation('slider', 'set_value', 90);
-	$sliders.pitch.foundation('slider', 'set_value', 0);
 
+	/**
+	 * Setup jQuery UI Widgets
+	 */
+	$('.js-slider').slider({
+		animate: true,
+		min: 0,
+		max: 180,
+		range: "min",
+		create: function(event, ui) {
+			$(event.target).parents('.js-container-slider').find('.js-slider-value').text( 0 );
+		},
+		change: sliderUpdate,
+		slide: sliderUpdate
+	});
+	$('#fov-slider').slider('option', {max: 120}).slider('value', 90);
+	$('#pitch-slider').slider('option', {max: 90, min: -90}).slider('value', 0);
+
+	/**
+	 * [description]
+	 * @param  {[type]} e [description]
+	 * @return {[type]}   [description]
+	 */
 	$('.js-random-address').on('click', function(e) {
 		var $target = $(e.target),
 			input = $($target.data('selector')),
@@ -70,9 +94,7 @@ $(function() {
 	 * Form submit functionality
 	 */
 	$('form').on('submit', function(e) {
-		var heading = $sliders.heading.attr('data-slider'),
-			fov = $sliders.fov.attr('data-slider'),
-			pitch = $sliders.pitch.attr('data-slider'),
+		var $imagesContainer = $('.js-images-container'),
 			location, url;
 
 		// TODO: Validate longitude/latitude values
@@ -83,9 +105,9 @@ $(function() {
 				width: leopard.images.width,
 				height: leopard.images.height,
 				location: location,
-				heading: heading,
-				fov: fov,
-				pitch: pitch
+				heading: getSliderValue('heading'),
+				fov: getSliderValue('fov'),
+				pitch: getSliderValue('pitch')
 		});
 
 		$imagesContainer.append($('<img/>').attr('src', url)).fadeIn();
