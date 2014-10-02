@@ -4,3 +4,12 @@
 // Custom imports & styles here.
 @import '../bower_components/foundation/scss/foundation';
 @import 'settings';
+
+.right-pos {
+	position: absolute;
+	right: 0;
+}
+.js-container-image {
+	display: inline-block;
+	position: relative;
+}

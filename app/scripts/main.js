@@ -1,7 +1,14 @@
 'use strict';
 
 $(function() {
-	var $sliders = {
+	var imageTpl = new leopard.tpl(
+			'<div class="js-container-image">' +
+				'<span class="ui-icon ui-icon-closethick right-pos"></span>' +
+				'<img src="{{src}}" width="{{width}}" height="{{height}}">' +
+			'</div>'
+		),
+		streetviewTpl = new leopard.tpl(leopard.api.streetview),
+		$sliders = {
 			heading: $('#heading-slider'),
 			fov: $('#fov-slider'),
 			pitch: $('#pitch-slider')
@@ -25,7 +32,7 @@ $(function() {
 		animate: true,
 		min: 0,
 		max: 180,
-		range: "min",
+		range: 'min',
 		create: function(event, ui) {
 			$(event.target).parents('.js-container-slider').find('.js-slider-value').text( 0 );
 		},
@@ -95,22 +102,25 @@ $(function() {
 	 */
 	$('form').on('submit', function(e) {
 		var $imagesContainer = $('.js-images-container'),
-			location, url;
+			location, url, img;
 
 		// TODO: Validate longitude/latitude values
 		location = $('#address-start').val();
 
-		url = new leopard.tpl(leopard.api.streetview).apply({
+		url = streetviewTpl.apply({
 				key: leopard.api.key,
-				width: leopard.images.width,
-				height: leopard.images.height,
 				location: location,
 				heading: getSliderValue('heading'),
 				fov: getSliderValue('fov'),
 				pitch: getSliderValue('pitch')
 		});
 
-		$imagesContainer.append($('<img/>').attr('src', url)).fadeIn();
+		img = $(imageTpl.apply({
+			src: url,
+			width: leopard.images.width,
+			height: leopard.images.height
+		}));
+		$imagesContainer.append(img);
 
 		e.preventDefault();
 	});
