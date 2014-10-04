@@ -21,9 +21,9 @@
 	<!-- TEMPLATES -->
 	<!-- build:js scripts/templates.js -->
 	<template id="tpl-image-container">
-		<div class="js-container-image">
+		<li class="js-container-image">
 			<i class="fi-x icon-remove clickable right-pos js-remove-image"></i>
-		</div>
+		</li>
 	</template>
 	<!-- endbuild -->
 </head>
@@ -107,7 +107,9 @@
 	</form>
 
 	<div class="row">
-		<div class="js-container-images"></div>
+		<div class="columns">
+			<ul class="js-container-images large-block-grid-6 medium-block-grid-4 small-block-grid-3"></ul>
+		</div>
 	</div>
 
 	<!-- build:js scripts/vendor.js -->
