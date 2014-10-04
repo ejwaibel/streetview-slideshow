@@ -95,6 +95,7 @@ $(function() {
 			$target.removeClass('disabled');
 			input.val(data.results[0].formatted_address); /* jshint ignore: line */
 		}).fail(function(data) {
+			$target.spin(false);
 			input.val(data.status);
 		});
 	});
@@ -109,11 +110,11 @@ $(function() {
 		location = $('#address-start').val();
 
 		url = streetviewTpl.apply({
-				key: leopard.api.key,
-				location: location,
-				heading: getSliderValue('heading'),
-				fov: getSliderValue('fov'),
-				pitch: getSliderValue('pitch')
+			key: leopard.api.key,
+			location: location,
+			heading: getSliderValue('heading'),
+			fov: getSliderValue('fov'),
+			pitch: getSliderValue('pitch')
 		});
 
 		e.preventDefault();
