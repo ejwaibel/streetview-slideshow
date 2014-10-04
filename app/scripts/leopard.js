@@ -7,7 +7,7 @@
 (function() {
 	var leopard = {
 		api: {
-			key: 'AIzaSyCbPuQGIShYS-IYU1T6eIfhxH9yc-8biCg',
+			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
 			directions: '',
 			geocode: 'https://maps.googleapis.com/maps/api/geocode/json?latlng={{location}}&location_type=ROOFTOP&key={{key}}',
 			streetview: 'https://maps.googleapis.com/maps/api/streetview?size=600x600&location={{location}}{{#heading}}&heading={{heading}}{{/heading}}{{#fov}}&fov={{fov}}{{/fov}}{{#pitch}}&pitch={{pitch}}{{/pitch}}&key={{key}}'
