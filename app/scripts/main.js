@@ -84,7 +84,7 @@ $(function() {
 			return false;
 		}
 
-		$target.spin('small');
+		$target.spin('small', 100);
 		$target.addClass('disabled');
 
 		getAddress(latlong);
