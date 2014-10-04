@@ -1,13 +1,15 @@
 'use strict';
 
 $(function() {
-	var imageTpl = new leopard.tpl(
-			'<div class="js-container-image">' +
-				'<span class="ui-icon ui-icon-closethick right-pos"></span>' +
-				'<img src="{{src}}" width="{{width}}" height="{{height}}">' +
-			'</div>'
-		),
+	var imageTpl = new leopard.tpl($('#tpl-image-container').html()),
 		streetviewTpl = new leopard.tpl(leopard.api.streetview),
+		elements = {
+			containerSlider: '.js-container-slider',
+			imagesContainer: '.js-container-images',
+			imageContainer: '.js-container-image',
+			slider: '.js-slider',
+			sliderValue: '.js-slider-value'
+		},
 		$sliders = {
 			heading: $('#heading-slider'),
 			fov: $('#fov-slider'),
@@ -17,7 +19,7 @@ $(function() {
 			return $sliders[name].slider('value');
 		},
 		sliderUpdate = function( event, ui ) {
-			$(event.target).parents('.js-container-slider').find('.js-slider-value').text( ui.value );
+			$(event.target).parents(elements.containerSlider).find(elements.sliderValue).text( ui.value );
 		};
 
 	/**
@@ -28,13 +30,13 @@ $(function() {
 	/**
 	 * Setup jQuery UI Widgets
 	 */
-	$('.js-slider').slider({
+	$(elements.slider).slider({
 		animate: true,
 		min: 0,
 		max: 180,
 		range: 'min',
 		create: function(event, ui) {
-			$(event.target).parents('.js-container-slider').find('.js-slider-value').text( 0 );
+			$(event.target).parents(elements.containerSlider).find(elements.sliderValue).text( 0 );
 		},
 		change: sliderUpdate,
 		slide: sliderUpdate
@@ -101,8 +103,7 @@ $(function() {
 	 * Form submit functionality
 	 */
 	$('form').on('submit', function(e) {
-		var $imagesContainer = $('.js-images-container'),
-			location, url, img;
+		var location, url, imgContainer, $img;
 
 		// TODO: Validate longitude/latitude values
 		location = $('#address-start').val();
@@ -115,13 +116,24 @@ $(function() {
 				pitch: getSliderValue('pitch')
 		});
 
-		img = $(imageTpl.apply({
-			src: url,
-			width: leopard.images.width,
-			height: leopard.images.height
-		}));
-		$imagesContainer.append(img);
-
 		e.preventDefault();
+		imgContainer = $(imageTpl.apply());
+
+		$(elements.imagesContainer).append(imgContainer);
+		imgContainer.spin('small', 250);
+
+		$img = $('<img>', {
+			src: url,
+			height: leopard.images.height,
+			width: leopard.images.width
+		});
+
+		$img.load(function() {
+			imgContainer.spin(false).append($img);
+		});
+	});
+
+	$(elements.imagesContainer).delegate('.js-remove-image', 'click', function() {
+		$(this).parents('.js-container-image').off().fadeOut().remove();
 	});
 });

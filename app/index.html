@@ -44,20 +44,28 @@
 	</div>
 	<form>
 		<div class="container-address">
-			<div class="row collapse">
-				<div class="columns small-11">
-					<input type="text" id="address-start" name="address-start" class="form-control" aria-labeledby="Starting Address" placeholder="Start (required)" required tab-index=1 autofocus="true">
-				</div>
-				<div class="columns small-1">
-					<button type="button" class="button postfix js-random-address" data-selector="#address-start">Random</button>
+			<div class="row">
+				<div class="columns">
+					<div class="row collapse">
+						<div class="columns small-11">
+							<input type="text" id="address-start" name="address-start" class="form-control" aria-labeledby="Starting Address" placeholder="Start (required)" required tab-index=1 autofocus="true">
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-random-address" data-selector="#address-start"><i class="fi-refresh"></i></button>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row collapse">
-				<div class="columns small-11">
-					<input type="text" id="address-end" name="address-end" class="form-control" aria-label="Ending Address" placeholder="End (optional)" tab-index=2>
-				</div>
-				<div class="columns small-1">
-					<button type="button" class="button postfix js-random-address" data-selector="#address-end">Random</button>
+			<div class="row">
+				<div class="columns">
+					<div class="row collapse">
+						<div class="columns small-11">
+							<input type="text" id="address-end" name="address-end" class="form-control" aria-label="Ending Address" placeholder="End (optional)" tab-index=2>
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-random-address" data-selector="#address-end"><i class="fi-refresh"></i></button>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -99,18 +107,8 @@
 	</form>
 
 	<div class="row">
-		<div class="js-images-container"></div>
+		<div class="js-container-images"></div>
 	</div>
-
-	<!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
-	<script>
-		(function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
-			function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
-		e=o.createElement(i);r=o.getElementsByTagName(i)[0];
-		e.src='//www.google-analytics.com/analytics.js';
-		r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
-		ga('create','UA-XXXXX-X');ga('send','pageview');
-	</script>
 
 	<!-- build:js scripts/vendor.js -->
 	<!-- bower:js -->
