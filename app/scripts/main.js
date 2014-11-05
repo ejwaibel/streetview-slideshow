@@ -35,7 +35,7 @@ $(function() {
 		min: 0,
 		max: 180,
 		range: 'min',
-		create: function(event, ui) {
+		create: function(event) {
 			$(event.target).parents(elements.containerSlider).find(elements.sliderValue).text( 0 );
 		},
 		change: sliderUpdate,
@@ -61,20 +61,20 @@ $(function() {
 			 * @param  {Object} location
 			 */
 			getAddress = function(location) {
-				$.ajax({
-					url: new leopard.tpl(leopard.api.geocode).apply({
-						location: location.latitude + ',' + location.longitude,
-						key: leopard.api.key
-					})
-				}).done(function(data) {
-					if (data.status === 'OK') {
-						return addressDfd.resolve(data);
-					} else if (data.status === 'ZERO_RESULTS' || data.status === 'UNKNOWN_ERROR') {
+				var geocoder = new google.maps.Geocoder(),
+					options = {
+						location: new google.maps.LatLng(location.latitude, location.longitude),
+					};
+
+				geocoder.geocode(options, function(results, status) {
+					if (status === 'OK') {
+						return addressDfd.resolve(results);
+					} else if (status === 'ZERO_RESULTS' || status === 'UNKNOWN_ERROR') {
 						latlong = leopard.getRandomLatLong();
 						return getAddress(latlong);
 					}
 
-					addressDfd.reject(data);
+					addressDfd.reject(status);
 				});
 
 				return true;
@@ -93,10 +93,10 @@ $(function() {
 		addressDfd.done(function(data) {
 			$target.spin(false);
 			$target.removeClass('disabled');
-			input.val(data.results[0].formatted_address); /* jshint ignore: line */
+			input.val(data[0].formatted_address); /* jshint ignore: line */
 		}).fail(function(data) {
 			$target.spin(false);
-			input.val(data.status);
+			input.val(data);
 		});
 	});
 
