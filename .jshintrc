@@ -21,6 +21,7 @@
     "globals": {
     	"define": true,
     	"Hogan": true,
-    	"leopard": true
+    	"leopard": true,
+    	"google": true
     }
 }
