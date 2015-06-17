@@ -96,7 +96,7 @@ $(function() {
 			 * Converts the given latitude/longitude values into a human
 			 * readable address. Continues to loop if the values given
 			 * do not return a valid address.
-			 * @param  {Object} location
+			 * @param  {Object} latlng
 			 */
 			getRandomAddress = function(latlng) {
 				getFormattedAddress(latlng)
