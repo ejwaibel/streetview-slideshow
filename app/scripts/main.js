@@ -10,54 +10,122 @@ $(function() {
 			slider: '.js-slider',
 			sliderValue: '.js-slider-value'
 		},
-		$sliders = {
-			heading: $('#heading-slider'),
-			fov: $('#fov-slider'),
-			pitch: $('#pitch-slider')
+		sliders = {
+			$heading: $('#heading-slider'),
+			$fov: $('#fov-slider'),
+			$pitch: $('#pitch-slider')
+		},
+		$submitBtn = $('form button[data-submit]'),
+		displayImage = function($container, $image) {
+			$container.spin(false).append($image);
+		},
+		formSubmitCallback = function(e) {
+			var getLocations = function() {
+					var origin = $('#address-origin').val(),
+						destination = $('#address-destination').val(),
+						locationDfd = $.Deferred(),
+						directionsService = new google.maps.DirectionsService(),
+						directionsRequest;
+
+					if (destination) {
+						directionsRequest = {
+							origin: origin,
+							destination: destination,
+							travelMode: google.maps.TravelMode.DRIVING
+						};
+
+						directionsService.route(directionsRequest, function(result, status) {
+							var steps,
+								locationsDfd = [],
+								i = 0,
+								formatAddress = function(step) {
+									console.debug('step', step);
+									locationsDfd.push(leopard.getFormattedAddress(step.start_location));
+								};
+
+							console.debug('result', result);
+
+							if (status === google.maps.DirectionsStatus.OK) {
+								steps = result.routes[0].legs[0].steps;
+
+								for (i = 0; i < steps.length; i++) {
+									// setTimeout(formatAddress, 2500, steps[i]);
+									locationsDfd.push(leopard.getFormattedAddress(steps[i].start_location));
+								}
+
+								console.debug('locationsDfd', locationsDfd);
+
+								$.when.apply($, locationsDfd).then(function(data) {
+									console.debug('data', data);
+									locationDfd.resolve(data);
+								});
+							} else {
+								locationDfd.reject(status);
+							}
+						});
+					} else {
+						locationDfd.resolve([origin]);
+					}
+
+					return locationDfd;
+				},
+				getLocationsCallback = function(locations) {
+					var imgUrl, $img, $imgContainer, i;
+
+					for (i = 0; i < locations.length; i++) {
+						$imgContainer = $(imageTpl.apply());
+						$(elements.imagesContainer).append($imgContainer);
+						$imgContainer.spin('small', 250);
+
+						imgUrl = streetviewTpl.apply({
+							key: leopard.api.key,
+							location: locations[i],
+							heading: true,
+							headingValue: getSliderValue('$heading'),
+							fov: true,
+							fovValue: getSliderValue('$fov'),
+							pitch: true,
+							pitchValue: getSliderValue('$pitch')
+						});
+
+						$img = $('<img>', {
+							src: imgUrl,
+							height: leopard.images.height,
+							width: leopard.images.width
+						});
+
+						$img.load(displayImage.call(this, $imgContainer, $img));
+					}
+
+					$submitBtn.removeClass('disabled').spin(false);
+				},
+				getLocationsFailback = function(status) {
+					$submitBtn.spin(false);
+					window.alert(status);
+				};
+
+			// TODO: Validate longitude/latitude values
+
+			e.preventDefault();
+
+			if ($submitBtn.hasClass('disabled')) {
+				return false;
+			}
+
+			$submitBtn.addClass('disabled').spin('medium', 100);
+
+			getLocations()
+				.done(getLocationsCallback)
+				.fail(getLocationsFailback);
 		},
 		getSliderValue = function(name) {
-			return $sliders[name].slider('value');
+			return parseInt(sliders[name].slider('value'), 10);
 		},
 		sliderUpdate = function(event, ui) {
 			$(event.target)
 				.parents(elements.containerSlider)
 				.find(elements.sliderValue)
 				.text(ui.value);
-		},
-		getFormattedAddress = function(latlng) {
-			var geocoder = new google.maps.Geocoder(),
-				dfd = $.Deferred(),
-				options = {
-					location: latlng.latitude ? new google.maps.LatLng(latlng.latitude, latlng.longitude) : latlng
-				},
-				invalidAddress = /unnamed road/i;
-
-			console.debug('options:', options);
-
-			geocoder.geocode(options, function(results, status) {
-				var address;
-
-				console.debug('results', results);
-				console.debug('status', status);
-
-				if (status === 'OK') {
-					address = results[0].formatted_address;
-
-					if (address.search(invalidAddress) !== -1 ||
-						address.match(/\,/g).length < 3) {
-						dfd.reject('RETRY');
-					} else {
-						dfd.resolve(address);
-					}
-				} else if (status === 'ZERO_RESULTS' ||
-						status === 'UNKNOWN_ERROR') {
-					dfd.reject('RETRY');
-				} else {
-					dfd.reject(status);
-				}
-			});
-
-			return dfd;
 		};
 
 	/**
@@ -99,7 +167,7 @@ $(function() {
 			 * @param  {Object} latlng
 			 */
 			getRandomAddress = function(latlng) {
-				getFormattedAddress(latlng)
+				leopard.getFormattedAddress(latlng)
 					.done(function(results) {
 						addressDfd.resolve(results);
 					})
@@ -111,7 +179,12 @@ $(function() {
 						}
 					});
 
-				return true;
+				return addressDfd.promise();
+			},
+			randomAddressCallback = function(data) {
+				$target.spin(false);
+				$target.removeClass('disabled');
+				$input.val(data);
 			};
 
 		if ($target.hasClass('disabled')) {
@@ -124,109 +197,14 @@ $(function() {
 		getRandomAddress(latlong);
 
 		addressDfd
-			.done(function(data) {
-				$target.spin(false);
-				$target.removeClass('disabled');
-				$input.val(data); /* jshint ignore: line */
-			}).fail(function(data) {
-				$target.spin(false);
-				$input.val('ERROR: ' + data);
-			});
+			.done(randomAddressCallback)
+			.fail(randomAddressCallback);
 	});
 
 	/**
 	 * Form submit functionality
 	 */
-	$('form').on('submit', function(e) {
-		var $submitBtn = $(this).find('button[data-submit]'),
-			imgUrl, $img, $imgContainer,
-			getLocations = function() {
-				var origin = $('#address-origin').val(),
-					destination = $('#address-destination').val(),
-					locationDfd = $.Deferred(),
-					directionsService = new google.maps.DirectionsService(),
-					directionsRequest;
-
-				if (destination) {
-					directionsRequest = {
-						origin: origin,
-						destination: destination,
-						travelMode: google.maps.TravelMode.DRIVING
-					};
-
-					directionsService.route(directionsRequest, function(result, status) {
-						var steps,
-							locationsDfd = [],
-							formatAddress = function(step) {
-								console.debug('step', step);
-								locationsDfd.push(getFormattedAddress(step.start_location));
-							};
-
-						console.debug('result', result);
-
-						if (status === google.maps.DirectionsStatus.OK) {
-							steps = result.routes[0].legs[0].steps;
-
-							for (var i = 0; i < steps.length; i++) {
-								setTimeout(formatAddress.call(this, steps[i]), 2500);
-							}
-
-							$.when.apply($, locationsDfd).then(function(data) {
-								console.debug('data', data);
-								locationDfd.resolve(data);
-							});
-						} else {
-							locationDfd.reject(status);
-						}
-					});
-				} else {
-					locationDfd.resolve([origin]);
-				}
-
-				return locationDfd;
-			},
-			displayImage = function($container, $image) {
-				$container.spin(false).append($image);
-			};
-
-		// TODO: Validate longitude/latitude values
-
-		e.preventDefault();
-
-		if ($submitBtn.hasClass('disabled')) {
-			return false;
-		}
-
-		$submitBtn.addClass('disabled').spin('medium', 100);
-
-		getLocations().done(function(locations) {
-			for (var i = 0; i < locations.length; i++) {
-				$imgContainer = $(imageTpl.apply());
-				$(elements.imagesContainer).append($imgContainer);
-				$imgContainer.spin('small', 250);
-
-				imgUrl = streetviewTpl.apply({
-					key: leopard.api.key,
-					location: locations[i],
-					heading: getSliderValue('heading'),
-					fov: getSliderValue('fov'),
-					pitch: getSliderValue('pitch')
-				});
-
-				$img = $('<img>', {
-					src: imgUrl,
-					height: leopard.images.height,
-					width: leopard.images.width
-				});
-
-				$img.load(displayImage.call(this, $img));
-			}
-			$submitBtn.removeClass('disabled').spin(false);
-		}).fail(function(status) {
-			$submitBtn.spin(false);
-			window.alert(status);
-		});
-	});
+	$('form').on('submit', formSubmitCallback);
 
 	$(elements.imagesContainer).delegate('.js-remove-image', 'click', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
