@@ -46,24 +46,30 @@
 		<div class="container-address">
 			<div class="row">
 				<div class="columns">
-					<div class="row collapse">
-						<div class="columns small-11">
+					<div class="row">
+						<div class="columns small-10">
 							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin (required)" required tab-index=1 autofocus="true">
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-origin"><i class="fi-refresh"></i></button>
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-get-image" data-selector="#address-origin"><i class="fi-camera"></i></button>
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="columns">
-					<div class="row collapse">
-						<div class="columns small-11">
+					<div class="row">
+						<div class="columns small-10">
 							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination (optional)" tab-index=2>
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-destination"><i class="fi-refresh"></i></button>
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-get-image" data-selector="#address-destination"><i class="fi-camera"></i></button>
 						</div>
 					</div>
 				</div>
@@ -104,7 +110,7 @@
 		</div>
 		<div class="row">
 			<div class="columns">
-				<button type="submit" class="button right" tab-index="3" data-submit>Go</button>
+				<button type="submit" class="button right js-get-directions" tab-index="3">Get Directions</button>
 			</div>
 		</div>
 	</form>

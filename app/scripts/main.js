@@ -15,11 +15,43 @@ $(function() {
 			$fov: $('#fov-slider'),
 			$pitch: $('#pitch-slider')
 		},
-		$submitBtn = $('form button[data-submit]'),
+		$directionsBtn = $('form .js-get-directions'),
+		$getImageBtn = $('form .js-get-image'),
+		$randomAddressBtn = $('form .js-random-address'),
 		displayImage = function($container, $image) {
 			$container.spin(false).append($image);
 		},
-		formSubmitCallback = function(e) {
+		generateImages = function(locations) {
+			var imgUrl, $img, $imgContainer, i;
+
+			for (i = 0; i < locations.length; i++) {
+				$imgContainer = $(imageTpl.apply());
+				$(elements.imagesContainer).append($imgContainer);
+				$imgContainer.spin('small', 250);
+
+				imgUrl = streetviewTpl.apply({
+					key: leopard.api.key,
+					location: locations[i],
+					heading: true,
+					headingValue: getSliderValue('$heading'),
+					fov: true,
+					fovValue: getSliderValue('$fov'),
+					pitch: true,
+					pitchValue: getSliderValue('$pitch')
+				});
+
+				$img = $('<img>', {
+					src: imgUrl,
+					height: leopard.images.height,
+					width: leopard.images.width
+				});
+
+				$img.load(displayImage.call(this, $imgContainer, $img));
+			}
+
+			$directionsBtn.removeClass('disabled').spin(false);
+		},
+		getDirectionsCallback = function(e) {
 			var getLocations = function() {
 					var origin = $('#address-origin').val(),
 						destination = $('#address-destination').val(),
@@ -58,43 +90,13 @@ $(function() {
 							}
 						});
 					} else {
-						locationDfd.resolve([origin]);
+						// TODO: Throw error 'destination is required'
 					}
 
 					return locationDfd;
 				},
-				getLocationsCallback = function(locations) {
-					var imgUrl, $img, $imgContainer, i;
-
-					for (i = 0; i < locations.length; i++) {
-						$imgContainer = $(imageTpl.apply());
-						$(elements.imagesContainer).append($imgContainer);
-						$imgContainer.spin('small', 250);
-
-						imgUrl = streetviewTpl.apply({
-							key: leopard.api.key,
-							location: locations[i],
-							heading: true,
-							headingValue: getSliderValue('$heading'),
-							fov: true,
-							fovValue: getSliderValue('$fov'),
-							pitch: true,
-							pitchValue: getSliderValue('$pitch')
-						});
-
-						$img = $('<img>', {
-							src: imgUrl,
-							height: leopard.images.height,
-							width: leopard.images.width
-						});
-
-						$img.load(displayImage.call(this, $imgContainer, $img));
-					}
-
-					$submitBtn.removeClass('disabled').spin(false);
-				},
 				getLocationsFailback = function(status) {
-					$submitBtn.spin(false);
+					$directionsBtn.spin(false);
 					window.alert(status);
 				};
 
@@ -102,14 +104,14 @@ $(function() {
 
 			e.preventDefault();
 
-			if ($submitBtn.hasClass('disabled')) {
+			if ($directionsBtn.hasClass('disabled')) {
 				return false;
 			}
 
-			$submitBtn.addClass('disabled').spin('medium', 100);
+			$directionsBtn.addClass('disabled').spin('medium', 100);
 
 			getLocations()
-				.done(getLocationsCallback)
+				.done(generateImages)
 				.fail(getLocationsFailback);
 		},
 		getSliderValue = function(name) {
@@ -149,7 +151,7 @@ $(function() {
 	 * @param  {[type]} e [description]
 	 * @return {[type]}   [description]
 	 */
-	$('.js-random-address').on('click', function(e) {
+	$randomAddressBtn.on('click', function(e) {
 		var $element = $(e.target),
 			$target = $element.attr('data-selector') ? $element : $element.parent(),
 			$input = $($target.data('selector')),
@@ -198,10 +200,19 @@ $(function() {
 			.fail(randomAddressCallback);
 	});
 
+	$getImageBtn.on('click', function(e) {
+		var $element = $(e.target),
+			$target = $element.attr('data-selector') ? $element : $element.parent(),
+			$input = $($target.data('selector')),
+			address = $input.val();
+
+		generateImages([address]);
+	});
+
 	/**
 	 * Form submit functionality
 	 */
-	$('form').on('submit', formSubmitCallback);
+	$('form').on('submit', getDirectionsCallback);
 
 	$(elements.imagesContainer).delegate('.js-remove-image', 'click', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
