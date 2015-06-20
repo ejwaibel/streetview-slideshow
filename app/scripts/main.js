@@ -43,7 +43,8 @@ $(function() {
 				$img = $('<img>', {
 					src: imgUrl,
 					height: leopard.images.height,
-					width: leopard.images.width
+					width: leopard.images.width,
+					title: locations[i]
 				});
 
 				$img.load(displayImage.call(this, $imgContainer, $img));
