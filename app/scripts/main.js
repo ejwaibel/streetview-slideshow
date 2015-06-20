@@ -37,27 +37,21 @@ $(function() {
 						directionsService.route(directionsRequest, function(result, status) {
 							var steps,
 								locationsDfd = [],
-								i = 0,
-								formatAddress = function(step) {
-									console.debug('step', step);
-									locationsDfd.push(leopard.getFormattedAddress(step.start_location));
-								};
-
-							console.debug('result', result);
+								i = 0;
 
 							if (status === google.maps.DirectionsStatus.OK) {
 								steps = result.routes[0].legs[0].steps;
 
 								for (i = 0; i < steps.length; i++) {
-									// setTimeout(formatAddress, 2500, steps[i]);
-									locationsDfd.push(leopard.getFormattedAddress(steps[i].start_location));
+									// Ensure we don't exceed the 5 queries per second limit
+									setTimeout(function() {
+										locationsDfd.push(leopard.getFormattedAddress(steps[i].start_location));
+									}, i * 1500);
 								}
 
-								console.debug('locationsDfd', locationsDfd);
-
-								$.when.apply($, locationsDfd).then(function(data) {
-									console.debug('data', data);
-									locationDfd.resolve(data);
+								$.when.apply($, locationsDfd).then(function() {
+									console.debug('args', arguments);
+									locationDfd.resolve(arguments);
 								});
 							} else {
 								locationDfd.reject(status);
@@ -156,7 +150,8 @@ $(function() {
 	 * @return {[type]}   [description]
 	 */
 	$('.js-random-address').on('click', function(e) {
-		var $target = $(e.target),
+		var $element = $(e.target),
+			$target = $element.attr('data-selector') ? $element : $element.parent(),
 			$input = $($target.data('selector')),
 			latlong = leopard.getRandomLatLong(),
 			addressDfd = $.Deferred(),
@@ -190,6 +185,8 @@ $(function() {
 		if ($target.hasClass('disabled')) {
 			return false;
 		}
+
+		$input.val('');
 
 		$target.addClass('disabled').spin('small', 100);
 

@@ -27,7 +27,6 @@
 					location: latlng.latitude ? new google.maps.LatLng(latlng.latitude, latlng.longitude) : latlng
 				},
 				geocodeCallback = function(results, status) {
-					console.debug('results', results);
 					console.debug('status', status);
 					var address = results && results.length && results[0] ? results[0].formatted_address : null;
 
@@ -36,34 +35,23 @@
 					if (status === google.maps.GeocoderStatus.OK) {
 						if (address.search(leopard.invalidAddress) !== -1 ||
 							address.match(/\,/g).length < 3) {
-							console.debug('REJECT - RETRY -- ' + address);
 							dfd.reject('RETRY');
 						} else {
-							console.debug('RESOLVE -- ' + address);
 							dfd.resolve(address);
 						}
 					} else if (status === google.maps.GeocoderStatus.ZERO_RESULTS ||
 							status === google.maps.GeocoderStatus.UNKNOWN_ERROR) {
-						console.debug('REJECT - RETRY -- ' + address);
 						dfd.reject('RETRY');
 					} else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-						console.debug('LIMIT : WAIT -- ' + options.location);
 						setTimeout(function() {
-							console.debug('WAIT : END -- ' + options.location);
 							leopard.geocoder.geocode(options, geocodeCallback);
-						}, Math.random() * 2000);
+						}, 1200);
 					} else {
-						console.debug('REJECT - ' + status + ' -- ' + address);
 						dfd.reject(status);
 					}
 				};
 
-			console.debug('options', options);
 			leopard.geocoder.geocode(options, geocodeCallback);
-			// Ensure we don't exceed the 5 queries per second limit
-			// setTimeout(function() {
-			// 	leopard.geocoder.geocode(options, geocodeCallback);
-			// }, 1500);
 
 			return dfd.promise();
 		},
