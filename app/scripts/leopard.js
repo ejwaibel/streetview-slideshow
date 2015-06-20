@@ -27,10 +27,7 @@
 					location: latlng.latitude ? new google.maps.LatLng(latlng.latitude, latlng.longitude) : latlng
 				},
 				geocodeCallback = function(results, status) {
-					console.debug('status', status);
 					var address = results && results.length && results[0] ? results[0].formatted_address : null;
-
-					console.debug('address', address);
 
 					if (status === google.maps.GeocoderStatus.OK) {
 						if (address.search(leopard.invalidAddress) !== -1 ||

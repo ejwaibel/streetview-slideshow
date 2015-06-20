@@ -69,22 +69,29 @@ $(function() {
 						directionsService.route(directionsRequest, function(result, status) {
 							var steps,
 								locationsDfd = [],
-								i = 0;
+								i = 0,
+								timer,
+								geocodeStep = function(step, dfdArray) {
+									dfdArray.push(leopard.getFormattedAddress(step.start_location));
+								};
 
 							if (status === google.maps.DirectionsStatus.OK) {
 								steps = result.routes[0].legs[0].steps;
 
 								for (i = 0; i < steps.length; i++) {
 									// Ensure we don't exceed the 5 queries per second limit
-									setTimeout(function() {
-										locationsDfd.push(leopard.getFormattedAddress(steps[i].start_location));
-									}, i * 1500);
+									setTimeout(geocodeStep.call(this, steps[i], locationsDfd), (i + 1) * 1500);
 								}
 
-								$.when.apply($, locationsDfd).then(function() {
-									console.debug('args', arguments);
-									locationDfd.resolve(arguments);
-								});
+								timer = setInterval(function() {
+									if (locationsDfd.length === steps.length) {
+										clearInterval(timer);
+
+										$.when.apply($, locationsDfd).then(function() {
+											locationDfd.resolve(arguments);
+										});
+									}
+								}, 3000);
 							} else {
 								locationDfd.reject(status);
 							}
