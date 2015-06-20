@@ -10,7 +10,11 @@
 	cursor: pointer;
 }
 
-.right-pos {
+.icon-remove {
+	color: red;
+}
+
+.right-block-position {
 	position: absolute;
 	right: $block-grid-default-spacing;
 }
