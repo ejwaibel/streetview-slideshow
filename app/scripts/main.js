@@ -21,46 +21,46 @@ $(function() {
 		displayImage = function($container, $image) {
 			$container.spin(false).append($image);
 		},
-		generateImages = function(locations) {
-			var imgUrl, $img, $imgContainer, i;
+		geocodeStep = function(step) {
+			leopard.getFormattedAddress(step.start_location)
+				.done(generateImage)
+				// TODO: Add failback for image from directions
+		},
+		generateImage = function(location) {
+			var $imgContainer = $(imageTpl.apply()),
+				imgUrl, $img, i;
 
-			for (i = 0; i < locations.length; i++) {
-				$imgContainer = $(imageTpl.apply());
-				$(elements.imagesContainer).append($imgContainer);
-				$imgContainer.spin('small', 250);
+			$(elements.imagesContainer).append($imgContainer);
+			$imgContainer.spin('medium');
 
-				imgUrl = streetviewTpl.apply({
-					key: leopard.api.key,
-					location: locations[i],
-					heading: true,
-					headingValue: getSliderValue('$heading'),
-					fov: true,
-					fovValue: getSliderValue('$fov'),
-					pitch: true,
-					pitchValue: getSliderValue('$pitch')
-				});
+			imgUrl = streetviewTpl.apply({
+				key: leopard.api.key,
+				location: location,
+				heading: true,
+				headingValue: getSliderValue('$heading'),
+				fov: true,
+				fovValue: getSliderValue('$fov'),
+				pitch: true,
+				pitchValue: getSliderValue('$pitch')
+			});
 
-				$img = $('<img>', {
-					src: imgUrl,
-					height: leopard.images.height,
-					width: leopard.images.width,
-					title: locations[i]
-				});
+			$img = $('<img>', {
+				src: imgUrl,
+				height: leopard.images.height,
+				width: leopard.images.width,
+				title: location
+			});
 
-				$img.load(displayImage.call(this, $imgContainer, $img));
-			}
-
-			$directionsBtn.removeClass('disabled').spin(false);
+			$img.load(displayImage.call(this, $imgContainer, $img));
 		},
 		getDirectionsCallback = function(e) {
-			var getLocations = function() {
+			var generateDirectionsImages = function() {
 					var origin = $('#address-origin').val(),
 						destination = $('#address-destination').val(),
-						locationDfd = $.Deferred(),
 						directionsService = new google.maps.DirectionsService(),
 						directionsRequest;
 
-					if (destination) {
+					if (origin && destination) {
 						directionsRequest = {
 							origin: origin,
 							destination: destination,
@@ -68,47 +68,27 @@ $(function() {
 						};
 
 						directionsService.route(directionsRequest, function(result, status) {
-							var steps,
-								locationsDfd = [],
-								i = 0,
-								timer,
-								geocodeStep = function(step, dfdArray) {
-									dfdArray.push(leopard.getFormattedAddress(step.start_location));
-								};
+							var steps, i;
 
 							if (status === google.maps.DirectionsStatus.OK) {
 								steps = result.routes[0].legs[0].steps;
 
 								for (i = 0; i < steps.length; i++) {
 									// Ensure we don't exceed the 5 queries per second limit
-									setTimeout(geocodeStep.call(this, steps[i], locationsDfd), (i + 1) * 1500);
+									setTimeout(geocodeStep.call(this, steps[i]), (i + 1) * 1500);
 								}
-
-								timer = setInterval(function() {
-									if (locationsDfd.length === steps.length) {
-										clearInterval(timer);
-
-										$.when.apply($, locationsDfd).then(function() {
-											locationDfd.resolve(arguments);
-										});
-									}
-								}, 3000);
 							} else {
 								locationDfd.reject(status);
 							}
+
+							$directionsBtn.removeClass('disabled').spin(false);
 						});
 					} else {
 						// TODO: Throw error 'destination is required'
 					}
 
-					return locationDfd;
-				},
-				getLocationsFailback = function(status) {
-					$directionsBtn.spin(false);
-					window.alert(status);
+					return true;
 				};
-
-			// TODO: Validate longitude/latitude values
 
 			e.preventDefault();
 
@@ -118,9 +98,7 @@ $(function() {
 
 			$directionsBtn.addClass('disabled').spin('medium', 100);
 
-			getLocations()
-				.done(generateImages)
-				.fail(getLocationsFailback);
+			generateDirectionsImages();
 		},
 		getSliderValue = function(name) {
 			return parseInt(sliders[name].slider('value'), 10);
@@ -214,7 +192,7 @@ $(function() {
 			$input = $($target.data('selector')),
 			address = $input.val();
 
-		generateImages([address]);
+		generateImage(address);
 	});
 
 	/**
