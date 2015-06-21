@@ -8,13 +8,19 @@
 	var leopard = {
 		api: {
 			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
-			streetview: 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
+			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
 		},
 		geocoder: new google.maps.Geocoder(),
 		invalidAddress: /(^unnamed road)|(^[\w\d\s]+$)/i,
 		images: {
-			width: 400,
-			height: 175
+			list: {
+				width: 400,
+				height: 175
+			},
+			streetview: {
+				width: 1024,
+				height: 1024
+			}
 		},
 		latitudeBoundary: {
 			min: 28.70,
@@ -56,7 +62,7 @@
 					}
 				};
 
-			leopard.geocoder.geocode(options, geocodeCallback);
+			this.geocoder.geocode(options, geocodeCallback);
 
 			return dfd.promise();
 		},
@@ -73,8 +79,8 @@
 
 			return {
 				// .toFixed() returns string, so ' * 1' is a trick to convert to number
-				latitude: (this.getRandom(leopard.latitudeBoundary.min, leopard.latitudeBoundary.max)).toFixed(fixed) * 1,
-				longitude: (this.getRandom(leopard.longitudeBoundary.min, leopard.longitudeBoundary.max)).toFixed(fixed) * 1
+				latitude: (this.getRandom(this.latitudeBoundary.min, this.latitudeBoundary.max)).toFixed(fixed) * 1,
+				longitude: (this.getRandom(this.longitudeBoundary.min, this.longitudeBoundary.max)).toFixed(fixed) * 1
 			};
 		}
 	};
