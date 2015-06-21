@@ -8,7 +8,7 @@
 	"disallowFunctionDeclarations": null,
 	"disallowIdentifierNames": [],
 	"disallowImplicitTypeConversion": [],
-	"disallowKeywordsInComments": [ "TODO", "FIXME" ],
+	"disallowKeywordsInComments": [ "FIXME" ],
 	"disallowKeywordsOnNewLine": [ "else" ],
 	"disallowKeywords": [ "with" ],
 	"disallowMixedSpacesAndTabs": true,
