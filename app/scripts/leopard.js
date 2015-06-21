@@ -16,6 +16,14 @@
 			width: 400,
 			height: 175
 		},
+		latitudeBoundary: {
+			min: 28.70,
+			max: 48.85
+		},
+		longitudeBoundary: {
+			min: -127.50,
+			max: -55.90
+		},
 		/**
 		 * Converts the given latitude/longitude values into a human
 		 * @param  {Object} latlng [description]
@@ -61,12 +69,12 @@
 		 * @return {Object}
 		 */
 		getRandomLatLong: function() {
-			var fixed = 3;
+			var fixed = 5;
 
 			return {
 				// .toFixed() returns string, so ' * 1' is a trick to convert to number
-				latitude: (this.getRandom(28.70, 48.85)).toFixed(fixed) * 1,
-				longitude: (this.getRandom(-127.50, -55.90)).toFixed(fixed) * 1
+				latitude: (this.getRandom(leopard.latitudeBoundary.min, leopard.latitudeBoundary.max)).toFixed(fixed) * 1,
+				longitude: (this.getRandom(leopard.longitudeBoundary.min, leopard.longitudeBoundary.max)).toFixed(fixed) * 1
 			};
 		}
 	};
