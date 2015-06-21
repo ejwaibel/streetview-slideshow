@@ -21,10 +21,72 @@ $(function() {
 		displayImage = function($container, $image) {
 			$container.spin(false).append($image);
 		},
-		geocodeStep = function(step) {
-			leopard.getFormattedAddress(step.start_location)
-				.done(generateImage)
-				// TODO: Add failback for image from directions
+		generateDirectionsImages = function() {
+			var origin = $('#address-origin').val(),
+				destination = $('#address-destination').val(),
+				directionsService = new google.maps.DirectionsService(),
+				finishedSteps = 0,
+				directionsRequest,
+				timer,
+				geocodeDirection = function(step) {
+					var start = step.start_location;
+
+					return leopard.getFormattedAddress(start);
+				},
+				geocodeCallback = function(address) {
+					finishedSteps++;
+
+					if (address !== 'RETRY') {
+						generateImage(address);
+
+						return true;
+					}
+
+					window.alert('ERROR');
+				};
+
+			if (origin && destination) {
+				directionsRequest = {
+					origin: origin,
+					destination: destination,
+					travelMode: google.maps.TravelMode.DRIVING
+				};
+
+				directionsService.route(directionsRequest, function(result, status) {
+					var steps, i;
+
+					if (status === google.maps.DirectionsStatus.OK) {
+						steps = result.routes[0].legs[0].steps;
+
+						generateImage(origin);
+						finishedSteps++;
+
+						// Only steps in between origin & destination
+						for (i = 1; i < steps.length - 1; i++) {
+							// Ensure we don't exceed the 5 queries per second limit
+							setTimeout(function(step) {
+								geocodeDirection(step)
+									.always(geocodeCallback);
+								// TODO: Add failback for image from directions
+							}, (i + 1) * 1500, steps[i]);
+						}
+
+						timer = setInterval(function() {
+							if (finishedSteps === steps.length - 1) {
+								clearInterval(timer);
+								generateImage(destination);
+								$directionsBtn.removeClass('disabled').spin(false);
+							}
+						}, 3000);
+					} else {
+						// TODO: Display error message
+					}
+				});
+			} else {
+				// TODO: Throw error 'origin & destination are required'
+			}
+
+			return true;
 		},
 		generateImage = function(location) {
 			var $imgContainer = $(imageTpl.apply()),
@@ -38,6 +100,8 @@ $(function() {
 				location: location,
 				heading: true,
 				headingValue: getSliderValue('$heading'),
+				imageWidth: leopard.images.streetview.width,
+				imageHeight: leopard.images.streetview.width,
 				fov: true,
 				fovValue: getSliderValue('$fov'),
 				pitch: true,
@@ -46,50 +110,16 @@ $(function() {
 
 			$img = $('<img>', {
 				src: imgUrl,
-				height: leopard.images.height,
-				width: leopard.images.width,
+				height: leopard.images.list.height,
+				width: leopard.images.list.width,
 				title: location
 			});
 
 			$img.load(displayImage.call(this, $imgContainer, $img));
+
+			return;
 		},
 		getDirectionsCallback = function(e) {
-			var generateDirectionsImages = function() {
-					var origin = $('#address-origin').val(),
-						destination = $('#address-destination').val(),
-						directionsService = new google.maps.DirectionsService(),
-						directionsRequest;
-
-					if (origin && destination) {
-						directionsRequest = {
-							origin: origin,
-							destination: destination,
-							travelMode: google.maps.TravelMode.DRIVING
-						};
-
-						directionsService.route(directionsRequest, function(result, status) {
-							var steps, i;
-
-							if (status === google.maps.DirectionsStatus.OK) {
-								steps = result.routes[0].legs[0].steps;
-
-								for (i = 0; i < steps.length; i++) {
-									// Ensure we don't exceed the 5 queries per second limit
-									setTimeout(geocodeStep.call(this, steps[i]), (i + 1) * 1500);
-								}
-							} else {
-								locationDfd.reject(status);
-							}
-
-							$directionsBtn.removeClass('disabled').spin(false);
-						});
-					} else {
-						// TODO: Throw error 'destination is required'
-					}
-
-					return true;
-				};
-
 			e.preventDefault();
 
 			if ($directionsBtn.hasClass('disabled')) {
@@ -99,6 +129,8 @@ $(function() {
 			$directionsBtn.addClass('disabled').spin('medium', 100);
 
 			generateDirectionsImages();
+
+			return;
 		},
 		getSliderValue = function(name) {
 			return parseInt(sliders[name].slider('value'), 10);

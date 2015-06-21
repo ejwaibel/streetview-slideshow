@@ -5,21 +5,3 @@
 @import '../bower_components/foundation/scss/foundation';
 @import 'settings';
 @import 'streetview-ui';
-
-.clickable {
-	cursor: pointer;
-}
-
-.icon-remove {
-	color: red;
-}
-
-.right-block-position {
-	position: absolute;
-	right: $block-grid-default-spacing;
-}
-
-.js-container-image {
-	display: inline-block;
-	position: relative;
-}

@@ -9,7 +9,10 @@
 
 	<!-- build:css styles/vendor.css -->
 	<!-- bower:css -->
+	<link rel="stylesheet" href="bower_components/foundation/css/foundation.css" />
 	<link rel="stylesheet" href="bower_components/foundation-icon-fonts/foundation-icons.css" />
+	<link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css" />
+	<link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css" />
 	<!-- endbower -->
 	<!-- endbuild -->
 
@@ -21,7 +24,7 @@
 	<!-- TEMPLATES -->
 	<!-- build:js scripts/templates.js -->
 	<template id="tpl-image-container">
-		<li class="js-container-image">
+		<li class="container-streetview-image js-container-image">
 			<i class="fi-x icon-remove clickable right-block-position js-remove-image"></i>
 		</li>
 	</template>
@@ -32,7 +35,7 @@
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 		<![endif]-->
 
-	<div id="instructions" class="row">
+	<div id="help" class="reveal-modal" data-reveal aria-labelledby="help" aria-hidden="true" role="dialog">
 		<ul>
 			<li><strong>heading</strong> indicates the compass heading of the camera. Accepted values are from 0 to 360 (both values indicating North, with 90 indicating East, and 180 South). If no heading is specified, a value will be calculated that directs the camera towards the specified location, from the point at which the closest photograph was taken.
 			</li>
@@ -41,14 +44,15 @@
 			<li><strong>pitch</strong> (default is 0) specifies the up or down angle of the camera relative to the Street View vehicle. This is often, but not always, flat horizontal. Positive values angle the camera up (with 90 degrees indicating straight up); negative values angle the camera down (with -90 indicating straight down).
 			</li>
 		</ul>
+		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 	</div>
-	<form>
+	<form autocomplete="yes">
 		<div class="container-address">
 			<div class="row">
 				<div class="columns">
 					<div class="row">
 						<div class="columns small-10">
-							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index=1 autofocus="true">
+							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-origin"><i class="fi-refresh"></i></button>
@@ -63,7 +67,7 @@
 				<div class="columns">
 					<div class="row">
 						<div class="columns small-10">
-							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index=2>
+							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-destination"><i class="fi-refresh"></i></button>
@@ -114,6 +118,7 @@
 			</div>
 		</div>
 	</form>
+	<a class="help-link" href="#" title="Help" data-reveal-id="help"><i class="fi-info help-icon"></i></a>
 
 	<div class="row">
 		<div class="columns">
@@ -129,8 +134,10 @@
 	<script src="bower_components/jquery.cookie/jquery.cookie.js"></script>
 	<script src="bower_components/jquery-placeholder/jquery.placeholder.js"></script>
 	<script src="bower_components/foundation/js/foundation.js"></script>
+	<script src="bower_components/hogan/lib/hogan.js"></script>
 	<script src="bower_components/spin.js/spin.js"></script>
 	<script src="bower_components/jquery-ui/jquery-ui.js"></script>
+	<script src="bower_components/slick-carousel/slick/slick.min.js"></script>
 	<!-- endbower -->
 	<script src="bower_components/hogan/lib/template.js"></script>
 	<script src="bower_components/hogan/lib/compiler.js"></script>

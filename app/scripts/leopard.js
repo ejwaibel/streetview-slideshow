@@ -8,13 +8,27 @@
 	var leopard = {
 		api: {
 			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
-			streetview: 'https://maps.googleapis.com/maps/api/streetview?size=400x400&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
+			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
 		},
 		geocoder: new google.maps.Geocoder(),
 		invalidAddress: /(^unnamed road)|(^[\w\d\s]+$)/i,
 		images: {
-			width: 400,
-			height: 175
+			list: {
+				width: 400,
+				height: 175
+			},
+			streetview: {
+				width: 1024,
+				height: 1024
+			}
+		},
+		latitudeBoundary: {
+			min: 28.70,
+			max: 48.85
+		},
+		longitudeBoundary: {
+			min: -127.50,
+			max: -55.90
 		},
 		/**
 		 * Converts the given latitude/longitude values into a human
@@ -48,7 +62,7 @@
 					}
 				};
 
-			leopard.geocoder.geocode(options, geocodeCallback);
+			this.geocoder.geocode(options, geocodeCallback);
 
 			return dfd.promise();
 		},
@@ -61,12 +75,12 @@
 		 * @return {Object}
 		 */
 		getRandomLatLong: function() {
-			var fixed = 3;
+			var fixed = 5;
 
 			return {
 				// .toFixed() returns string, so ' * 1' is a trick to convert to number
-				latitude: (this.getRandom(28.70, 48.85)).toFixed(fixed) * 1,
-				longitude: (this.getRandom(-127.50, -55.90)).toFixed(fixed) * 1
+				latitude: (this.getRandom(this.latitudeBoundary.min, this.latitudeBoundary.max)).toFixed(fixed) * 1,
+				longitude: (this.getRandom(this.longitudeBoundary.min, this.longitudeBoundary.max)).toFixed(fixed) * 1
 			};
 		}
 	};
