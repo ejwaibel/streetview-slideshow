@@ -232,7 +232,7 @@ $(function() {
 	 */
 	$('form').on('submit', getDirectionsCallback);
 
-	$(elements.imagesContainer).delegate('.js-remove-image', 'click', function() {
+	$(elements.imagesContainer).on('click', '.js-remove-image', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
 	});
 });
