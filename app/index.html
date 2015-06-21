@@ -47,39 +47,8 @@
 		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 	</div>
 	<form autocomplete="yes">
-		<div class="container-address">
-			<div class="row">
-				<div class="columns">
-					<div class="row">
-						<div class="columns small-10">
-							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
-						</div>
-						<div class="columns small-1">
-							<button type="button" class="button postfix js-random-address" data-selector="#address-origin"><i class="fi-refresh"></i></button>
-						</div>
-						<div class="columns small-1">
-							<button type="button" class="button postfix js-get-image" data-selector="#address-origin"><i class="fi-camera"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="columns">
-					<div class="row">
-						<div class="columns small-10">
-							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
-						</div>
-						<div class="columns small-1">
-							<button type="button" class="button postfix js-random-address" data-selector="#address-destination"><i class="fi-refresh"></i></button>
-						</div>
-						<div class="columns small-1">
-							<button type="button" class="button postfix js-get-image" data-selector="#address-destination"><i class="fi-camera"></i></button>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="container-sliders js-streetview-options">
+		<!-- SLIDERS -->
+		<div class="row container-sliders js-streetview-options">
 			<div class="row js-container-slider">
 				<h4>HEADING</h4>
 				<div class="small-2 columns">
@@ -112,11 +81,50 @@
 				</div>
 			</div>
 		</div>
-		<div class="row">
-			<div class="columns">
-				<button type="submit" class="button right js-get-directions" tab-index="3">Get Directions</button>
+		<!-- END: SLIDERS -->
+
+		<!-- ADDRESS TEXT FIELDS -->
+		<div class="container-address">
+			<div class="row">
+				<div class="columns">
+					<div class="row">
+						<div class="columns small-10">
+							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-random-address" data-selector="#address-origin"><i class="fi-refresh"></i></button>
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-get-image" data-selector="#address-origin"><i class="fi-camera"></i></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="columns">
+					<div class="row">
+						<div class="columns small-10">
+							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-random-address" data-selector="#address-destination"><i class="fi-refresh"></i></button>
+						</div>
+						<div class="columns small-1">
+							<button type="button" class="button postfix js-get-image" data-selector="#address-destination"><i class="fi-camera"></i></button>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
+		<!-- END: ADDRESS TEXT FIELDS -->
+
+		<!-- FORM SUBMIT -->
+		<div class="row">
+			<div class="columns small-12">
+				<button type="submit" class="button right js-get-directions" tab-index="3">Add Images from Directions</button>
+			</div>
+		</div>
+		<!-- END: FORM SUBMIT -->
 	</form>
 	<a class="help-link" href="#" title="Help" data-reveal-id="help"><i class="fi-info help-icon"></i></a>
 
