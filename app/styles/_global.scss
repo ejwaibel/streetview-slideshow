@@ -1,18 +1,14 @@
-form {
-	margin-top: rem-calc(18);
-}
-
 .clickable {
 	cursor: pointer;
 }
 
-.icon-remove {
-	color: #000000;
-	font-size: rem-calc(25);
+.container-sliders {
+	margin-bottom: rem-calc(36);
+}
 
-	&:hover {
-		color: #ff0000;
-	}
+.container-streetview-image {
+	display: inline-block;
+	position: relative;
 }
 
 .right-block-position {
@@ -20,11 +16,6 @@ form {
 	// right: $block-grid-default-spacing;
 	right: 0;
 	top: -20px;
-}
-
-.container-streetview-image {
-	display: inline-block;
-	position: relative;
 }
 
 .help-link {
