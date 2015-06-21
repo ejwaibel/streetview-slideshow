@@ -5,35 +5,3 @@
 @import '../bower_components/foundation/scss/foundation';
 @import 'settings';
 @import 'streetview-ui';
-
-form {
-	margin-top: rem-calc(18);
-}
-
-.clickable {
-	cursor: pointer;
-}
-
-.icon-remove {
-	color: red;
-}
-
-.right-block-position {
-	position: absolute;
-	right: $block-grid-default-spacing;
-}
-
-.container-streetview-image {
-	display: inline-block;
-	position: relative;
-}
-
-.help-link {
-	position: absolute;
-	top: 10px;
-	right: 10px;
-
-	.help-icon {
-		font-size: rem-calc(36);
-	}
-}
