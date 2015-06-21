@@ -46,13 +46,13 @@
 		</ul>
 		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 	</div>
-	<form>
+	<form autocomplete="yes">
 		<div class="container-address">
 			<div class="row">
 				<div class="columns">
 					<div class="row">
 						<div class="columns small-10">
-							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index=1 autofocus="true">
+							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-origin"><i class="fi-refresh"></i></button>
@@ -67,7 +67,7 @@
 				<div class="columns">
 					<div class="row">
 						<div class="columns small-10">
-							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index=2>
+							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
 						</div>
 						<div class="columns small-1">
 							<button type="button" class="button postfix js-random-address" data-selector="#address-destination"><i class="fi-refresh"></i></button>
