@@ -10,8 +10,38 @@
 			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
 			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
 		},
+		buttons: {},
+		elements: {
+			containerSlider: '.js-container-slider',
+			imagesContainer: '.js-container-images',
+			imageContainer: '.js-container-image',
+			slider: '.js-slider',
+			sliderValue: '.js-slider-value'
+		},
 		geocoder: new google.maps.Geocoder(),
-		invalidAddress: /(^unnamed road)|(^[\w\d\s]+$)/i,
+		/**
+		 * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
+		 */
+		getBase64Image: function(img) {
+			// Create an empty canvas element
+			var canvas = document.createElement('canvas'),
+				ctx;
+
+			canvas.width = img.width;
+			canvas.height = img.height;
+
+			// Copy the image contents to the canvas
+			ctx = canvas.getContext('2d');
+			ctx.drawImage(img, 0, 0);
+
+			// Get the data-URL formatted image
+			// Firefox supports PNG and JPEG. You could check img.src to guess the
+			// original format, but be aware the using 'image/jpg' will re-encode the image.
+			var dataURL = canvas.toDataURL('image/png');
+
+			return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
+		},
+		invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
 		images: {
 			list: {
 				width: 400,
