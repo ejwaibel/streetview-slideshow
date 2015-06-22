@@ -14,7 +14,7 @@
 	/**
 	 * Setup jQuery UI Buttons
 	 */
-	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').button({ disabled: true }),
+	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').button({ disabled: true }).find('.icon').unwrap(),
 	leopard.buttons.$getDirections = $('form .js-get-directions').button(),
 	leopard.buttons.$getImage = $('form .js-get-image').button(),
 	leopard.buttons.$randomAddress = $('form .js-random-address').button(),
