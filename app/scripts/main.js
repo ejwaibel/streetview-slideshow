@@ -125,6 +125,15 @@
 		},
 		getSliderValue = function(name) {
 			return parseInt(sliders[name].slider('value'), 10);
+		},
+		toggleButtons = function(action) {
+			Object.getOwnPropertyNames(leopard.buttons).forEach(function(key) {
+				if (leopard.buttons.hasOwnProperty(key)) {
+					leopard.buttons[key].button(action);
+				};
+			});
+
+			return true;
 		};
 
 	/**
@@ -200,10 +209,17 @@
 		var $this = $(this),
 			i;
 
-		// Get all running directions timers
+		// Stop all running directions setTimeout calls
 		for (i = 0; i < directionTimers.length; i++) {
 			clearTimeout(directionTimers[i]);
 		}
+
+		leopard.buttons.$getDirections.spin(false);
+		toggleButtons('enable');
+
+		directionTimers = [];
+
+		$this.button('disable');
 	});
 
 	/**
