@@ -10,6 +10,13 @@
 			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
 			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
 		},
+		elements: {
+			containerSlider: '.js-container-slider',
+			imagesContainer: '.js-container-images',
+			imageContainer: '.js-container-image',
+			slider: '.js-slider',
+			sliderValue: '.js-slider-value'
+		},
 		geocoder: new google.maps.Geocoder(),
 		invalidAddress: /(^unnamed road)|(^[\w\d\s]+$)/i,
 		images: {
