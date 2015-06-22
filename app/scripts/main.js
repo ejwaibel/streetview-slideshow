@@ -68,7 +68,8 @@
 							if (finishedSteps === steps.length - 1) {
 								clearInterval(timer);
 								generateImage(destination);
-								leopard.buttons.$getDirections.button('enable').spin(false);
+								toggleButtons('enable');
+								leopard.buttons.$getDirections.spin(false);
 								leopard.buttons.$cancelDirections.button('disable');
 							}
 						}, 3000);
@@ -116,7 +117,8 @@
 		getDirectionsCallback = function(e) {
 			e.preventDefault();
 
-			leopard.buttons.$getDirections.button('disable').spin('medium', 100);
+			toggleButtons('disable');
+			leopard.buttons.$getDirections.spin('medium', 100);
 			leopard.buttons.$cancelDirections.button('enable');
 
 			generateDirectionsImages();
