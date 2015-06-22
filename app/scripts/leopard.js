@@ -10,6 +10,9 @@
 			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
 			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
 		},
+		buttons: {
+
+		},
 		elements: {
 			containerSlider: '.js-container-slider',
 			imagesContainer: '.js-container-images',

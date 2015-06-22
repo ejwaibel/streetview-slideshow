@@ -8,10 +8,6 @@
 			$fov: $('#fov-slider'),
 			$pitch: $('#pitch-slider')
 		},
-		$directionsCancelBtn = $('form .js-cancel-directions'),
-		$directionsBtn = $('form .js-get-directions'),
-		$getImageBtn = $('form .js-get-image'),
-		$randomAddressBtn = $('form .js-random-address'),
 		directionTimers = [],
 		displayImage = function($container, $image) {
 			$container.spin(false).append($image);
@@ -72,8 +68,8 @@
 							if (finishedSteps === steps.length - 1) {
 								clearInterval(timer);
 								generateImage(destination);
-								$directionsBtn.removeClass('disabled').spin(false);
-								$directionsCancelBtn.addClass('disabled');
+								leopard.buttons.$getDirections.button('enable').spin(false);
+								leopard.buttons.$cancelDirections.button('disable');
 							}
 						}, 3000);
 					} else {
@@ -120,12 +116,8 @@
 		getDirectionsCallback = function(e) {
 			e.preventDefault();
 
-			if ($directionsBtn.hasClass('disabled')) {
-				return false;
-			}
-
-			$directionsBtn.addClass('disabled').spin('medium', 100);
-			$directionsCancelBtn.removeClass('disabled');
+			leopard.buttons.$getDirections.button('disable').spin('medium', 100);
+			leopard.buttons.$cancelDirections.button('enable');
 
 			generateDirectionsImages();
 
@@ -140,9 +132,9 @@
 	 * @param  {[type]} e [description]
 	 * @return {[type]}   [description]
 	 */
-	$randomAddressBtn.on('click', function(e) {
+	leopard.buttons.$randomAddress.on('click', function(e) {
 		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parent(),
+			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
 			$input = $($target.data('selector')),
 			latlong = leopard.getRandomLatLong(),
 			addressDfd = $.Deferred(),
@@ -168,18 +160,13 @@
 				return addressDfd.promise();
 			},
 			randomAddressCallback = function(data) {
-				$target.spin(false);
-				$target.removeClass('disabled');
+				$target.button('enable').spin(false);
 				$input.val(data);
 			};
 
-		if ($target.hasClass('disabled')) {
-			return false;
-		}
-
 		$input.val('');
 
-		$target.addClass('disabled').spin('small', 100);
+		$target.button('disable').spin('small', 100);
 
 		// Wait for valid address to be returned
 		getRandomAddress(latlong);
@@ -192,7 +179,7 @@
 	/**
 	 * Get image from address button
 	 */
-	$getImageBtn.on('click', function(e) {
+	leopard.buttons.$getImage.on('click', function(e) {
 		var $element = $(e.target),
 			$target = $element.attr('data-selector') ? $element : $element.parent(),
 			$input = $($target.data('selector')),
@@ -209,13 +196,9 @@
 	/**
 	 * Cancel directions button
 	 */
-	$directionsCancelBtn.on('click', function() {
+	leopard.buttons.$cancelDirections.on('click', function() {
 		var $this = $(this),
 			i;
-
-		if ($this.hasClass('disabled')) {
-			return false;
-		}
 
 		// Get all running directions timers
 		for (i = 0; i < directionTimers.length; i++) {

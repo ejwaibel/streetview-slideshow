@@ -12,12 +12,15 @@
 	$(document).foundation();
 
 	/**
-	 * Setup global jQuery UI components
+	 * Setup jQuery UI Buttons
 	 */
-	$('button').button();
+	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').button({ disabled: true }),
+	leopard.buttons.$getDirections = $('form .js-get-directions').button(),
+	leopard.buttons.$getImage = $('form .js-get-image').button(),
+	leopard.buttons.$randomAddress = $('form .js-random-address').button(),
 
 	/**
-	 * Setup jQuery UI Widgets
+	 * Setup jQuery UI Sliders
 	 */
 	$(leopard.elements.slider).slider({
 		animate: true,
