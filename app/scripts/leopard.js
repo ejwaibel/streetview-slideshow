@@ -21,7 +21,7 @@
 			sliderValue: '.js-slider-value'
 		},
 		geocoder: new google.maps.Geocoder(),
-		invalidAddress: /(^unnamed road)|(^[\w\d\s]+$)/i,
+		invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
 		images: {
 			list: {
 				width: 400,
