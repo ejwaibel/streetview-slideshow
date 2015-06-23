@@ -68,9 +68,9 @@
 							if (finishedSteps === steps.length - 1) {
 								clearInterval(timer);
 								generateImage(destination);
-								toggleButtons('enable');
+								toggleButtons(false);
 								leopard.buttons.$getDirections.spin(false);
-								leopard.buttons.$cancelDirections.button('disable');
+								leopard.buttons.$cancelDirections.disable(true);
 							}
 						}, 3000);
 					} else {
@@ -88,7 +88,7 @@
 				imgUrl, $img, i;
 
 			$(leopard.elements.imagesContainer).append($imgContainer);
-			$imgContainer.spin('medium');
+			$imgContainer.spin('small');
 
 			imgUrl = streetviewTpl.apply({
 				key: leopard.api.key,
@@ -117,9 +117,9 @@
 		getDirectionsCallback = function(e) {
 			e.preventDefault();
 
-			toggleButtons('disable');
-			leopard.buttons.$getDirections.spin('medium', 100);
-			leopard.buttons.$cancelDirections.button('enable');
+			toggleButtons(true);
+			leopard.buttons.$getDirections.spin('large');
+			leopard.buttons.$cancelDirections.disable(false);
 
 			generateDirectionsImages();
 
@@ -131,7 +131,7 @@
 		toggleButtons = function(action) {
 			Object.getOwnPropertyNames(leopard.buttons).forEach(function(key) {
 				if (leopard.buttons.hasOwnProperty(key)) {
-					leopard.buttons[key].button(action);
+					leopard.buttons[key].disable(action);
 				};
 			});
 
@@ -171,13 +171,13 @@
 				return addressDfd.promise();
 			},
 			randomAddressCallback = function(data) {
-				$target.button('enable').spin(false);
+				$target.disable(false).spin(false);
 				$input.val(data);
 			};
 
 		$input.val('');
 
-		$target.button('disable').spin('small', 100);
+		$target.disable(true).spin('small');
 
 		// Wait for valid address to be returned
 		getRandomAddress(latlong);
@@ -217,11 +217,11 @@
 		}
 
 		leopard.buttons.$getDirections.spin(false);
-		toggleButtons('enable');
+		toggleButtons(false);
 
 		directionTimers = [];
 
-		$this.button('disable');
+		$this.disable(true);
 	});
 
 	/**
