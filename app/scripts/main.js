@@ -88,7 +88,7 @@
 				imgUrl, $img, i;
 
 			$(leopard.elements.imagesContainer).append($imgContainer);
-			$imgContainer.spin('small');
+			$imgContainer.spin('large');
 
 			imgUrl = streetviewTpl.apply({
 				key: leopard.api.key,
