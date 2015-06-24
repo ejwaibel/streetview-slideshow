@@ -2,6 +2,7 @@
 
 (function($, leopard) {
 	var imageTpl = new leopard.tpl($('#tpl-image-container').html()),
+		slideshowTpl = new leopard.tpl($('#tpl-slideshow-container').html()).apply(),
 		streetviewTpl = new leopard.tpl(leopard.api.streetview),
 		sliders = {
 			$heading: $('#heading-slider'),
@@ -103,9 +104,8 @@
 			});
 
 			$img = $('<img>', {
+				class: 'streetview-image',
 				src: imgUrl,
-				height: leopard.images.list.height,
-				width: leopard.images.list.width,
 				title: location
 			});
 
@@ -127,6 +127,49 @@
 		getSliderValue = function(name) {
 			return parseInt(sliders[name].slider('value'), 10);
 		},
+		randomAddressClickCallback = function(e) {
+			var $element = $(e.target),
+				$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
+				$input = $($target.data('selector')),
+				latlong = leopard.getRandomLatLong(),
+				addressDfd = $.Deferred(),
+				/**
+				 * Converts the given latitude/longitude values into a human
+				 * readable address. Continues to loop if the values given
+				 * do not return a valid address.
+				 * @param  {Object} latlng
+				 */
+				getRandomAddress = function(latlng) {
+					leopard.getFormattedAddress(latlng)
+						.done(function(results) {
+							addressDfd.resolve(results);
+						})
+						.fail(function(status) {
+							if (status === 'RETRY') {
+								getRandomAddress(leopard.getRandomLatLong());
+							} else {
+								addressDfd.fail(status);
+							}
+						});
+
+					return addressDfd.promise();
+				},
+				getRandomAddressCallback = function(data) {
+					$target.disable(false).spin(false);
+					$input.val(data);
+				};
+
+			$input.val('');
+
+			$target.disable(true).spin('small');
+
+			// Wait for valid address to be returned
+			getRandomAddress(latlong);
+
+			addressDfd
+				.done(getRandomAddressCallback)
+				.fail(getRandomAddressCallback);
+		},
 		toggleButtons = function(action) {
 			Object.getOwnPropertyNames(leopard.buttons).forEach(function(key) {
 				if (leopard.buttons.hasOwnProperty(key)) {
@@ -142,49 +185,7 @@
 	 * @param  {[type]} e [description]
 	 * @return {[type]}   [description]
 	 */
-	leopard.buttons.$randomAddress.on('click', function(e) {
-		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
-			$input = $($target.data('selector')),
-			latlong = leopard.getRandomLatLong(),
-			addressDfd = $.Deferred(),
-			/**
-			 * Converts the given latitude/longitude values into a human
-			 * readable address. Continues to loop if the values given
-			 * do not return a valid address.
-			 * @param  {Object} latlng
-			 */
-			getRandomAddress = function(latlng) {
-				leopard.getFormattedAddress(latlng)
-					.done(function(results) {
-						addressDfd.resolve(results);
-					})
-					.fail(function(status) {
-						if (status === 'RETRY') {
-							getRandomAddress(leopard.getRandomLatLong());
-						} else {
-							addressDfd.fail(status);
-						}
-					});
-
-				return addressDfd.promise();
-			},
-			randomAddressCallback = function(data) {
-				$target.disable(false).spin(false);
-				$input.val(data);
-			};
-
-		$input.val('');
-
-		$target.disable(true).spin('small');
-
-		// Wait for valid address to be returned
-		getRandomAddress(latlong);
-
-		addressDfd
-			.done(randomAddressCallback)
-			.fail(randomAddressCallback);
-	});
+	leopard.buttons.$randomAddress.on('click', randomAddressClickCallback);
 
 	/**
 	 * Get image from address button
@@ -221,6 +222,16 @@
 		directionTimers = [];
 
 		$this.disable(true);
+	});
+
+	leopard.buttons.$startSlideshow.on('click', function() {
+		var $images = $(leopard.elements.streetviewImage).clone(),
+			slider = $(slideshowTpl).append($images.wrapAll($('<div/>')));
+
+		$('.js-slideshow-dialog')
+			.append(slider)
+			.dialog(leopard.dialogOptions);
+		slider.slick(leopard.slickOptions);
 	});
 
 	/**
