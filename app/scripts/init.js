@@ -33,6 +33,7 @@
 	leopard.buttons.$getDirections = $('form .js-get-directions'),
 	leopard.buttons.$getImage = $('form .js-get-image'),
 	leopard.buttons.$randomAddress = $('form .js-random-address'),
+	leopard.buttons.$startSlideshow = $('.js-start-slideshow'),
 
 	/**
 	 * Setup jQuery UI Sliders
