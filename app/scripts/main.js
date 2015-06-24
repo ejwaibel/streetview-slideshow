@@ -33,7 +33,7 @@
 						return true;
 					}
 
-					window.alert('ERROR');
+					window.alert(address);
 				};
 
 			if (origin && destination) {
@@ -91,7 +91,6 @@
 			$imgContainer.spin('large');
 
 			imgUrl = streetviewTpl.apply({
-				key: leopard.api.key,
 				location: location,
 				heading: true,
 				headingValue: getSliderValue('$heading'),
