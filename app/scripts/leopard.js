@@ -13,9 +13,9 @@
 		elements: {
 			containerSlider: '.js-container-slider',
 			imagesContainer: '.js-container-images',
-			imageContainer: '.js-container-image',
 			slider: '.js-slider',
-			sliderValue: '.js-slider-value'
+			sliderValue: '.js-slider-value',
+			streetviewImage: '.streetview-image'
 		},
 		geocoder: new google.maps.Geocoder(),
 		/**
@@ -42,13 +42,9 @@
 		},
 		invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
 		images: {
-			list: {
-				width: 400,
-				height: 175
-			},
 			streetview: {
-				width: 1024,
-				height: 1024
+				width: 640,
+				height: 640
 			}
 		},
 		latitudeBoundary: {
@@ -111,6 +107,19 @@
 				latitude: (this.getRandom(this.latitudeBoundary.min, this.latitudeBoundary.max)).toFixed(fixed) * 1,
 				longitude: (this.getRandom(this.longitudeBoundary.min, this.longitudeBoundary.max)).toFixed(fixed) * 1
 			};
+		},
+		dialogOptions: {
+			height: 700,
+			modal: true,
+			resizable: false,
+			width: 800
+		},
+		slickOptions: {
+			arrows: true,
+			autoplay: true,
+			dots: true,
+			fade: true,
+			infinite: true
 		}
 	};
 
