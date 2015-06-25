@@ -34,6 +34,7 @@
 						return true;
 					}
 
+					// FIXME: Need to do something here
 					window.alert(address);
 				};
 

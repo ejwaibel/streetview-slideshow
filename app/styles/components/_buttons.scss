@@ -1,5 +1,7 @@
 .button {
-	&.disabled, &[disabled] {
+	&.disabled, &[disabled],
+	&.disabled.alert, &[disabled].alert,
+	&.disabled.success, &[disabled].success {
 		@include button-style($bg:#ccc, $disabled:true, $bg-hover:#ccc, $border-color:$button-border-color);
 	}
 }
