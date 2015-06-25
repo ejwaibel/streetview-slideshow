@@ -9,6 +9,7 @@
 .container-streetview-image {
 	display: inline-block;
 	position: relative;
+	height: rem-calc(255) !important;
 
 	.icon-remove {
 		position: absolute;

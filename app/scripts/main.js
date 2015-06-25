@@ -1,7 +1,7 @@
 'use strict';
 
 (function($, leopard) {
-	var imageTpl = new leopard.tpl($('#tpl-image-container').html()),
+	var imageTpl = new leopard.tpl($('#tpl-image-container').html()).apply(),
 		slideshowTpl = new leopard.tpl($('#tpl-slideshow-container').html()).apply(),
 		streetviewTpl = new leopard.tpl(leopard.api.streetview),
 		sliders = {
@@ -11,7 +11,7 @@
 		},
 		directionTimers = [],
 		displayImage = function($container, $image) {
-			$container.spin(false).append($image);
+			$container.append($image).spin(false);
 		},
 		generateDirectionsImages = function() {
 			var origin = $('#address-origin').val(),
@@ -85,7 +85,7 @@
 			return true;
 		},
 		generateImage = function(location) {
-			var $imgContainer = $(imageTpl.apply()),
+			var $imgContainer = $(imageTpl),
 				imgUrl, $img, i;
 
 			$(leopard.elements.imagesContainer).append($imgContainer);
@@ -109,7 +109,8 @@
 				title: location
 			});
 
-			$img.load(displayImage.call(this, $imgContainer, $img));
+			// Hack because $img.load() is too fast
+			setTimeout(displayImage, 500, $imgContainer, $img);
 
 			return;
 		},
