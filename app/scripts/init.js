@@ -14,9 +14,9 @@
 
 				if ($this.is('input, button')) {
 					this.disabled = state;
-				} else {
-					$this.toggleClass('disabled', state);
 				}
+
+				$this.toggleClass('disabled', state);
 			});
 		}
 	});
