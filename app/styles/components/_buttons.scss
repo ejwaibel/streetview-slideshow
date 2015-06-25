@@ -1,0 +1,5 @@
+.button {
+	&.disabled, &[disabled] {
+		@include button-style($bg:#ccc, $disabled:true, $bg-hover:#ccc, $border-color:$button-border-color);
+	}
+}
