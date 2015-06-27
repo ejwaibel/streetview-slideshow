@@ -109,15 +109,12 @@
 			};
 		},
 		dialogOptions: {
-			height: 700,
 			modal: true,
-			resizable: false,
-			width: 800
+			resizable: false
 		},
 		slickOptions: {
 			arrows: true,
 			autoplay: true,
-			dots: true,
 			fade: true,
 			infinite: true
 		}

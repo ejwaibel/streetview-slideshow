@@ -231,8 +231,9 @@
 			slider = $(slideshowTpl).append($images.wrapAll($('<div/>')));
 
 		$('.js-slideshow-dialog')
-			.append(slider)
-			.dialog(leopard.dialogOptions);
+			.empty()
+			.append(slider);
+
 		slider.slick(leopard.slickOptions);
 	});
 

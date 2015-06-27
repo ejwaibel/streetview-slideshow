@@ -48,7 +48,7 @@
 		</ul>
 		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 	</div>
-	<div class="slideshow-dialog js-slideshow-dialog"></div>
+	<div id="slideshow-dialog" class="reveal-modal js-slideshow-dialog" data-reveal aria-labelledby="slideshow dialog" aria-hidden="true" role="dialog"></div>
 	<form autocomplete="yes">
 		<!-- SLIDERS -->
 		<div class="row container-sliders js-streetview-options">
@@ -153,10 +153,9 @@
 
 	<div class="row">
 		<div class="columns">
-			<button type="button" class="button large js-start-slideshow" title="Start Slideshow">
+			<a class="button large js-start-slideshow" href="#" title="Start Slideshow" data-reveal-id="slideshow-dialog">
 				<i class="icon icon-slideshow fa fa-photo"></i>
-				<span>Start Slideshow</span>
-			</button>
+			</a>
 		</div>
 	</div>
 	<div class="row">
