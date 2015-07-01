@@ -90,7 +90,7 @@
 				imgUrl, $img, i;
 
 			$(leopard.elements.imagesContainer).append($imgContainer);
-			$imgContainer.spin('large');
+			$imgContainer.spin(leopard.spinOptions);
 
 			imgUrl = streetviewTpl.apply({
 				location: location,
@@ -119,7 +119,7 @@
 			e.preventDefault();
 
 			toggleButtons(true);
-			leopard.buttons.$getDirections.spin('large');
+			leopard.buttons.$getDirections.spin(leopard.spinOptions);
 			leopard.buttons.$cancelDirections.disable(false);
 
 			generateDirectionsImages();
@@ -163,7 +163,7 @@
 
 			$input.val('');
 
-			$target.disable(true).spin('small');
+			$target.disable(true).spin(leopard.spinOptions);
 
 			// Wait for valid address to be returned
 			getRandomAddress(latlong);
