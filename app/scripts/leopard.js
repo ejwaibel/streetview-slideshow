@@ -7,18 +7,58 @@
 (function() {
 	var leopard = {
 		api: {
-			key: 'AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4',
-			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&key={{key}}'
+			streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&sensor=false'
 		},
 		buttons: {},
+		dialogOptions: {
+			modal: true,
+			resizable: false
+		},
 		elements: {
 			containerSlider: '.js-container-slider',
 			imagesContainer: '.js-container-images',
-			imageContainer: '.js-container-image',
 			slider: '.js-slider',
-			sliderValue: '.js-slider-value'
+			sliderValue: '.js-slider-value',
+			streetviewImage: '.streetview-image'
 		},
 		geocoder: new google.maps.Geocoder(),
+		invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
+		images: {
+			streetview: {
+				width: 640,
+				height: 640
+			}
+		},
+		latitudeBoundary: {
+			min: 28.70,
+			max: 48.85
+		},
+		longitudeBoundary: {
+			min: -127.50,
+			max: -55.90
+		},
+		slickOptions: {
+			arrows: true,
+			autoplay: true,
+			fade: true,
+			infinite: true
+		},
+		spinOptions: {
+			lines: 15             // The number of lines to draw
+			, length: 15             // The length of each line
+			, width: 3              // The line thickness
+			, radius: 10            // The radius of the inner circle
+			, scale: 1.25            // Scales overall size of the spinner
+			, corners: .5            // Roundness (0..1)
+			, color: '#008cba'         // #rgb or #rrggbb
+			, opacity: 1/4          // Opacity of the lines
+			, rotate: 0             // Rotation offset
+			, direction: 1          // 1: clockwise, -1: counterclockwise
+			, speed: 1              // Rounds per second
+			, trail: 70            // Afterglow percentage
+			, fps: 20               // Frames per second when using setTimeout()
+			, shadow: true         // Whether to render a shadow
+		},
 		/**
 		 * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
 		 */
@@ -40,25 +80,6 @@
 			var dataURL = canvas.toDataURL('image/png');
 
 			return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
-		},
-		invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
-		images: {
-			list: {
-				width: 400,
-				height: 175
-			},
-			streetview: {
-				width: 1024,
-				height: 1024
-			}
-		},
-		latitudeBoundary: {
-			min: 28.70,
-			max: 48.85
-		},
-		longitudeBoundary: {
-			min: -127.50,
-			max: -55.90
 		},
 		/**
 		 * Converts the given latitude/longitude values into a human

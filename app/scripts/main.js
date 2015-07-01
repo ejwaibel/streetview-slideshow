@@ -1,7 +1,8 @@
 'use strict';
 
 (function($, leopard) {
-	var imageTpl = new leopard.tpl($('#tpl-image-container').html()),
+	var imageTpl = new leopard.tpl($('#tpl-image-container').html()).apply(),
+		slideshowTpl = new leopard.tpl($('#tpl-slideshow-container').html()).apply(),
 		streetviewTpl = new leopard.tpl(leopard.api.streetview),
 		sliders = {
 			$heading: $('#heading-slider'),
@@ -10,7 +11,7 @@
 		},
 		directionTimers = [],
 		displayImage = function($container, $image) {
-			$container.spin(false).append($image);
+			$container.append($image).spin(false);
 		},
 		generateDirectionsImages = function() {
 			var origin = $('#address-origin').val(),
@@ -33,7 +34,8 @@
 						return true;
 					}
 
-					window.alert('ERROR');
+					// FIXME: Need to do something here
+					window.alert(address);
 				};
 
 			if (origin && destination) {
@@ -68,9 +70,9 @@
 							if (finishedSteps === steps.length - 1) {
 								clearInterval(timer);
 								generateImage(destination);
-								toggleButtons('enable');
+								toggleButtons(false);
 								leopard.buttons.$getDirections.spin(false);
-								leopard.buttons.$cancelDirections.button('disable');
+								leopard.buttons.$cancelDirections.disable(true);
 							}
 						}, 3000);
 					} else {
@@ -84,14 +86,13 @@
 			return true;
 		},
 		generateImage = function(location) {
-			var $imgContainer = $(imageTpl.apply()),
+			var $imgContainer = $(imageTpl),
 				imgUrl, $img, i;
 
 			$(leopard.elements.imagesContainer).append($imgContainer);
-			$imgContainer.spin('medium');
+			$imgContainer.spin(leopard.spinOptions);
 
 			imgUrl = streetviewTpl.apply({
-				key: leopard.api.key,
 				location: location,
 				heading: true,
 				headingValue: getSliderValue('$heading'),
@@ -104,22 +105,22 @@
 			});
 
 			$img = $('<img>', {
+				class: 'streetview-image',
 				src: imgUrl,
-				height: leopard.images.list.height,
-				width: leopard.images.list.width,
 				title: location
 			});
 
-			$img.load(displayImage.call(this, $imgContainer, $img));
+			// Hack because $img.load() is too fast
+			setTimeout(displayImage, 500, $imgContainer, $img);
 
 			return;
 		},
 		getDirectionsCallback = function(e) {
 			e.preventDefault();
 
-			toggleButtons('disable');
-			leopard.buttons.$getDirections.spin('medium', 100);
-			leopard.buttons.$cancelDirections.button('enable');
+			toggleButtons(true);
+			leopard.buttons.$getDirections.spin(leopard.spinOptions);
+			leopard.buttons.$cancelDirections.disable(false);
 
 			generateDirectionsImages();
 
@@ -128,10 +129,53 @@
 		getSliderValue = function(name) {
 			return parseInt(sliders[name].slider('value'), 10);
 		},
+		randomAddressClickCallback = function(e) {
+			var $element = $(e.target),
+				$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
+				$input = $($target.data('selector')),
+				latlong = leopard.getRandomLatLong(),
+				addressDfd = $.Deferred(),
+				/**
+				 * Converts the given latitude/longitude values into a human
+				 * readable address. Continues to loop if the values given
+				 * do not return a valid address.
+				 * @param  {Object} latlng
+				 */
+				getRandomAddress = function(latlng) {
+					leopard.getFormattedAddress(latlng)
+						.done(function(results) {
+							addressDfd.resolve(results);
+						})
+						.fail(function(status) {
+							if (status === 'RETRY') {
+								getRandomAddress(leopard.getRandomLatLong());
+							} else {
+								addressDfd.fail(status);
+							}
+						});
+
+					return addressDfd.promise();
+				},
+				getRandomAddressCallback = function(data) {
+					$target.disable(false).spin(false);
+					$input.val(data);
+				};
+
+			$input.val('');
+
+			$target.disable(true).spin(leopard.spinOptions);
+
+			// Wait for valid address to be returned
+			getRandomAddress(latlong);
+
+			addressDfd
+				.done(getRandomAddressCallback)
+				.fail(getRandomAddressCallback);
+		},
 		toggleButtons = function(action) {
 			Object.getOwnPropertyNames(leopard.buttons).forEach(function(key) {
 				if (leopard.buttons.hasOwnProperty(key)) {
-					leopard.buttons[key].button(action);
+					leopard.buttons[key].disable(action);
 				};
 			});
 
@@ -143,49 +187,7 @@
 	 * @param  {[type]} e [description]
 	 * @return {[type]}   [description]
 	 */
-	leopard.buttons.$randomAddress.on('click', function(e) {
-		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
-			$input = $($target.data('selector')),
-			latlong = leopard.getRandomLatLong(),
-			addressDfd = $.Deferred(),
-			/**
-			 * Converts the given latitude/longitude values into a human
-			 * readable address. Continues to loop if the values given
-			 * do not return a valid address.
-			 * @param  {Object} latlng
-			 */
-			getRandomAddress = function(latlng) {
-				leopard.getFormattedAddress(latlng)
-					.done(function(results) {
-						addressDfd.resolve(results);
-					})
-					.fail(function(status) {
-						if (status === 'RETRY') {
-							getRandomAddress(leopard.getRandomLatLong());
-						} else {
-							addressDfd.fail(status);
-						}
-					});
-
-				return addressDfd.promise();
-			},
-			randomAddressCallback = function(data) {
-				$target.button('enable').spin(false);
-				$input.val(data);
-			};
-
-		$input.val('');
-
-		$target.button('disable').spin('small', 100);
-
-		// Wait for valid address to be returned
-		getRandomAddress(latlong);
-
-		addressDfd
-			.done(randomAddressCallback)
-			.fail(randomAddressCallback);
-	});
+	leopard.buttons.$randomAddress.on('click', randomAddressClickCallback);
 
 	/**
 	 * Get image from address button
@@ -217,11 +219,22 @@
 		}
 
 		leopard.buttons.$getDirections.spin(false);
-		toggleButtons('enable');
+		toggleButtons(false);
 
 		directionTimers = [];
 
-		$this.button('disable');
+		$this.disable(true);
+	});
+
+	leopard.buttons.$startSlideshow.on('click', function() {
+		var $images = $(leopard.elements.streetviewImage).clone(),
+			slider = $(slideshowTpl).append($images.wrapAll($('<div/>')));
+
+		$('.js-slideshow-dialog')
+			.empty()
+			.append(slider);
+
+		slider.slick(leopard.slickOptions);
 	});
 
 	/**

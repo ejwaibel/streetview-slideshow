@@ -6,6 +6,21 @@
 				.text(ui.value);
 		};
 
+	// Extended disable function
+	jQuery.fn.extend({
+		disable: function(state) {
+			return this.each(function() {
+				var $this = $(this);
+
+				if ($this.is('input, button')) {
+					this.disabled = state;
+				}
+
+				$this.toggleClass('disabled', state);
+			});
+		}
+	});
+
 	/**
 	 * Setup Foundation components and default values
 	 */
@@ -14,10 +29,11 @@
 	/**
 	 * Setup jQuery UI Buttons
 	 */
-	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').button({ disabled: true }),
-	leopard.buttons.$getDirections = $('form .js-get-directions').button(),
-	leopard.buttons.$getImage = $('form .js-get-image').button(),
-	leopard.buttons.$randomAddress = $('form .js-random-address').button(),
+	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').disable(true),
+	leopard.buttons.$getDirections = $('form .js-get-directions'),
+	leopard.buttons.$getImage = $('form .js-get-image'),
+	leopard.buttons.$randomAddress = $('form .js-random-address'),
+	leopard.buttons.$startSlideshow = $('.js-start-slideshow'),
 
 	/**
 	 * Setup jQuery UI Sliders

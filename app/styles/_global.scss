@@ -9,13 +9,13 @@
 .container-streetview-image {
 	display: inline-block;
 	position: relative;
-}
+	height: rem-calc(255) !important;
 
-.right-block-position {
-	position: absolute;
-	// right: $block-grid-default-spacing;
-	right: 0;
-	top: -20px;
+	.icon-remove {
+		position: absolute;
+		right: 0;
+		top: rem-calc(-12);
+	}
 }
 
 .help-link {

@@ -9,24 +9,26 @@
 
 	<!-- build:css styles/vendor.css -->
 	<!-- bower:css -->
-	<link rel="stylesheet" href="bower_components/foundation/css/foundation.css" />
-	<link rel="stylesheet" href="bower_components/foundation-icon-fonts/foundation-icons.css" />
 	<link rel="stylesheet" href="bower_components/slick-carousel/slick/slick.css" />
 	<link rel="stylesheet" href="bower_components/slick-carousel/slick/slick-theme.css" />
+	<link rel="stylesheet" href="bower_components/fontawesome/css/font-awesome.css" />
+	<link rel="stylesheet" href="bower_components/jquery-ui/themes/cupertino/jquery-ui.min.css">
 	<!-- endbower -->
 	<!-- endbuild -->
 
 	<!-- build:css({.tmp,app}) styles/main.css -->
 	<link rel="stylesheet" href="styles/main.css">
-	<link rel="stylesheet" href="bower_components/jquery-ui/themes/dark-hive/jquery-ui.min.css">
 	<!-- endbuild -->
 
 	<!-- TEMPLATES -->
 	<!-- build:js scripts/templates.js -->
 	<template id="tpl-image-container">
 		<li class="container-streetview-image js-container-image">
-			<i class="fi-x icon-remove clickable right-block-position js-remove-image"></i>
+			<i class="icon icon-remove fa fa-remove clickable js-remove-image"></i>
 		</li>
+	</template>
+	<template id="tpl-slideshow-container">
+		<div class="carousel-container js-carousel"></div>
 	</template>
 	<!-- endbuild -->
 </head>
@@ -46,6 +48,7 @@
 		</ul>
 		<a class="close-reveal-modal" aria-label="Close">&#215;</a>
 	</div>
+	<div id="slideshow-dialog" class="reveal-modal js-slideshow-dialog" data-reveal aria-labelledby="slideshow dialog" aria-hidden="true" role="dialog"></div>
 	<form autocomplete="yes">
 		<!-- SLIDERS -->
 		<div class="row container-sliders js-streetview-options">
@@ -89,14 +92,18 @@
 				<div class="columns small-12">
 					<label for="address-origin">Origin</label>
 					<div class="row collapse">
-						<div class="columns small-1">
-							<button type="button" class="button primary prefix js-random-address" data-selector="#address-origin" title="Random Address"><i class="icon fi-refresh"></i></button>
+						<div class="columns small-2 medium-1">
+							<button type="button" class="button btn-labeled primary prefix js-random-address" data-selector="#address-origin" title="Random Address">
+								<i class="icon icon-refresh fa fa-refresh"></i>
+							</button>
 						</div>
-						<div class="columns small-10">
+						<div class="columns small-8 medium-10">
 							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
 						</div>
-						<div class="columns small-1">
-							<button type="button" class="button primary prefix js-get-image" data-selector="#address-origin" title="Generate Image"><i class="icon fi-camera"></i></button>
+						<div class="columns small-2 medium-1">
+							<button type="button" class="button primary prefix js-get-image" data-selector="#address-origin" title="Generate Image">
+								<i class="icon icon-streetview fa fa-street-view"></i>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -105,14 +112,18 @@
 				<div class="columns small-12">
 					<label for="address-destination">Destination</label>
 					<div class="row collapse">
-						<div class="columns small-1">
-							<button type="button" class="button primary prefix js-random-address" data-selector="#address-destination" title="Random Address"><i class="icon fi-refresh"></i></button>
+						<div class="columns small-2 medium-1">
+							<button type="button" class="button primary prefix js-random-address" data-selector="#address-destination" title="Random Address">
+								<i class="icon icon-refresh fa fa-refresh"></i>
+							</button>
 						</div>
-						<div class="columns small-10">
+						<div class="columns small-8 medium-10">
 							<input type="text" id="address-destination" name="address-destination" class="form-control" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
 						</div>
-						<div class="columns small-1">
-							<button type="button" class="button primary prefix js-get-image" data-selector="#address-destination" title="Generate Image"><i class="icon fi-camera"></i></button>
+						<div class="columns small-2 medium-1">
+							<button type="button" class="button primary prefix js-get-image" data-selector="#address-destination" title="Generate Image">
+								<i class="icon icon-streetview fa fa-street-view"></i>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -122,17 +133,31 @@
 
 		<!-- FORM SUBMIT -->
 		<div class="row">
-			<div class="columns small-10">
-				<button type="submit" class="button right js-get-directions" tab-index="3" title="Generate Images from Directions">Generate Images from Directions</button>
+			<div class="right">
+				<button type="button" class="button tiny alert disabled js-cancel-directions" tab-index="4" title="cancel" disabled>
+					<i class="icon fa fa-ban btn-danger"></i>
+				</button>
 			</div>
-			<div class="columns small-2">
-				<button type="button" class="button right js-cancel-directions" tab-index="4" title="cancel">CANCEL</button>
+			<div class="right">
+				<button type="submit" class="button tiny success js-get-directions" tab-index="3" title="Generate Images from Directions">
+					<i class="icon icon-car fa fa-car"></i>
+					<i class="icon icon-camera fa fa-camera"></i>
+				</button>
 			</div>
 		</div>
 		<!-- END: FORM SUBMIT -->
 	</form>
-	<a class="help-link" href="#" title="Help" data-reveal-id="help"><i class="fi-info help-icon"></i></a>
+	<a class="help-link" href="#" title="Help" data-reveal-id="help">
+		<i class="icon help-icon fa fa-2x fa-question-circle"></i>
+	</a>
 
+	<div class="row">
+		<div class="columns">
+			<a class="button large js-start-slideshow" href="#" title="Start Slideshow" data-reveal-id="slideshow-dialog">
+				<i class="icon icon-slideshow fa fa-photo"></i>
+			</a>
+		</div>
+	</div>
 	<div class="row">
 		<div class="columns">
 			<ul class="js-container-images large-block-grid-5 medium-block-grid-4 small-block-grid-3"></ul>
@@ -147,7 +172,8 @@
 	<script src="bower_components/jquery.cookie/jquery.cookie.js"></script>
 	<script src="bower_components/jquery-placeholder/jquery.placeholder.js"></script>
 	<script src="bower_components/foundation/js/foundation.js"></script>
-	<script src="bower_components/spin.js/spin.js"></script>
+	<script src="bower_components/spin.js/spin.min.js"></script>
+	<script src="bower_components/spin.js/jquery.spin.js"></script>
 	<script src="bower_components/jquery-ui/jquery-ui.js"></script>
 	<script src="bower_components/slick-carousel/slick/slick.min.js"></script>
 	<!-- endbower -->
@@ -156,8 +182,7 @@
 	<!-- endbuild -->
 
 	<!-- build:js scripts/main.js -->
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB1jk8Ai169dtl2k6kYatTRiU7ul6gZZd4"></script>
-	<script src="scripts/libs/jquery.spin.js"></script>
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
 	<script src="scripts/leopard.js"></script>
 	<script src="scripts/template.js"></script>
 	<script src="scripts/init.js"></script>
