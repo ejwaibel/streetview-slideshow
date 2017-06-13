@@ -5,6 +5,6 @@
 // }
 
 .reveal-modal {
-	background-color: #008CBA;
-	width: rem-calc(780);
+	background-color: #008cba;
+	max-width: $small-breakpoint;
 }

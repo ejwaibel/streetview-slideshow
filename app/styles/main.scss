@@ -1,14 +1,12 @@
 // Overwrite Foundation _settings.scss
-@import "settings";
+@import 'settings';
 
 // bower:scss
-@import "../bower_components/foundation/scss/normalize";
-@import "../bower_components/foundation/scss/foundation";
 // endbower
 
-@import "global";
-@import "components/buttons";
+@import 'global';
+@import 'theme';
+@import 'components/buttons';
 @import 'components/forms';
 @import 'components/icons';
-@import "components/jquery-ui";
 @import 'components/slideshow';
