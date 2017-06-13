@@ -1,9 +1,14 @@
-'use strict';
+import init from './init.js';
+import spinner from './libs/jquery.spin.js';
+import { leopard } from './leopard.js';
+import { Template } from './template.js';
 
-(function($, leopard) {
-	var imageTpl = new leopard.tpl($('#tpl-image-container').html()).apply(),
-		slideshowTpl = new leopard.tpl($('#tpl-slideshow-container').html()).apply(),
-		streetviewTpl = new leopard.tpl(leopard.api.streetview),
+$(function() {
+	init();
+
+	var imageTpl = leopard.templates.img,
+		slideshowTpl = leopard.templates.slideshow,
+		streetviewTpl = new Template(leopard.api.streetview),
 		sliders = {
 			$heading: $('#heading-slider'),
 			$fov: $('#fov-slider'),
@@ -243,4 +248,4 @@
 	$(leopard.elements.imagesContainer).on('click', '.js-remove-image', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
 	});
-})(jQuery, window.leopard);
+});

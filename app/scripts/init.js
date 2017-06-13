@@ -1,4 +1,6 @@
-(function($, leopard) {
+import { leopard } from './leopard.js';
+
+export default function init() {
 	var sliderUpdate = function(event, ui) {
 			$(event.target)
 				.parents(leopard.elements.containerSlider)
@@ -54,4 +56,4 @@
 	});
 	$('#fov-slider').slider('option', { max: 120 }).slider('value', 90);
 	$('#pitch-slider').slider('option', { max: 90, min: -90 }).slider('value', 0);
-})(jQuery, window.leopard);
+};
