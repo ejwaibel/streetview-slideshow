@@ -1,14 +1,12 @@
 {
-	"disallowAnonymousFunctions": null,
-	"disallowCapitalizedComments": null,
-	"disallowCommaBeforeLineBreak": null,
 	"disallowCurlyBraces": [],
-	"disallowDanglingUnderscores": { "allExcept": ["_gm", "_defaults", "_name", "_settings", "_options"] },
+	"disallowDanglingUnderscores": {
+		"allExcept": ["_defaults", "_name", "_super"]
+	},
 	"disallowEmptyBlocks": true,
-	"disallowFunctionDeclarations": null,
 	"disallowIdentifierNames": [],
 	"disallowImplicitTypeConversion": [],
-	"disallowKeywordsInComments": [ "FIXME" ],
+	"disallowKeywordsInComments": [ "TODO", "FIXME" ],
 	"disallowKeywordsOnNewLine": [ "else" ],
 	"disallowKeywords": [ "with" ],
 	"disallowMixedSpacesAndTabs": true,
@@ -24,14 +22,12 @@
 	"disallowPaddingNewLinesAfterUseStrict": null,
 	"disallowPaddingNewLinesBeforeExport": null,
 	"disallowPaddingNewlinesBeforeKeywords": [],
-	"disallowPaddingNewLinesBeforeLineComments": null,
 	"disallowPaddingNewlinesInBlocks": true,
 	"disallowPaddingNewLinesInObjects": null,
 	"disallowQuotedKeysInObjects": true,
 	"disallowSemicolons": null,
 	"disallowSpaceAfterBinaryOperators": [],
 	"disallowSpaceAfterKeywords": [],
-	"disallowSpaceAfterLineComment": null,
 	"disallowSpaceAfterObjectKeys": true,
 	"disallowSpaceAfterPrefixUnaryOperators": true,
 	"disallowSpaceBeforeBinaryOperators": [],
@@ -65,16 +61,19 @@
 	"disallowTrailingComma": true,
 	"disallowTrailingWhitespace": true,
 	"disallowYodaConditions": true,
+	"maxErrors": -1,
 	"maximumLineLength": {
 		"value": 90,
 		"tabSize": 1,
-		"allowComments": true,
-		"allowUrlComments": true,
-		"allowRegex": true
+		"allExcept": [
+			"regex",
+			"comments",
+			"urlComments",
+			"functionSignature"
+		]
 	},
 	"requireBlocksOnNewline": true,
 	"requireCamelCaseOrUpperCaseIdentifiers": "ignoreProperties",
-	"requireCapitalizedComments": { "allExcept": ["jshint", "window", "jquery", "jQuery", "document", "undefined", "global", "libsass", "console"] },
 	"requireCapitalizedConstructors": true,
 	"requireCommaBeforeLineBreak": true,
 	"requireCommaBeforeLineBreak": true,
@@ -96,13 +95,10 @@
 		"switch",
 		"case",
 		"try",
-		"catch",
 		"void",
 		"with",
-		"return",
-		"typeof"
+		"return"
 	],
-	"requirePaddingNewLinesBeforeLineComments": { "allExcept": "firstAfterCurly" },
 	"requireParenthesesAroundIIFE": true,
 	"requireSemicolons": true,
 	"requireSpaceAfterBinaryOperators": true,
@@ -153,11 +149,10 @@
 	"requireSpacesInsideObjectBrackets": "allButNested",
 	"safeContextKeyword": ["self"],
 	"validateIndentation": "\t",
-	"validateJSDoc": {
+	"jsDoc": {
 		"checkParamNames": true,
 		"requireParamTypes": true
 	},
-	"validateLineBreaks": "LF",
 	"validateParameterSeparator": ", ",
 	"validateQuoteMarks": "'"
 }
