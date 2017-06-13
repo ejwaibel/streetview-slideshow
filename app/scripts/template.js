@@ -1,8 +1,8 @@
 'use strict';
 
-(function() {
-	var Template = function(config) {
-		this._template = null;
+export class Template {
+	constructor(config) {
+		this.tpl = null;
 
 		if (typeof config === 'string') {
 			this.init(config);
@@ -15,27 +15,24 @@
 				this.onLoad = config.onLoad;
 			}
 		}
-	};
+	}
 
-	Template.prototype.init = function(template) {
-		this._template = Hogan.compile(template.replace(/[\r\n\t]+/gm, '').replace(/<!--.*?-->/g, ''));
+	init(template) {
+		this.tpl = Handlebars.compile(template.replace(/[\r\n\t]+/gm, ''));
+	}
 
-		return this;
-	};
-
-	Template.prototype.apply = function(map, partials) {
-		var mappedPartials = {}, key;
+	apply(map, partials) {
+		var mappedPartials = {},
+			key;
 
 		for (key in partials) {
 			mappedPartials[key] = partials[key] instanceof Template ? partials[key].toString() : partials[key];
 		}
 
-		return this._template.render(map, mappedPartials);
+		return this.tpl(map, mappedPartials);
 	};
 
-	Template.prototype.toString = function() {
-		return this._template.text;
+	toString() {
+		return this.tpl.text;
 	};
-
-	leopard.tpl = Template;
-})();
+}
