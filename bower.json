@@ -9,7 +9,7 @@
     "swiper": "^3.4.2",
     "modernizr": "^3.5.0",
     "moment": "^2.18.1",
-    "jquery": "2.2.0",
+    "jquery": "2.1.4",
     "handlebars": "^4.0.10"
   }
 }
