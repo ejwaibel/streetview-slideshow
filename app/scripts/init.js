@@ -1,11 +1,11 @@
-import { leopard } from './leopard.js';
+import { config } from './config.js';
 import { Template } from './template.js';
 
 export default function init() {
 	var sliderUpdate = function(event, ui) {
 			$(event.target)
-				.parents(leopard.elements.sliderContainer)
-				.find(leopard.elements.sliderValue)
+				.parents(config.elements.containerSlider)
+				.find(config.elements.sliderValue)
 				.text(ui.value);
 		};
 
@@ -29,30 +29,30 @@ export default function init() {
 	 */
 	$(document).foundation();
 	$(document).on('opened.fndtn.reveal', function() {
-		let swiper = new Swiper(leopard.elements.carousel, leopard.carouselOptions);
+		let swiper = new Swiper(config.elements.carousel, config.carouselOptions);
 	});
 
 	/**
 	 * Setup jQuery UI Buttons
 	 */
-	leopard.buttons.$cancelDirections = $('form .js-cancel-directions').disable(true),
-	leopard.buttons.$getDirections = $('form .js-get-directions'),
-	leopard.buttons.$getImage = $('form .js-get-image'),
-	leopard.buttons.$randomAddress = $('form .js-random-address'),
-	leopard.buttons.$startSlideshow = $('.js-start-slideshow'),
+	config.buttons.$cancelDirections = $('form .js-cancel-directions').disable(true),
+	config.buttons.$getDirections = $('form .js-get-directions'),
+	config.buttons.$getImage = $('form .js-get-image'),
+	config.buttons.$randomAddress = $('form .js-random-address'),
+	config.buttons.$startSlideshow = $('.js-start-slideshow'),
 
 	/**
 	 * Setup jQuery UI Sliders
 	 */
-	$(leopard.elements.slider).slider({
+	$(config.elements.slider).slider({
 		animate: true,
 		min: 0,
 		max: 180,
 		range: 'min',
 		create: function(event) {
 			$(event.target)
-				.parents(leopard.elements.sliderContainer)
-				.find(leopard.elements.sliderValue)
+				.parents(config.elements.containerSlider)
+				.find(config.elements.sliderValue)
 				.text(0);
 		},
 		change: sliderUpdate,

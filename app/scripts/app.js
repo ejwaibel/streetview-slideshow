@@ -1,23 +1,14 @@
-import init from './init.js';
-import spinner from './libs/jquery.spin.js';
-import { leopard } from './leopard.js';
-import { Template } from './template.js';
+import init from './init';
+import spinner from './libs/jquery.spin';
+import { config } from './config';
+import { utils } from './utils';
+import { Template } from './template';
 
 $(function() {
 	init();
 
-	var imageTpl = leopard.templates.img,
-		slideshowTpl = new Template(leopard.templates.slideshow),
-		streetviewTpl = new Template(leopard.api.streetview),
-		sliders = {
-			$heading: $('#heading-slider'),
-			$fov: $('#fov-slider'),
-			$pitch: $('#pitch-slider')
-		},
+	var slideshowTpl = new Template(config.templates.slideshow),
 		directionTimers = [],
-		displayImage = function($container, $image) {
-			$container.append($image).spin(false);
-		},
 		generateDirectionsImages = function() {
 			var origin = $('#address-origin').val(),
 				destination = $('#address-destination').val(),
@@ -28,13 +19,13 @@ $(function() {
 				geocodeDirection = function(step) {
 					var start = step.start_location;
 
-					return leopard.getFormattedAddress(start);
+					return utils.getFormattedAddress(start);
 				},
 				geocodeCallback = function(address) {
 					finishedSteps++;
 
 					if (address !== 'RETRY') {
-						generateImage(address);
+						utils.generateImage(address);
 
 						return true;
 					}
@@ -44,6 +35,8 @@ $(function() {
 				};
 
 			if (origin && destination) {
+				config.buttons.$startSlideshow.removeAttr('disabled');
+
 				directionsRequest = {
 					origin: origin,
 					destination: destination,
@@ -56,7 +49,7 @@ $(function() {
 					if (status === google.maps.DirectionsStatus.OK) {
 						steps = result.routes[0].legs[0].steps;
 
-						generateImage(origin);
+						utils.generateImage(origin);
 						finishedSteps++;
 
 						// Only steps in between origin & destination
@@ -74,10 +67,10 @@ $(function() {
 						timer = setInterval(function() {
 							if (finishedSteps === steps.length - 1) {
 								clearInterval(timer);
-								generateImage(destination);
-								toggleButtons(false);
-								leopard.buttons.$getDirections.spin(false);
-								leopard.buttons.$cancelDirections.disable(true);
+								utils.generateImage(destination);
+								utils.toggleButtons(false);
+								config.buttons.$getDirections.spin(false);
+								config.buttons.$cancelDirections.disable(true);
 							}
 						}, 3000);
 					} else {
@@ -90,55 +83,22 @@ $(function() {
 
 			return true;
 		},
-		generateImage = function(location) {
-			var $imgContainer = $(imageTpl),
-				imgUrl, $img, i;
-
-			$(leopard.elements.imagesContainer).append($imgContainer);
-			$imgContainer.spin(leopard.spinOptions);
-
-			imgUrl = streetviewTpl.apply({
-				location: location,
-				heading: true,
-				headingValue: getSliderValue('$heading'),
-				imageWidth: leopard.images.streetview.width,
-				imageHeight: leopard.images.streetview.width,
-				fov: true,
-				fovValue: getSliderValue('$fov'),
-				pitch: true,
-				pitchValue: getSliderValue('$pitch')
-			});
-
-			$img = $('<img>', {
-				class: 'streetview-image',
-				src: imgUrl,
-				title: location
-			});
-
-			// Hack because $img.load() is too fast
-			setTimeout(displayImage, 500, $imgContainer, $img);
-
-			return;
-		},
 		getDirectionsCallback = function(e) {
 			e.preventDefault();
 
-			toggleButtons(true);
-			leopard.buttons.$getDirections.spin(leopard.spinOptions);
-			leopard.buttons.$cancelDirections.disable(false);
+			utils.toggleButtons(true);
+			config.buttons.$getDirections.spin(config.spinOptions);
+			config.buttons.$cancelDirections.disable(false);
 
 			generateDirectionsImages();
 
 			return;
 		},
-		getSliderValue = function(name) {
-			return parseInt(sliders[name].slider('value'), 10);
-		},
 		randomAddressClickCallback = function(e) {
 			var $element = $(e.target),
 				$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
 				$input = $($target.data('selector')),
-				latlong = leopard.getRandomLatLong(),
+				latlong = utils.getRandomLatLong(),
 				addressDfd = $.Deferred(),
 				/**
 				 * Converts the given latitude/longitude values into a human
@@ -147,13 +107,13 @@ $(function() {
 				 * @param  {Object} latlng
 				 */
 				getRandomAddress = function(latlng) {
-					leopard.getFormattedAddress(latlng)
+					utils.getFormattedAddress(latlng)
 						.done(function(results) {
 							addressDfd.resolve(results);
 						})
 						.fail(function(status) {
 							if (status === 'RETRY') {
-								getRandomAddress(leopard.getRandomLatLong());
+								getRandomAddress(utils.getRandomLatLong());
 							} else {
 								addressDfd.fail(status);
 							}
@@ -168,7 +128,7 @@ $(function() {
 
 			$input.val('');
 
-			$target.disable(true).spin(leopard.spinOptions);
+			$target.disable(true).spin(config.spinOptions);
 
 			// Wait for valid address to be returned
 			getRandomAddress(latlong);
@@ -176,15 +136,6 @@ $(function() {
 			addressDfd
 				.done(getRandomAddressCallback)
 				.fail(getRandomAddressCallback);
-		},
-		toggleButtons = function(action) {
-			Object.getOwnPropertyNames(leopard.buttons).forEach(function(key) {
-				if (leopard.buttons.hasOwnProperty(key)) {
-					leopard.buttons[key].disable(action);
-				};
-			});
-
-			return true;
 		};
 
 	/**
@@ -192,18 +143,18 @@ $(function() {
 	 * @param  {[type]} e [description]
 	 * @return {[type]}   [description]
 	 */
-	leopard.buttons.$randomAddress.on('click', randomAddressClickCallback);
+	config.buttons.$randomAddress.on('click', randomAddressClickCallback);
 
 	/**
 	 * Get image from address button
 	 */
-	leopard.buttons.$getImage.on('click', function(e) {
+	config.buttons.$getImage.on('click', function(e) {
 		var $element = $(e.target),
 			$target = $element.attr('data-selector') ? $element : $element.parent(),
 			$input = $($target.data('selector')),
 			address = $input.val();
 
-		generateImage(address);
+		utils.generateImage(address);
 	});
 
 	/**
@@ -214,7 +165,7 @@ $(function() {
 	/**
 	 * Cancel directions button
 	 */
-	leopard.buttons.$cancelDirections.on('click', function() {
+	config.buttons.$cancelDirections.on('click', function() {
 		var $this = $(this),
 			i;
 
@@ -223,25 +174,25 @@ $(function() {
 			clearTimeout(directionTimers[i]);
 		}
 
-		leopard.buttons.$getDirections.spin(false);
-		toggleButtons(false);
+		config.buttons.$getDirections.spin(false);
+		utils.toggleButtons(false);
 
 		directionTimers = [];
 
 		$this.disable(true);
 	});
 
-	leopard.buttons.$startSlideshow.on('click', function(e) {
-		var $images = $(leopard.elements.streetviewImage).clone(),
+	config.buttons.$startSlideshow.on('click', function(e) {
+		var $images = $(config.elements.streetviewImage).clone(),
 			slides = $images.map(function(index, el) {
 				return el.outerHTML;
 			}).toArray(),
 			$scroller = $(slideshowTpl.apply({ slides: slides })),
-			$dialog = $(leopard.elements.dialog);
+			$dialogContent = $(config.elements.dialogContent);
 
 		e.preventDefault();
 
-		$dialog
+		$dialogContent
 			.empty()
 			.append($scroller);
 	});
@@ -249,7 +200,7 @@ $(function() {
 	/**
 	 * Remove image icon
 	 */
-	$(leopard.elements.imagesContainer).on('click', '.js-remove-image', function() {
+	$(config.elements.imagesContainer).on('click', '.js-remove-image', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
 	});
 });
