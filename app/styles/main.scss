@@ -1,5 +1,6 @@
 // Overwrite Foundation _settings.scss
-@import 'settings';
+@import 'config/colors';
+@import 'config/settings';
 
 // bower:scss
 // endbower
@@ -9,4 +10,4 @@
 @import 'components/buttons';
 @import 'components/forms';
 @import 'components/icons';
-@import 'components/slideshow';
+@import 'components/modal';
