@@ -2,7 +2,19 @@
 
 export const config = {
 	api: {
-		streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&sensor=false'
+		images: {
+			width: 960,
+			height: 960
+		},
+		streetview: `
+			https://maps.googleapis.com/maps/api/streetview
+				?size={{imageWidth}}x{{imageHeight}}
+				&location={{location}}
+				{{#heading}}&heading={{headingValue}}{{/heading}}
+				{{#fov}}&fov={{fovValue}}{{/fov}}
+				{{#pitch}}&pitch={{pitchValue}}{{/pitch}}
+				&sensor=false
+		`
 	},
 	buttons: {}, // Initialize
 	carouselOptions: {
@@ -20,12 +32,8 @@ export const config = {
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
 		imagesContainer: '.js-container-images'
 	},
-	images: {
-		streetview: {
-			width: 640,
-			height: 640
-		}
-	},
+	images: {},
+	// jscs:disable
 	spinOptions: {
 		lines: 15				// The number of lines to draw
 		, length: 12			// The length of each line
@@ -42,6 +50,7 @@ export const config = {
 		, fps: 20				// Frames per second when using setTimeout()
 		, shadow: true			// Whether to render a shadow
 	},
+	// jscs:enable
 	sliders: {},
 	templates: {
 		img: `
@@ -60,5 +69,5 @@ export const config = {
 			<div class="ui-control ui-control-prev swiper-button-prev" role="button"></div>
 			<div class="ui-control ui-control-next swiper-button-next" role="button"></div>
 		`
-	},
-}
+	}
+};

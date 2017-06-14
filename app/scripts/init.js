@@ -4,13 +4,6 @@ import { Slider } from './Slider';
 import { Template } from './Template';
 
 export default function init() {
-	var sliderUpdate = function(event, ui) {
-			$(event.target)
-				.parents(config.elements.containerSlider)
-				.find(config.elements.sliderValue)
-				.text(ui.value);
-		};
-
 	// Extended disable function
 	jQuery.fn.extend({
 		disable: function(state) {
@@ -26,13 +19,16 @@ export default function init() {
 		}
 	});
 
+	config.templates.streetview = new Template(config.api.streetview);
+
 	/**
 	 * Setup Foundation components and default values
 	 */
-	$(document).foundation();
-	$(document).on('opened.fndtn.reveal', function() {
-		let swiper = new Swiper(config.elements.carousel, config.carouselOptions);
-	});
+	$(document)
+		.foundation()
+		.on('opened.fndtn.reveal', function() {
+			let swiper = new Swiper(config.elements.carousel, config.carouselOptions);
+		});
 
 	/**
 	 * Form submit functionality
@@ -42,7 +38,8 @@ export default function init() {
 	/**
 	 * Remove image icon
 	 */
-	$(config.elements.imagesContainer).on('click', '.js-remove-image', function() {
+	config.images.$container = $(config.elements.imagesContainer);
+	config.images.$container.on('click', '.js-remove-image', function() {
 		$(this).parents('.js-container-image').off().fadeOut().remove();
 	});
 
