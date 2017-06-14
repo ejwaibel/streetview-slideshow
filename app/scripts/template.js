@@ -21,18 +21,11 @@ export class Template {
 		this.tpl = Handlebars.compile(template.replace(/[\r\n\t]+/gm, ''));
 	}
 
-	apply(map, partials) {
-		var mappedPartials = {},
-			key;
-
-		for (key in partials) {
-			mappedPartials[key] = partials[key] instanceof Template ? partials[key].toString() : partials[key];
-		}
-
-		return this.tpl(map, mappedPartials);
+	apply(map) {
+		return this.tpl(map);
 	};
 
 	toString() {
-		return this.tpl.text;
+		return this.tpl.toString();
 	};
 }
