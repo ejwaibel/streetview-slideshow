@@ -115,8 +115,7 @@ gulp.task('styles', ['styles:lint', 'images', 'fonts'], function() {
 		.pipe($.postcss(postcssPlugins))
 		.pipe($.sourcemaps.write())
 		.pipe($.rename('main.css'))
-		.pipe(gulp.dest('.tmp/styles'))
-		.pipe(reload({ stream: true }));
+		.pipe(gulp.dest('.tmp/styles'));
 });
 
 gulp.task('scripts:lint', function() {
@@ -185,15 +184,15 @@ gulp.task('serve', ['html', 'extras'], function() {
 	gulp.watch([
 		'.tmp/*.html',
 		'.tmp/scripts/app.js',
+		'.tmp/styles/**/*',
 		'app/images/**/*',
 		'.tmp/fonts/**/*'
 	], { cwd: './' }).on('change', reload);
 
-	gulp.watch('app/index.html', ['html']);
+	gulp.watch(['bower.json', 'app/index.html'], ['html']);
 	gulp.watch('app/scripts/**/*.js', ['scripts']);
 	gulp.watch('app/styles/**/*', ['styles']);
 	gulp.watch('app/fonts/**/*', ['fonts']);
-	gulp.watch('bower.json', ['wiredep', 'fonts']);
 });
 
 // Inject bower components
