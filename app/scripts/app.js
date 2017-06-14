@@ -231,7 +231,7 @@ $(function() {
 		$this.disable(true);
 	});
 
-	leopard.buttons.$startSlideshow.on('click', function() {
+	leopard.buttons.$startSlideshow.on('click', function(e) {
 		var $images = $(leopard.elements.streetviewImage).clone(),
 			slides = $images.map(function(index, el) {
 				return el.outerHTML;
@@ -239,8 +239,11 @@ $(function() {
 			$scroller = $(slideshowTpl.apply({ slides: slides })),
 			$dialog = $(leopard.elements.dialog);
 
-		$dialog.html($scroller);
-		$dialog.dialog('open');
+		e.preventDefault();
+
+		$dialog
+			.empty()
+			.append($scroller);
 	});
 
 	/**

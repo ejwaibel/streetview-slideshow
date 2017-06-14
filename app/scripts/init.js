@@ -24,13 +24,12 @@ export default function init() {
 		}
 	});
 
-	$(leopard.elements.dialog).dialog({
-		autoOpen: false,
-		// modal: true,
-		resizable: false,
-		open: function() {
-			let swiper = new Swiper(leopard.elements.carousel);
-		}
+	/**
+	 * Setup Foundation components and default values
+	 */
+	$(document).foundation();
+	$(document).on('opened.fndtn.reveal', function() {
+		let swiper = new Swiper(leopard.elements.carousel, leopard.carouselOptions);
 	});
 
 	/**

@@ -10,7 +10,7 @@ export const leopard = {
 	},
 	buttons: {},
 	carouselOptions: {
-		autoplay: 1000,
+		autoplay: 2000,
 		effect: 'coverflow',
 		freeMode: false,
 		freeModeMomentum: false,
@@ -18,10 +18,6 @@ export const leopard = {
 		prevButton: '.swiper-button-prev',
 		keyboardControl: true,
 		loop: true
-	},
-	dialogOptions: {
-		modal: true,
-		resizable: false
 	},
 	elements: {
 		carousel: '.js-carousel',
@@ -78,8 +74,8 @@ export const leopard = {
 					{{/each}}
 				</div>
 			</div>
-			<button type="button" class="button ui-control ui-control-prev swiper-button-prev" role="button"></button>
-			<button type="button" class="button ui-control ui-control-next swiper-button-next" role="button"></button>
+			<div class="ui-control ui-control-prev swiper-button-prev" role="button"></div>
+			<div class="ui-control ui-control-next swiper-button-next" role="button"></div>
 		`
 	},
 	/**
