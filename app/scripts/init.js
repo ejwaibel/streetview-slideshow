@@ -1,5 +1,7 @@
-import { config } from './config.js';
-import { Template } from './template.js';
+import { config } from './config';
+import { utils } from './utils';
+import { Slider } from './Slider';
+import { Template } from './Template';
 
 export default function init() {
 	var sliderUpdate = function(event, ui) {
@@ -33,31 +35,75 @@ export default function init() {
 	});
 
 	/**
+	 * Form submit functionality
+	 */
+	$('form').on('submit', utils.getDirectionsCallback);
+
+	/**
+	 * Remove image icon
+	 */
+	$(config.elements.imagesContainer).on('click', '.js-remove-image', function() {
+		$(this).parents('.js-container-image').off().fadeOut().remove();
+	});
+
+	/**
 	 * Setup jQuery UI Buttons
 	 */
-	config.buttons.$cancelDirections = $('form .js-cancel-directions').disable(true),
-	config.buttons.$getDirections = $('form .js-get-directions'),
-	config.buttons.$getImage = $('form .js-get-image'),
-	config.buttons.$randomAddress = $('form .js-random-address'),
-	config.buttons.$startSlideshow = $('.js-start-slideshow'),
+
+	// Cancel Directions button
+	config.buttons.$cancelDirections = $('.js-cancel-directions').disable(true);
+	config.buttons.$cancelDirections.on('click', function() {
+		var $this = $(this),
+			i;
+
+		// Stop all running directions setTimeout calls
+		for (i = 0; i < utils.directionTimers.length; i++) {
+			clearTimeout(utils.directionTimers[i]);
+		}
+
+		config.buttons.$getDirections.spin(false);
+		utils.toggleButtons(false);
+
+		utils.directionTimers = [];
+
+		$this.disable(true);
+	});
+
+	// Get Directions button
+	config.buttons.$getDirections = $('.js-get-directions');
+
+	// Get random address button
+	config.buttons.$randomAddress = $('.js-random-address');
+	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
+
+	// Start slideshow button
+	config.buttons.$startSlideshow = $('.js-start-slideshow');
+
+	/**
+	 * Get image from address button
+	 */
+	config.buttons.$getImage = $('form .js-get-image');
+	config.buttons.$getImage.on('click', function(e) {
+		var $element = $(e.target),
+			$target = $element.attr('data-selector') ? $element : $element.parent(),
+			$input = $($target.data('selector')),
+			address = $input.val();
+
+		utils.generateImage(address);
+	});
 
 	/**
 	 * Setup jQuery UI Sliders
 	 */
-	$(config.elements.slider).slider({
-		animate: true,
-		min: 0,
-		max: 180,
-		range: 'min',
-		create: function(event) {
-			$(event.target)
-				.parents(config.elements.containerSlider)
-				.find(config.elements.sliderValue)
-				.text(0);
-		},
-		change: sliderUpdate,
-		slide: sliderUpdate
-	});
-	$('#fov-slider').slider('option', { max: 120 }).slider('value', 90);
-	$('#pitch-slider').slider('option', { max: 90, min: -90 }).slider('value', 0);
+	config.sliders.heading = new Slider($('#heading-slider'));
+	config.sliders.fov = new Slider($('#fov-slider'));
+	config.sliders.pitch = new Slider($('#pitch-slider'));
+
+	config.sliders.fov
+		.setOption({ max: 120 })
+		.setValue(90);
+
+	config.sliders.pitch
+		.setOption({ max: 90, min: -90 })
+		.setValue(0);
 };

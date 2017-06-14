@@ -1,24 +1,95 @@
 'use strict';
 
 import { config } from './config';
-import { Template } from './template';
+import { Template } from './Template';
 
 export const utils = {
+	directionTimers: [],
 	invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
 	geocoder: new google.maps.Geocoder(),
-	generateImage: function(location) {
-		var sliders = { // FIXME
-				$heading: $('#heading-slider'),
-				$fov: $('#fov-slider'),
-				$pitch: $('#pitch-slider')
+	generateDirectionsImages: function() {
+		var self = this,
+			origin = $('#address-origin').val(),
+			destination = $('#address-destination').val(),
+			directionsService = new google.maps.DirectionsService(),
+			finishedSteps = 0,
+			directionsRequest,
+			timer,
+			geocodeDirection = function(step) {
+				var start = step.start_location;
+
+				return utils.getFormattedAddress(start);
 			},
-			imageTpl = config.templates.img,
+			geocodeCallback = function(address) {
+				finishedSteps++;
+
+				if (address !== 'RETRY') {
+					utils.generateImage(address);
+
+					return true;
+				}
+
+				// FIXME: Need to do something here
+				// window.alert(address);
+			};
+
+		if (origin && destination) {
+			config.buttons.$startSlideshow.removeAttr('disabled');
+
+			directionsRequest = {
+				origin: origin,
+				destination: destination,
+				travelMode: google.maps.TravelMode.DRIVING
+			};
+
+			directionsService.route(directionsRequest, function(result, status) {
+				var steps, i, timeout;
+
+				if (status === google.maps.DirectionsStatus.OK) {
+					steps = result.routes[0].legs[0].steps;
+
+					utils.generateImage(origin);
+					finishedSteps++;
+
+					// Only steps in between origin & destination
+					for (i = 1; i < steps.length - 1; i++) {
+						// Ensure we don't exceed the 5 queries per second limit
+						timeout = setTimeout(function(step) {
+							geocodeDirection(step)
+								.always(geocodeCallback);
+							// TODO: Add failback for image from directions
+						}, (i + 1) * 1500, steps[i]);
+
+						self.directionTimers.push(timeout);
+					}
+
+					timer = setInterval(function() {
+						if (finishedSteps === steps.length - 1) {
+							clearInterval(timer);
+							utils.generateImage(destination);
+							utils.toggleButtons(false);
+							config.buttons.$getDirections.spin(false);
+							config.buttons.$cancelDirections.disable(true);
+						}
+					}, 3000);
+				} else {
+					// TODO: Display error message
+				}
+			});
+		} else {
+			// TODO: Throw error 'origin & destination are required'
+		}
+
+		return true;
+	},
+	generateImage: function(location) {
+		var imageTpl = config.templates.img,
 			$imgContainer = $(imageTpl),
 			displayImage = function($container, $image) {
 				$container.append($image).spin(false);
 			},
 			getSliderValue = function(name) {
-				return parseInt(sliders[name].slider('value'), 10);
+				return parseInt(config.sliders[name].getValue(), 10);
 			},
 			streetviewTpl = new Template(config.api.streetview),
 			imgUrl, $img, i;
@@ -29,13 +100,13 @@ export const utils = {
 		imgUrl = streetviewTpl.apply({
 			location: location,
 			heading: true,
-			headingValue: getSliderValue('$heading'),
+			headingValue: getSliderValue('heading'),
 			imageWidth: config.images.streetview.width,
 			imageHeight: config.images.streetview.width,
 			fov: true,
-			fovValue: getSliderValue('$fov'),
+			fovValue: getSliderValue('fov'),
 			pitch: true,
-			pitchValue: getSliderValue('$pitch')
+			pitchValue: getSliderValue('pitch')
 		});
 
 		$img = $('<img>', {
@@ -70,6 +141,17 @@ export const utils = {
 		var dataURL = canvas.toDataURL('image/png');
 
 		return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
+	},
+	getDirectionsCallback: function(e) {
+		e.preventDefault();
+
+		utils.toggleButtons(true);
+		config.buttons.$getDirections.spin(config.spinOptions);
+		config.buttons.$cancelDirections.disable(false);
+
+		utils.generateDirectionsImages();
+
+		return;
 	},
 	/**
 	 * Converts the given latitude/longitude values into a human
@@ -140,6 +222,49 @@ export const utils = {
 					longitudeBoundary.max)
 				).toFixed(fixed) * 1
 		};
+	},
+	randomAddressClickCallback: function(e) {
+		var $element = $(e.target),
+			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
+			$input = $($target.data('selector')),
+			latlong = utils.getRandomLatLong(),
+			addressDfd = $.Deferred(),
+			/**
+			 * Converts the given latitude/longitude values into a human
+			 * readable address. Continues to loop if the values given
+			 * do not return a valid address.
+			 * @param  {Object} latlng
+			 */
+			getRandomAddress = function(latlng) {
+				utils.getFormattedAddress(latlng)
+					.done(function(results) {
+						addressDfd.resolve(results);
+					})
+					.fail(function(status) {
+						if (status === 'RETRY') {
+							getRandomAddress(utils.getRandomLatLong());
+						} else {
+							addressDfd.fail(status);
+						}
+					});
+
+				return addressDfd.promise();
+			},
+			getRandomAddressCallback = function(data) {
+				$target.disable(false).spin(false);
+				$input.val(data);
+			};
+
+		$input.val('');
+
+		$target.disable(true).spin(config.spinOptions);
+
+		// Wait for valid address to be returned
+		getRandomAddress(latlong);
+
+		addressDfd
+			.done(getRandomAddressCallback)
+			.fail(getRandomAddressCallback);
 	},
 	toggleButtons: function(action) {
 		Object.getOwnPropertyNames(config.buttons).forEach(function(key) {

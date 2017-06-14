@@ -17,12 +17,8 @@ export const config = {
 	},
 	elements: {
 		carousel: '.js-carousel',
-		containerSlider: '.js-container-slider',
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
-		imagesContainer: '.js-container-images',
-		slider: '.js-slider',
-		sliderValue: '.js-slider-value',
-		streetviewImage: '.streetview-image'
+		imagesContainer: '.js-container-images'
 	},
 	images: {
 		streetview: {
@@ -46,6 +42,7 @@ export const config = {
 		, fps: 20				// Frames per second when using setTimeout()
 		, shadow: true			// Whether to render a shadow
 	},
+	sliders: {},
 	templates: {
 		img: `
 			<li class="container-streetview-image js-container-image">
