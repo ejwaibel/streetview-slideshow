@@ -73,52 +73,57 @@ export const utils = {
 						}
 					}, 3000);
 				} else {
-					// TODO: Display error message
+					config.images.$container.append('<div>ERROR DIRECTIONS</div>');
 				}
 			});
-		} else {
-			// TODO: Throw error 'origin & destination are required'
 		}
 
 		return true;
 	},
 	generateImage: function(location) {
-		var imageTpl = config.templates.img,
-			$imgContainer = $(imageTpl),
+		var $imgContainer = $(config.templates.img),
 			displayImage = function($container, $image) {
 				$container.append($image).spin(false);
 			},
 			getSliderValue = function(name) {
 				return parseInt(config.sliders[name].getValue(), 10);
 			},
-			streetviewTpl = new Template(config.api.streetview),
 			imgUrl, $img, i;
 
-		$(config.elements.imagesContainer).append($imgContainer);
+		config.images.$container.append($imgContainer);
 		$imgContainer.spin(config.spinOptions);
 
-		imgUrl = streetviewTpl.apply({
+		imgUrl = config.templates.streetview.apply({
 			location: location,
 			heading: true,
 			headingValue: getSliderValue('heading'),
-			imageWidth: config.images.streetview.width,
-			imageHeight: config.images.streetview.width,
+			imageWidth: config.api.images.width,
+			imageHeight: config.api.images.width,
 			fov: true,
 			fovValue: getSliderValue('fov'),
 			pitch: true,
 			pitchValue: getSliderValue('pitch')
 		});
 
+		// Setup new <img> element with default attributes and
+		// append it to image container
 		$img = $('<img>', {
 			class: 'streetview-image',
-			src: imgUrl,
 			title: location
-		});
+		}).appendTo($imgContainer);
 
-		// Hack because $img.load() is too fast
-		setTimeout(displayImage, 500, $imgContainer, $img);
-
-		return;
+		// Get the URL to the image and once that finishes, set the same URL on the
+		// image and stop the spinner on image container
+		$.get(imgUrl)
+			.done(function() {
+				$img.attr('src', imgUrl);
+			})
+			.fail(function() {
+				$img.attr('src', 'https://blog.sqlauthority.com/i/a/errorstop.png');
+			})
+			.always(function() {
+				$imgContainer.spin(false);
+			});
 	},
 	/**
 	 * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
@@ -162,10 +167,13 @@ export const utils = {
 		var self = this,
 			dfd = $.Deferred(),
 			options = {
-				location: latlng.latitude ? new google.maps.LatLng(latlng.latitude, latlng.longitude) : latlng
+				location: latlng.latitude ?
+						new google.maps.LatLng(latlng.latitude, latlng.longitude) :
+						latlng
 			},
 			geocodeCallback = function(results, status) {
-				var address = results && results.length && results[0] ? results[0].formatted_address : null;
+				var address = results && results.length && results[0] ?
+							results[0].formatted_address : null;
 
 				if (status === google.maps.GeocoderStatus.OK) {
 					if (address.search(self.invalidAddress) !== -1 ||
@@ -243,9 +251,9 @@ export const utils = {
 					.fail(function(status) {
 						if (status === 'RETRY') {
 							getRandomAddress(utils.getRandomLatLong());
-						} else {
-							addressDfd.fail(status);
 						}
+
+						addressDfd.fail(status);
 					});
 
 				return addressDfd.promise();
@@ -260,9 +268,7 @@ export const utils = {
 		$target.disable(true).spin(config.spinOptions);
 
 		// Wait for valid address to be returned
-		getRandomAddress(latlong);
-
-		addressDfd
+		getRandomAddress(latlong)
 			.done(getRandomAddressCallback)
 			.fail(getRandomAddressCallback);
 	},
