@@ -7,7 +7,7 @@ $(function() {
 	init();
 
 	var imageTpl = leopard.templates.img,
-		slideshowTpl = leopard.templates.slideshow,
+		slideshowTpl = new Template(leopard.templates.slideshow),
 		streetviewTpl = new Template(leopard.api.streetview),
 		sliders = {
 			$heading: $('#heading-slider'),
@@ -233,13 +233,14 @@ $(function() {
 
 	leopard.buttons.$startSlideshow.on('click', function() {
 		var $images = $(leopard.elements.streetviewImage).clone(),
-			slider = $(slideshowTpl).append($images.wrapAll($('<div/>')));
+			slides = $images.map(function(index, el) {
+				return el.outerHTML;
+			}).toArray(),
+			$scroller = $(slideshowTpl.apply({ slides: slides })),
+			$dialog = $(leopard.elements.dialog);
 
-		$('.js-slideshow-dialog')
-			.empty()
-			.append(slider);
-
-		slider.slick(leopard.slickOptions);
+		$dialog.html($scroller);
+		$dialog.dialog('open');
 	});
 
 	/**

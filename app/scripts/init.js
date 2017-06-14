@@ -1,9 +1,10 @@
 import { leopard } from './leopard.js';
+import { Template } from './template.js';
 
 export default function init() {
 	var sliderUpdate = function(event, ui) {
 			$(event.target)
-				.parents(leopard.elements.containerSlider)
+				.parents(leopard.elements.sliderContainer)
 				.find(leopard.elements.sliderValue)
 				.text(ui.value);
 		};
@@ -23,10 +24,14 @@ export default function init() {
 		}
 	});
 
-	/**
-	 * Setup Foundation components and default values
-	 */
-	$(document).foundation();
+	$(leopard.elements.dialog).dialog({
+		autoOpen: false,
+		// modal: true,
+		resizable: false,
+		open: function() {
+			let swiper = new Swiper(leopard.elements.carousel);
+		}
+	});
 
 	/**
 	 * Setup jQuery UI Buttons
@@ -47,7 +52,7 @@ export default function init() {
 		range: 'min',
 		create: function(event) {
 			$(event.target)
-				.parents(leopard.elements.containerSlider)
+				.parents(leopard.elements.sliderContainer)
 				.find(leopard.elements.sliderValue)
 				.text(0);
 		},

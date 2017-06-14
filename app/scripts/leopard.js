@@ -9,12 +9,24 @@ export const leopard = {
 		streetview: 'https://maps.googleapis.com/maps/api/streetview?size={{imageWidth}}x{{imageHeight}}&location={{location}}{{#heading}}&heading={{headingValue}}{{/heading}}{{#fov}}&fov={{fovValue}}{{/fov}}{{#pitch}}&pitch={{pitchValue}}{{/pitch}}&sensor=false'
 	},
 	buttons: {},
+	carouselOptions: {
+		autoplay: 1000,
+		effect: 'coverflow',
+		freeMode: false,
+		freeModeMomentum: false,
+		nextButton: '.swiper-button-next',
+		prevButton: '.swiper-button-prev',
+		keyboardControl: true,
+		loop: true
+	},
 	dialogOptions: {
 		modal: true,
 		resizable: false
 	},
 	elements: {
+		carousel: '.js-carousel',
 		containerSlider: '.js-container-slider',
+		dialog: '#slideshow-dialog',
 		imagesContainer: '.js-container-images',
 		slider: '.js-slider',
 		sliderValue: '.js-slider-value',
@@ -35,12 +47,6 @@ export const leopard = {
 	longitudeBoundary: {
 		min: -127.50,
 		max: -55.90
-	},
-	slickOptions: {
-		arrows: true,
-		autoplay: true,
-		fade: true,
-		infinite: true
 	},
 	spinOptions: {
 		lines: 15             // The number of lines to draw
@@ -65,7 +71,15 @@ export const leopard = {
 			</li>
 		`,
 		slideshow: `
-			<div class="carousel-container js-carousel"></div>
+			<div class="swiper-container js-carousel">
+				<div class="swiper-wrapper">
+					{{#each slides}}
+					<div class="swiper-slide">{{{this}}}</div>
+					{{/each}}
+				</div>
+			</div>
+			<button type="button" class="button ui-control ui-control-prev swiper-button-prev" role="button"></button>
+			<button type="button" class="button ui-control ui-control-next swiper-button-next" role="button"></button>
 		`
 	},
 	/**
