@@ -34,7 +34,7 @@ $('#el').spin('flower', 'red')
 
 */
 
-export default (function($, Spinner) {
+(function($, Spinner) {
 	$.fn.spin = function(opts, color) {
 		return this.each(function() {
 			var $this = $(this),
