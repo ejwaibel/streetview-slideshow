@@ -8,8 +8,8 @@
 
 .container-streetview-image {
 	display: inline-block;
-	position: relative;
 	height: rem-calc(255) !important;
+	position: relative;
 
 	.icon-remove {
 		position: absolute;
@@ -20,8 +20,8 @@
 
 .help-link {
 	position: absolute;
-	top: 10px;
 	right: 10px;
+	top: 10px;
 
 	.help-icon {
 		font-size: rem-calc(36);
