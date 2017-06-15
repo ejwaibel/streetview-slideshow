@@ -1,0 +1,16 @@
+.ui-progressbar {
+	position: relative;
+
+	.ui-progressbar-value {
+		margin: 0;
+	}
+
+	.progress-label {
+		display: block;
+		left: 50%;
+		position: absolute;
+		top: rem-calc(5);
+		transform: translateX(-50%);
+	}
+}
+

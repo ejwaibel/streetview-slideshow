@@ -103,4 +103,10 @@ export default function init() {
 
 	config.sliders.pitch.update({ max: 90, min: -90 });
 	config.sliders.pitch.value = config.api.defaults.pitch;
+
+	/**
+	 * Setup jQuery UI Progress Bar
+	 */
+	config.$stepsProgress = $(config.elements.stepProgress).progressbar({ disabled: true });
+	config.$stepsProgress.append(config.templates.progressLabel);
 };

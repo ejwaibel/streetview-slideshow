@@ -37,6 +37,7 @@ export const config = {
 		carousel: '.js-carousel',
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
 		imagesContainer: '.js-container-images',
+		stepProgress: '.js-step-progress',
 		streetviewImage: '.streetview-image'
 	},
 	images: {},
@@ -64,6 +65,9 @@ export const config = {
 			<li class="container-streetview-image js-container-image">
 				<i class="icon icon-remove fa fa-remove clickable js-remove-image"></i>
 			</li>
+		`,
+		progressLabel: `
+			<span class="js-steps-label progress-label"></span>
 		`,
 		slideshow: `
 			<div class="swiper-container js-carousel">

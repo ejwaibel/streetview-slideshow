@@ -12,16 +12,26 @@ export const utils = {
 			origin = $('#address-origin').val(),
 			destination = $('#address-destination').val(),
 			directionsService = new google.maps.DirectionsService(),
-			finishedSteps = 0,
+			$stepCount = $(config.elements.stepCount),
+			$stepTotal = $(config.elements.stepTotal),
+			stepsCount = 0,
+			stepsTotal = 0,
 			directionsRequest,
 			timer,
+			updateProgress = function() {
+				stepsCount++;
+				config.$stepsProgress
+					.progressbar('value', stepsCount)
+					.children('.js-steps-label')
+						.html(`${stepsCount} of ${stepsTotal}`);
+			},
 			geocodeDirection = function(step) {
 				var start = step.start_location;
 
 				return utils.getFormattedAddress(start);
 			},
 			geocodeCallback = function(address) {
-				finishedSteps++;
+				updateProgress();
 
 				if (address !== 'RETRY') {
 					utils.generateImage(address);
@@ -47,12 +57,14 @@ export const utils = {
 
 				if (status === google.maps.DirectionsStatus.OK) {
 					steps = result.routes[0].legs[0].steps;
+					stepsTotal = steps.length;
+					config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
 					utils.generateImage(origin);
-					finishedSteps++;
+					updateProgress();
 
 					// Only steps in between origin & destination
-					for (i = 1; i < steps.length - 1; i++) {
+					for (i = 1; i < stepsTotal - 1; i++) {
 						// Ensure we don't exceed the 5 queries per second limit
 						timeout = setTimeout(function(step) {
 							geocodeDirection(step)
@@ -64,7 +76,7 @@ export const utils = {
 					}
 
 					timer = setInterval(function() {
-						if (finishedSteps === steps.length - 1) {
+						if (stepsCount === stepsTotal - 1) {
 							clearInterval(timer);
 							utils.generateImage(destination);
 							utils.toggleButtons(false);
