@@ -24,7 +24,7 @@
 		<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
 	<![endif]-->
 
-	<div id="slideshow-dialog" class="reveal-modal js-slideshow-dialog small" data-reveal aria-labelledby="slideshowModal" aria-hidden="true" role="dialog">
+	<div id="slideshow-dialog" class="reveal-modal js-slideshow-dialog full" data-reveal aria-labelledby="slideshowModal" aria-hidden="true" role="dialog">
 		<div class="dialog-content js-dialog-content"></div>
 		<a class="close-reveal-modal" aria-label="Close">
 			<i class="icon fa fa-close"></i>
@@ -88,7 +88,7 @@
 	<form autocomplete="yes">
 		<!-- ADDRESS TEXT FIELDS -->
 		<div class="container-address">
-			<div class="row">
+			<div class="row collapse">
 				<div class="columns small-12">
 					<label for="address-origin">Origin</label>
 					<div class="row collapse">
@@ -108,7 +108,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
+			<div class="row collapse">
 				<div class="columns small-12">
 					<label for="address-destination">Destination</label>
 					<div class="row collapse">
@@ -132,30 +132,30 @@
 		<!-- END: ADDRESS TEXT FIELDS -->
 
 		<!-- FORM SUBMIT -->
-		<div class="row">
-			<div class="right">
-				<button type="button" class="button tiny alert disabled js-cancel-directions" tab-index="4" title="cancel" disabled>
-					<i class="icon fa fa-ban btn-danger"></i>
-				</button>
-			</div>
-			<div class="right">
-				<button type="submit" class="button tiny success js-get-directions" tab-index="3" title="Generate Images from Directions">
+		<div class="row collapse">
+			<div class="columns small-2">
+				<button type="submit" class="button success js-get-directions" tab-index="3" title="Generate Images from Directions">
 					<i class="icon icon-car fa fa-car"></i>
 					<i class="icon icon-camera fa fa-camera"></i>
+				</button>
+			</div>
+			<div class="columns small-1">
+				<button type="button" class="right button alert js-cancel-directions" tab-index="4" title="cancel" disabled>
+					<i class="icon fa fa-ban btn-danger"></i>
 				</button>
 			</div>
 		</div>
 		<!-- END: FORM SUBMIT -->
 	</form>
 
-	<div class="row">
+	<div class="row collapse">
 		<div class="columns">
 			<button type="button" class="button primary large js-start-slideshow" disabled title="Start Slideshow" data-reveal-id="slideshow-dialog">
 				<i class="icon icon-slideshow fa fa-photo"></i>
 			</button>
 		</div>
 	</div>
-	<div class="row">
+	<div class="row collapse">
 		<div class="columns">
 			<ul class="js-container-images large-block-grid-5 medium-block-grid-4 small-block-grid-3"></ul>
 		</div>
