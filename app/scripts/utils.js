@@ -74,6 +74,9 @@ export const utils = {
 					}, 3000);
 				} else {
 					config.images.$container.append('<div>ERROR DIRECTIONS</div>');
+					utils.toggleButtons(false);
+					config.buttons.$getDirections.spin(false);
+					config.buttons.$cancelDirections.disable(true);
 				}
 			});
 		}
@@ -85,9 +88,9 @@ export const utils = {
 			displayImage = function($container, $image) {
 				$container.append($image).spin(false);
 			},
-			getSliderValue = function(name) {
-				return parseInt(config.sliders[name].getValue(), 10);
-			},
+			headingValue = config.sliders.heading.value,
+			fovValue = config.sliders.fov.value,
+			pitchValue = config.sliders.pitch.value,
 			imgUrl, $img, i;
 
 		config.images.$container.append($imgContainer);
@@ -95,14 +98,14 @@ export const utils = {
 
 		imgUrl = config.templates.streetview.apply({
 			location: location,
-			heading: true,
-			headingValue: getSliderValue('heading'),
+			heading: headingValue !== config.api.defaults.heading,
+			headingValue: headingValue,
 			imageWidth: config.api.images.width,
 			imageHeight: config.api.images.width,
-			fov: true,
-			fovValue: getSliderValue('fov'),
-			pitch: true,
-			pitchValue: getSliderValue('pitch')
+			fov: fovValue !== config.api.defaults.fov,
+			fovValue: fovValue,
+			pitch: pitchValue !== config.api.defaults.pitch,
+			pitchValue: pitchValue
 		});
 
 		// Setup new <img> element with default attributes and

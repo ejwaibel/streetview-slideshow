@@ -1,3 +1,5 @@
+let _sliders = {};
+
 export class Slider {
 	constructor($el, opts) {
 		this.elements = {
@@ -31,17 +33,17 @@ export class Slider {
 		this.$sliderValue.text(ui.value);
 	}
 
-	setOption(options) {
+	update(options) {
 		this.$slider.slider('option', options);
 
 		return this;
 	}
 
-	getValue() {
-		return this.$slider.slider('value');
+	get value() {
+		return window.parseInt(this.$slider.slider('value'), 10);
 	}
 
-	setValue(val) {
+	set value(val) {
 		this.$slider.slider('value', val);
 
 		return this;

@@ -98,11 +98,9 @@ export default function init() {
 	config.sliders.fov = new Slider($('#fov-slider'));
 	config.sliders.pitch = new Slider($('#pitch-slider'));
 
-	config.sliders.fov
-		.setOption({ max: 120 })
-		.setValue(90);
+	config.sliders.fov.update({ max: 120 });
+	config.sliders.fov.value = config.api.defaults.fov;
 
-	config.sliders.pitch
-		.setOption({ max: 90, min: -90 })
-		.setValue(0);
+	config.sliders.pitch.update({ max: 90, min: -90 });
+	config.sliders.pitch.value = config.api.defaults.pitch;
 };
