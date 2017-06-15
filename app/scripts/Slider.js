@@ -3,8 +3,7 @@ export class Slider {
 		this.elements = {
 			containerSlider: '.js-container-slider',
 			slider: '.js-slider',
-			sliderValue: '.js-slider-value',
-			streetviewImage: '.streetview-image'
+			sliderValue: '.js-slider-value'
 		};
 
 		this.$sliderValue = $el

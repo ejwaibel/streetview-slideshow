@@ -30,7 +30,8 @@ export const config = {
 	elements: {
 		carousel: '.js-carousel',
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
-		imagesContainer: '.js-container-images'
+		imagesContainer: '.js-container-images',
+		streetviewImage: '.streetview-image'
 	},
 	images: {},
 	// jscs:disable
