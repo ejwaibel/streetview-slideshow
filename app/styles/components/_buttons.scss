@@ -42,8 +42,8 @@ $button-margin-bottom: rem-calc(10);
 // $info-button-border-color: $info-button-bg-hover;
 
 // We use this to set the default radius used throughout the core.
-// $button-radius: $global-radius;
-// $button-round: $global-rounded;
+$button-radius: 0;
+$button-round: 0;
 
 // We use this to set default opacity and cursor for disabled buttons.
 $button-disabled-opacity: .4;
@@ -53,12 +53,13 @@ $button-disabled-cursor: $cursor-default-value;
 	&.disabled,
 	&[disabled] {
 		&.alert,
-		&.default,
+		&.primary,
+		&.secondary,
 		&.success {
 			@include button-style(
-				$bg: #ccc,
+				$bg: get-color('tundora'),
 				$disabled: true,
-				$bg-hover: #ccc,
+				$bg-hover: get-color('tundora'),
 				$border-color: $button-border-color
 			);
 		}
