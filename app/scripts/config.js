@@ -2,6 +2,11 @@
 
 export const config = {
 	api: {
+		defaults: {
+			heading: 0,
+			fov: 90,
+			pitch: 0
+		},
 		images: {
 			width: 960,
 			height: 960
@@ -19,13 +24,14 @@ export const config = {
 	buttons: {}, // Initialize
 	carouselOptions: {
 		autoplay: 2000,
-		effect: 'coverflow',
 		freeMode: false,
 		freeModeMomentum: false,
 		nextButton: '.swiper-button-next',
 		prevButton: '.swiper-button-prev',
 		keyboardControl: true,
-		loop: true
+		loop: true,
+		slidesPerGroup: 2,
+		slidesPerView: 2
 	},
 	elements: {
 		carousel: '.js-carousel',
