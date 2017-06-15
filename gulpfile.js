@@ -128,7 +128,7 @@ gulp.task('scripts:lint', function() {
 });
 
 gulp.task('scripts', ['scripts:lint'], function() {
-	options.browserify.entries = glob.sync('app/scripts/app.js');
+	options.browserify.entries = glob.sync('app/scripts/**/*.js');
 
 	return browserify(options.browserify)
 		.transform(babelify, options.babelify)
