@@ -15,6 +15,8 @@ export default function init() {
 			let swiper = new Swiper(config.elements.carousel, config.carouselOptions);
 		});
 
+	config.$dialogContent = $(config.elements.dialogContent);
+
 	/**
 	 * Form submit functionality
 	 */
@@ -59,7 +61,22 @@ export default function init() {
 	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
 
 	// Start slideshow button
+	let slideshowTpl = new Template(config.templates.slideshow);
+
 	config.buttons.$startSlideshow = $('.js-start-slideshow');
+	config.buttons.$startSlideshow.on('click', function(e) {
+		var $images = $(config.elements.streetviewImage).clone(),
+			slides = $images.map(function(index, el) {
+				return el.outerHTML;
+			}).toArray(),
+			$scroller = $(slideshowTpl.apply({ slides: slides }));
+
+		e.preventDefault();
+
+		config.$dialogContent
+			.empty()
+			.append($scroller);
+	});
 
 	/**
 	 * Get image from address button
