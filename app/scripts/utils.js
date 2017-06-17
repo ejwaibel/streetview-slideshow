@@ -246,6 +246,13 @@ export const utils = {
 				).toFixed(fixed) * 1
 		};
 	},
+	onRemoveImageClick: function() {
+		$(this)
+			.parents(config.elements.containerImage)
+			.off()
+			.fadeOut()
+			.remove();
+	},
 	randomAddressClickCallback: function(e) {
 		var $element = $(e.target),
 			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),

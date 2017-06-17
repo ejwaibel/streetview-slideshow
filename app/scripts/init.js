@@ -26,9 +26,7 @@ export default function init() {
 	 * Remove image icon
 	 */
 	config.images.$container = $(config.elements.imagesContainer);
-	config.images.$container.on('click', '.js-remove-image', function() {
-		$(this).parents('.js-container-image').off().fadeOut().remove();
-	});
+	config.images.$container.on('click', '.js-remove-image', utils.onRemoveImageClick);
 
 	/**
 	 * Setup jQuery UI Buttons
