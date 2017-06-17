@@ -53,18 +53,29 @@ export const utils = {
 			};
 
 			directionsService.route(directionsRequest, function(result, status) {
-				var steps, i, timeout;
+				var endDirections = function(location) {
+						if (location === destination) {
+							utils.generateImage(location);
+						} else {
+							console.error(location);
+						}
+
+						utils.toggleButtons(false);
+						config.buttons.$getDirections.spin(false);
+						config.buttons.$cancelDirections.disable(true);
+					},
+					steps, i, timeout;
 
 				if (status === google.maps.DirectionsStatus.OK) {
 					steps = result.routes[0].legs[0].steps;
-					stepsTotal = steps.length;
+					stepsTotal = steps.length - 1;
 					config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
 					utils.generateImage(origin);
 					updateProgress();
 
 					// Only steps in between origin & destination
-					for (i = 1; i < stepsTotal - 1; i++) {
+					for (i = 1; i < stepsTotal; i++) {
 						// Ensure we don't exceed the 5 queries per second limit
 						timeout = setTimeout(function(step) {
 							geocodeDirection(step)
@@ -76,19 +87,13 @@ export const utils = {
 					}
 
 					timer = setInterval(function() {
-						if (stepsCount === stepsTotal - 1) {
+						if (stepsCount === stepsTotal) {
 							clearInterval(timer);
-							utils.generateImage(destination);
-							utils.toggleButtons(false);
-							config.buttons.$getDirections.spin(false);
-							config.buttons.$cancelDirections.disable(true);
+							endDirections(destination);
 						}
 					}, 3000);
 				} else {
-					config.images.$container.append('<div>ERROR DIRECTIONS</div>');
-					utils.toggleButtons(false);
-					config.buttons.$getDirections.spin(false);
-					config.buttons.$cancelDirections.disable(true);
+					endDirections(status);
 				}
 			});
 		}
