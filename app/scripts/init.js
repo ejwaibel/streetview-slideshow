@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { config } from './config';
 import { utils } from './utils';
 import { Slider } from './Slider';
@@ -35,18 +36,17 @@ export default function init() {
 	// Cancel Directions button
 	config.buttons.$cancelDirections = $('.js-cancel-directions').disable(true);
 	config.buttons.$cancelDirections.on('click', function() {
-		var $this = $(this),
-			i;
+		var $this = $(this);
 
 		// Stop all running directions setTimeout calls
-		for (i = 0; i < utils.directionTimers.length; i++) {
-			clearTimeout(utils.directionTimers[i]);
-		}
+		_.forEach(utils.directionTimers, function(val) {
+			clearTimeout(val);
+		});
+
+		utils.directionTimers = [];
 
 		config.buttons.$getDirections.spin(false);
 		utils.toggleButtons(false);
-
-		utils.directionTimers = [];
 
 		$this.disable(true);
 	});
