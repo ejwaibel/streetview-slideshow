@@ -1,0 +1,24 @@
+.container-streetview-image {
+	display: inline-block;
+	height: rem-calc(255) !important;
+	position: relative;
+
+	.icon-remove {
+		color: get-color(black);
+		display: none;
+		font-size: 2.5rem;
+		position: absolute;
+		right: 0;
+		top: rem-calc(-12);
+
+		&:hover {
+			color: get-color('red-light');
+		}
+	}
+
+	&:hover {
+		.icon-remove {
+			display: block;
+		}
+	}
+}

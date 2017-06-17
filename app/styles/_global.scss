@@ -6,22 +6,10 @@
 	margin-bottom: rem-calc(36);
 }
 
-.container-streetview-image {
-	display: inline-block;
-	height: rem-calc(255) !important;
-	position: relative;
-
-	.icon-remove {
-		position: absolute;
-		right: 0;
-		top: rem-calc(-12);
-	}
-}
-
 .help-link {
 	position: absolute;
-	right: 10px;
-	top: 10px;
+	right: 1rem;
+	top: 1rem;
 
 	.help-icon {
 		font-size: rem-calc(36);
