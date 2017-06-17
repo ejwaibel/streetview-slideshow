@@ -116,7 +116,7 @@ gulp.task('styles', ['styles:lint', 'images', 'fonts'], function() {
 		.pipe($.sourcemaps.write())
 		.pipe($.rename('main.css'))
 		.pipe(gulp.dest('.tmp/styles'))
-		.pipe(browserSync.stream({ once: true }));
+		.pipe(reload({ stream: true }));
 });
 
 gulp.task('scripts:lint', function() {
@@ -188,7 +188,7 @@ gulp.task('serve', ['html', 'scripts', 'styles', 'extras'], function() {
 
 	gulp.watch([
 		'.tmp/*.html',
-		'.tmp/scripts/app.js',
+		'.tmp/scripts/*.js',
 		'app/images/**/*',
 		'.tmp/fonts/**/*'
 	], { cwd: './' }).on('change', reload);
