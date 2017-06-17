@@ -7,10 +7,10 @@
 
 	.progress-label {
 		display: block;
-		left: 50%;
 		position: absolute;
+		text-align: center;
 		top: rem-calc(5);
-		transform: translateX(-50%);
+		width: 100%;
 	}
 }
 
