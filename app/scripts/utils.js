@@ -97,12 +97,8 @@ export const utils = {
 	},
 	generateImage: function(location) {
 		var $imgContainer = $(config.templates.img),
-			displayImage = function($container, $image) {
-				$container.append($image).spin(false);
-			},
-			headingValue = config.sliders.heading.value,
-			fovValue = config.sliders.fov.value,
-			pitchValue = config.sliders.pitch.value,
+			imgHeight = config.api.images.width,
+			imgWidth = config.api.images.width,
 			imgUrl, $img, i;
 
 		config.images.$container.append($imgContainer);

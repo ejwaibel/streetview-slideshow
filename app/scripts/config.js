@@ -16,9 +16,9 @@ export const config = {
 			https://maps.googleapis.com/maps/api/streetview
 				?size={{imageWidth}}x{{imageHeight}}
 				&location={{location}}
-				{{#heading}}&heading={{headingValue}}{{/heading}}
-				{{#fov}}&fov={{fovValue}}{{/fov}}
-				{{#pitch}}&pitch={{pitchValue}}{{/pitch}}
+				&heading={{heading}}
+				&fov={{fov}}
+				&pitch={{pitch}}
 				&sensor=false
 		`
 	},
