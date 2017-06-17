@@ -110,22 +110,34 @@ export const utils = {
 
 		imgUrl = config.templates.streetview.apply({
 			location: location,
-			heading: headingValue !== config.api.defaults.heading,
-			headingValue: headingValue,
-			imageWidth: config.api.images.width,
-			imageHeight: config.api.images.width,
-			fov: fovValue !== config.api.defaults.fov,
-			fovValue: fovValue,
-			pitch: pitchValue !== config.api.defaults.pitch,
-			pitchValue: pitchValue
+			imageHeight: imgHeight,
+			imageWidth: imgWidth,
+			heading: config.sliders.heading.value,
+			fov: config.sliders.fov.value,
+			pitch: config.sliders.pitch.value
 		});
+
+		let imgAttr = {
+			class: 'streetview-image',
+			crossOrigin: 'anonymous',
+			title: location
+		};
 
 		// Setup new <img> element with default attributes and
 		// append it to image container
-		$img = $('<img>', {
-			class: 'streetview-image',
-			title: location
-		}).appendTo($imgContainer);
+		$img = $('<img>', imgAttr)
+				.appendTo($imgContainer)
+				.on('load', function() {
+					let img64 = utils.getBase64Image(this).substr(0, 64);
+
+					if (config.api.images.noImageRegex.test(img64)) {
+						// utils.onRemoveImageClick.call(this);
+						$(this).attr(
+							'src',
+							`https://unsplash.it/g/${imgWidth}/${imgHeight}?blur&random`
+						);
+					}
+				});
 
 		// Get the URL to the image and once that finishes, set the same URL on the
 		// image and stop the spinner on image container
@@ -160,7 +172,9 @@ export const utils = {
 		// original format, but be aware the using 'image/jpg' will re-encode the image.
 		var dataURL = canvas.toDataURL('image/png');
 
-		return dataURL.replace(/^data:image\/(png|jpg);base64,/, '');
+		return dataURL
+				.replace(/^data:image\/(png|jpg);base64,/, '')
+				.replace(/iVBORw0KGgoAAAANSUhEUgAAAPEAAADxCAYAAAAay1EJAAA/, '');
 	},
 	getDirectionsCallback: function(e) {
 		e.preventDefault();
