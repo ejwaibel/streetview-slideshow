@@ -9,8 +9,8 @@ export const config = {
 		},
 		images: {
 			noImageRegex: new RegExp('ah4JdLMxVcEySefa6wxEgkBWYRpzNzuMEvoA$'),
-			width: 960,
-			height: 960
+			width: 640,
+			height: 640
 		},
 		streetview: `
 			https://maps.googleapis.com/maps/api/streetview
@@ -66,6 +66,9 @@ export const config = {
 		img: `
 			<li class="container-streetview-image js-container-image">
 				<i class="icon icon-remove fa fa-remove clickable js-remove-image"></i>
+				<div class="streetview-image">
+					<p class="location-title js-location-title"></p>
+				</div>
 			</li>
 		`,
 		progressLabel: `

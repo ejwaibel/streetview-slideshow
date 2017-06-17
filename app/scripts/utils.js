@@ -81,7 +81,7 @@ export const utils = {
 							geocodeDirection(step)
 								.always(geocodeCallback);
 							// TODO: Add failback for image from directions
-						}, (i + 1) * 1500, steps[i]);
+						}, (i + 1) * 500, steps[i]);
 
 						self.directionTimers.push(timeout);
 					}
@@ -102,12 +102,16 @@ export const utils = {
 	},
 	generateImage: function(location) {
 		var $imgContainer = $(config.templates.img),
+			$streetviewImage = $imgContainer.find(config.elements.streetviewImage),
 			imgHeight = config.api.images.width,
 			imgWidth = config.api.images.width,
 			imgUrl, $img, i;
 
 		config.images.$container.append($imgContainer);
-		$imgContainer.spin(config.spinOptions);
+		$imgContainer
+			.spin(config.spinOptions)
+			.find('.js-location-title')
+				.text(location);
 
 		imgUrl = config.templates.streetview.apply({
 			location: location,
@@ -119,7 +123,6 @@ export const utils = {
 		});
 
 		let imgAttr = {
-			class: 'streetview-image',
 			crossOrigin: 'anonymous',
 			title: location
 		};
@@ -127,7 +130,7 @@ export const utils = {
 		// Setup new <img> element with default attributes and
 		// append it to image container
 		$img = $('<img>', imgAttr)
-				.appendTo($imgContainer)
+				.prependTo($streetviewImage)
 				.on('load', function() {
 					let img64 = utils.getBase64Image(this).substr(0, 64);
 
