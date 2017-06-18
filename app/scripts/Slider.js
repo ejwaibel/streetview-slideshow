@@ -1,16 +1,24 @@
-let _sliders = {};
-
 export class Slider {
-	constructor($el, opts) {
+	constructor(opts, uiOptions) {
 		this.elements = {
 			containerSlider: '.js-container-slider',
 			slider: '.js-slider',
 			sliderValue: '.js-slider-value'
 		};
 
-		this.$sliderValue = $el
-					.parents(this.elements.containerSlider)
-					.find(this.elements.sliderValue);
+		this.$el = $(`
+			<div class="row collapse">
+				<h4 class="slider-title text-center">${opts.title}</h4>
+				<div class="container-slider js-container-slider">
+					<div class="js-slider">
+						<span class="slider-value js-slider-value"></span>
+					</div>
+				</div>
+			</div>
+		`);
+
+		this.$slider = this.$el.find(this.elements.slider);
+		this.$sliderValue = this.$el.find(this.elements.sliderValue);
 
 		this.options = $.extend(true, {
 			animate: true,
@@ -20,9 +28,11 @@ export class Slider {
 			create: this.onCreate.bind(this),
 			change: this.onUpdate.bind(this),
 			slide: this.onUpdate.bind(this)
-		}, opts);
+		}, uiOptions);
 
-		this.$slider = $el.slider(this.options);
+		this.$slider.slider(this.options);
+
+		return this;
 	}
 
 	onCreate(event) {

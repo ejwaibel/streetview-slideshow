@@ -92,15 +92,16 @@ export default function init() {
 	/**
 	 * Setup jQuery UI Sliders
 	 */
-	config.sliders.heading = new Slider($('#heading-slider'));
-	config.sliders.fov = new Slider($('#fov-slider'));
-	config.sliders.pitch = new Slider($('#pitch-slider'));
-
-	config.sliders.fov.update({ max: 120 });
+	config.sliders.heading = new Slider({ title: 'HEADING' });
+	config.sliders.fov = new Slider({ title: 'FOV' }, { max: 120 });
 	config.sliders.fov.value = config.api.defaults.fov;
-
-	config.sliders.pitch.update({ max: 90, min: -90 });
+	config.sliders.pitch = new Slider({ title: 'PITCH' }, { max: 90, min: -90 });
 	config.sliders.pitch.value = config.api.defaults.pitch;
+
+	// Append each slider to the DOM
+	_.forEach(config.sliders, function(slider) {
+		$(config.elements.containerSliders).append(slider.$el);
+	});
 
 	/**
 	 * Setup jQuery UI Progress Bar

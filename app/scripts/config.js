@@ -37,6 +37,7 @@ export const config = {
 	elements: {
 		carousel: '.js-carousel',
 		containerImage: '.js-container-image',
+		containerSliders: '.js-container-sliders',
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
 		imagesContainer: '.js-container-images',
 		stepProgress: '.js-step-progress',
