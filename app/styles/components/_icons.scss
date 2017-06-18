@@ -1,0 +1,8 @@
+$fa-font-size-base: 32px;
+
+.icon {
+	@include fa-icon;
+
+	font-size: 2em;
+	vertical-align: middle;
+}
