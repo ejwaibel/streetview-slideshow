@@ -89,6 +89,9 @@ var options = {
 		exclude: [],
 		// ignorePath: /^(\.\.\/)*\.\./,
 		overrides: {
+			fontawesome: {
+				main: ['scss/font-awesome.scss']
+			},
 			'jquery-ui': {
 				main: ['themes/cupertino/jquery-ui.css', 'jquery-ui.js']
 			}
