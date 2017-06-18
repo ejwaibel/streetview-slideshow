@@ -40,8 +40,10 @@ var options = {
 		debug: true
 	},
 	browserSync: {
-		debugInfo: true,
+		logLevel: 'debug',
+		logPrefix: 'streetview',
 		minify: false,
+		notify: false,
 		open: false,
 		port: 9000,
 		server: {
@@ -102,7 +104,7 @@ gulp.task('styles:lint', function() {
 		.pipe($.sassLint.failOnError());
 });
 
-gulp.task('styles', ['styles:lint', 'images', 'fonts'], function() {
+gulp.task('styles', ['styles:lint'], function() {
 	var postcssPlugins = [
 		$.autoprefixer(options.autoprefixer)
 	];
@@ -141,7 +143,7 @@ gulp.task('scripts', ['scripts:lint'], function() {
 		.pipe(gulp.dest('.tmp/scripts'));
 });
 
-gulp.task('html', function() {
+gulp.task('html', ['images', 'fonts'], function() {
 	var wiredep = require('wiredep').stream;
 
 	return gulp.src('app/*.html')
@@ -187,16 +189,14 @@ gulp.task('serve', ['html', 'scripts', 'styles', 'extras'], function() {
 	browserSync.init(options.browserSync);
 
 	gulp.watch([
-		'.tmp/*.html',
-		'.tmp/scripts/*.js',
-		'app/images/**/*',
-		'.tmp/fonts/**/*'
-	], { cwd: './' }).on('change', reload);
+		'.tmp/scripts/*.js'
+	]).on('change', reload);
 
 	gulp.watch(['bower.json', 'app/*.html'], { cwd: './' }, ['html']);
 	gulp.watch('app/scripts/**/*.js', { cwd: './' }, ['scripts']);
 	gulp.watch('app/styles/**/*', { cwd: './' }, ['styles']);
-	gulp.watch('app/fonts/**/*', ['fonts']);
+	gulp.watch('app/fonts/**/*', { cwd: './' }, ['fonts']);
+	gulp.watch(['app/images/**/*', 'app/styles/images/*'], { cwd: './' }, ['images']);
 });
 
 gulp.task('build', ['clean', 'scripts', 'styles', 'html', 'extras'], function() {
