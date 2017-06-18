@@ -8,10 +8,12 @@ export class Slider {
 
 		this.$el = $(`
 			<div class="row collapse">
-				<h4 class="slider-title text-center">${opts.title}</h4>
+				<div class="slider-title text-right">
+					<h4>${opts.title} = <span class="slider-value js-slider-value"></span></h4>
+				</div>
 				<div class="container-slider js-container-slider">
 					<div class="js-slider">
-						<span class="slider-value js-slider-value"></span>
+
 					</div>
 				</div>
 			</div>
