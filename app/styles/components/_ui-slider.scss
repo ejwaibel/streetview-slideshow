@@ -1,0 +1,31 @@
+.ui-widget {
+	&.ui-slider {
+		font-size: 2.5em;
+	}
+}
+
+.slider-title {
+	@include grid-column(
+		// $center: true,
+		$columns: 3,
+		$last-column: false
+	);
+
+	margin-top: rem-calc(8);
+}
+
+.container-slider {
+	@include grid-column(
+		// $center: true,
+		$collapse: true,
+		$columns: 8
+	);
+
+	padding: 1rem 0;
+
+	.slider-value {
+		font-size: 1.5rem;
+		position: absolute;
+		z-index: 2;
+	}
+}
