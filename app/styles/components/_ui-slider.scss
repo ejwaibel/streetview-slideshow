@@ -11,21 +11,24 @@
 		$last-column: false
 	);
 
-	margin-top: rem-calc(8);
+	margin-top: .75rem;
 }
 
 .container-slider {
 	@include grid-column(
 		// $center: true,
-		$collapse: true,
+		// $collapse: true,
 		$columns: 8
 	);
 
-	padding: 1rem 0;
+	padding-bottom: 1rem;
+	padding-top: 1rem;
 
 	.slider-value {
+		cursor: default;
 		font-size: 1.5rem;
 		position: absolute;
-		z-index: 2;
+		user-select: none;
+		z-index: 5;
 	}
 }
