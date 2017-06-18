@@ -81,7 +81,7 @@ export const utils = {
 							geocodeDirection(step)
 								.always(geocodeCallback);
 							// TODO: Add failback for image from directions
-						}, (i + 1) * 500, steps[i]);
+						}, (i + 1) * 750, steps[i]);
 
 						self.directionTimers.push(timeout);
 					}
