@@ -215,7 +215,7 @@ $header-font-color: $body-font-color;
 // $anchor-text-decoration: none;
 // $anchor-text-decoration-hover: none;
 $anchor-font-color: $secondary-color;
-$anchor-font-color-hover: scale-color($anchor-font-color, $lightness: -14%);
+$anchor-font-color-hover: scale-color($anchor-font-color, $lightness: -30%);
 
 // We use these to style the <hr> element
 // $hr-border-width: 1px;
@@ -276,7 +276,7 @@ $anchor-font-color-hover: scale-color($anchor-font-color, $lightness: -14%);
 
 $include-html-accordion-classes: $include-html-classes;
 
-// $accordion-navigation-padding: rem-calc(16);
+$accordion-navigation-padding: .5rem;
 $accordion-navigation-bg-color: $primary-color;
 $accordion-navigation-hover-bg-color: scale-color($accordion-navigation-bg-color, $lightness: 25%);
 $accordion-navigation-active-bg-color: $accordion-navigation-hover-bg-color;
@@ -309,7 +309,7 @@ $reveal-box-shadow: 0 0 1rem lighten(get-color(black), 20);
 $reveal-close-font-size: rem-calc(40);
 $reveal-close-top: rem-calc(2);
 $reveal-close-side: rem-calc(8);
-$reveal-close-color: darken($secondary-color, 25);
+$reveal-close-color: $anchor-font-color;
 $reveal-close-weight: $font-weight-bold;
 
 // We use this to set the default radius used throughout the core.

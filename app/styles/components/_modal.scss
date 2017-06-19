@@ -5,4 +5,10 @@
 .reveal-modal {
 	height: auto !important;
 	top: 0 !important;
+
+	.close-reveal-modal {
+		&:hover {
+			color: $anchor-font-color-hover;
+		}
+	}
 }
