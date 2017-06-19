@@ -35,6 +35,21 @@ export default function init() {
 	config.buttons.$randomAddress = $('.js-random-address');
 	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
 
+	// Create the autocomplete object, restricting the search to geographical
+	// location types.
+	new google.maps.places.Autocomplete(
+		$('#address-origin')[0],
+		{ type: 'geocode' }
+	).setComponentRestrictions(
+		{ country: ['us'] }
+	);
+	new google.maps.places.Autocomplete(
+		$('#address-destination')[0],
+		{ type: 'geocode' }
+	).setComponentRestrictions(
+		{ country: ['us'] }
+	);
+
 	/**
 	 * Get image from address button
 	 */
