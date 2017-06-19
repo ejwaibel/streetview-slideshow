@@ -1,6 +1,7 @@
 'use strict';
 
 import { config } from './config';
+import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export const utils = {
@@ -19,10 +20,15 @@ export const utils = {
 			timer,
 			updateProgress = function() {
 				stepsCount++;
+
 				config.$stepsProgress
 					.progressbar('value', stepsCount)
 					.children('.js-steps-label')
 						.html(`${stepsCount} of ${stepsTotal}`);
+
+				if (config.$stepsProgress.progressbar('value') === stepsTotal) {
+					endDirections(destination);
+				}
 			},
 			geocodeDirection = function(step) {
 				var start = step.start_location;
@@ -30,14 +36,29 @@ export const utils = {
 				return utils.getFormattedAddress(start);
 			},
 			geocodeCallback = function(address) {
+				let streetviewImage = new StreetviewImage();
+
 				updateProgress();
 
 				if (!address.includes('RETRY')) {
-					utils.generateImage(address);
+					streetviewImage.generateImage(address);
 				}
 
 				// FIXME: Need to do something here
 				// window.alert(address);
+			},
+			endDirections = function(location) {
+				let streetviewImage = new StreetviewImage();
+
+				if (location === destination) {
+					streetviewImage.generateImage(location);
+				} else {
+					console.error(location);
+				}
+
+				utils.toggleButtons(false);
+				config.buttons.$getDirections.spin(false);
+				config.buttons.$cancelDirections.disable(true);
 			};
 
 		if (origin && destination) {
@@ -50,17 +71,7 @@ export const utils = {
 			};
 
 			directionsService.route(directionsRequest, function(result, status) {
-				var endDirections = function(location) {
-						if (location === destination) {
-							utils.generateImage(location);
-						} else {
-							console.error(location);
-						}
-
-						utils.toggleButtons(false);
-						config.buttons.$getDirections.spin(false);
-						config.buttons.$cancelDirections.disable(true);
-					},
+				var streetviewImage = new StreetviewImage(),
 					steps, i, timeout;
 
 				if (status === google.maps.DirectionsStatus.OK) {
@@ -68,7 +79,7 @@ export const utils = {
 					stepsTotal = steps.length - 1;
 					config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
-					utils.generateImage(origin);
+					streetviewImage.generateImage(origin);
 					updateProgress();
 
 					// Only steps in between origin & destination
@@ -78,13 +89,6 @@ export const utils = {
 						geocodeDirection(step)
 							.always(geocodeCallback);
 					}
-
-					timer = setInterval(function() {
-						if (stepsCount === stepsTotal) {
-							clearInterval(timer);
-							endDirections(destination);
-						}
-					}, 3000);
 				} else {
 					endDirections(status);
 				}
@@ -92,62 +96,6 @@ export const utils = {
 		}
 
 		return true;
-	},
-	generateImage: function(location) {
-		var $imgContainer = $(config.templates.img),
-			$streetviewImage = $imgContainer.find(config.elements.streetviewImage),
-			imgHeight = config.api.images.width,
-			imgWidth = config.api.images.width,
-			imgUrl, $img, i;
-
-		config.images.$container.append($imgContainer);
-		$imgContainer
-			.spin(config.spinOptions)
-			.find('.js-location-title')
-				.text(location);
-
-		imgUrl = config.templates.streetview.apply({
-			location: location,
-			imageHeight: imgHeight,
-			imageWidth: imgWidth,
-			heading: config.sliders.heading.value,
-			fov: config.sliders.fov.value,
-			pitch: config.sliders.pitch.value
-		});
-
-		let imgAttr = {
-			crossOrigin: 'anonymous',
-			title: location
-		};
-
-		// Setup new <img> element with default attributes and
-		// append it to image container
-		$img = $('<img>', imgAttr)
-				.prependTo($streetviewImage)
-				.on('load', function() {
-					let img64 = utils.getBase64Image(this).substr(0, 64);
-
-					if (config.api.images.noImageRegex.test(img64)) {
-						// utils.onRemoveImageClick.call(this);
-						$(this).attr(
-							'src',
-							`https://unsplash.it/g/${imgWidth}/${imgHeight}?blur&random`
-						);
-					}
-				});
-
-		// Get the URL to the image and once that finishes, set the same URL on the
-		// image and stop the spinner on image container
-		$.get(imgUrl)
-			.done(function() {
-				$img.attr('src', imgUrl);
-			})
-			.fail(function() {
-				$img.attr('src', 'https://blog.sqlauthority.com/i/a/errorstop.png');
-			})
-			.always(function() {
-				$imgContainer.spin(false);
-			});
 	},
 	/**
 	 * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
@@ -273,13 +221,7 @@ export const utils = {
 				).toFixed(fixed) * 1
 		};
 	},
-	onRemoveImageClick: function() {
-		$(this)
-			.parents(config.elements.containerImage)
-			.off()
-			.fadeOut()
-			.remove();
-	},
+
 	onGetCurrentLocationClick: function(e) {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector'));

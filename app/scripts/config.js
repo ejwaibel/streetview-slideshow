@@ -7,11 +7,6 @@ export const config = {
 			fov: 90,
 			pitch: 0
 		},
-		images: {
-			noImageRegex: new RegExp('ah4JdLMxVcEySefa6wxEgkBWYRpzNzuMEvoA$'),
-			width: 640,
-			height: 640
-		},
 		// jscs:disable
 		invalidAddress: new RegExp(
 			[
@@ -56,8 +51,7 @@ export const config = {
 		containerSliders: '.js-container-sliders',
 		dialogContent: '.js-slideshow-dialog .js-dialog-content',
 		imagesContainer: '.js-container-images',
-		stepProgress: '.js-step-progress',
-		streetviewImage: '.streetview-image'
+		stepProgress: '.js-step-progress'
 	},
 	images: {},
 	// jscs:disable
@@ -80,14 +74,6 @@ export const config = {
 	// jscs:enable
 	sliders: {},
 	templates: {
-		img: `
-			<li class="container-streetview-image js-container-image">
-				<i class="icon icon-remove fa fa-remove clickable js-remove-image"></i>
-				<div class="streetview-image">
-					<p class="location-title js-location-title"></p>
-				</div>
-			</li>
-		`,
 		progressLabel: `
 			<span class="js-steps-label progress-label"></span>
 		`,

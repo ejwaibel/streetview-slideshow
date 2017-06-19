@@ -89,7 +89,7 @@ export default function init() {
 
 	config.buttons.$startSlideshow = $('.js-start-slideshow');
 	config.buttons.$startSlideshow.on('click', function(e) {
-		var $images = $(config.elements.streetviewImage).clone(),
+		let $images = $('.streetview-image').clone(),
 			slides = $images.map(function(index, el) {
 				return el.outerHTML;
 			}).toArray(),
@@ -100,22 +100,6 @@ export default function init() {
 		config.$dialogContent
 			.empty()
 			.append($scroller);
-	});
-
-	/**
-	 * Remove image icon
-	 */
-	config.images.$container = $(config.elements.imagesContainer);
-	config.images.$container.on('click', '.js-remove-image', utils.onRemoveImageClick);
-
-	/**
-	 * Clear all images
-	 */
-	config.buttons.$clearImages = $('.js-clear-images');
-	config.buttons.$clearImages.on('click', function(e) {
-		config.images.$container
-			.find(config.elements.containerImage + ' .js-remove-image')
-			.trigger('click');
 	});
 
 	/**
