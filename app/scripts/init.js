@@ -77,6 +77,16 @@ export default function init() {
 	});
 
 	/**
+	 * Clear all images
+	 */
+	config.buttons.$clearImages = $('.js-clear-images');
+	config.buttons.$clearImages.on('click', function(e) {
+		config.images.$container
+			.find(config.elements.containerImage + ' .js-remove-image')
+			.trigger('click');
+	});
+
+	/**
 	 * Get image from address button
 	 */
 	config.buttons.$getImage = $('form .js-get-image');

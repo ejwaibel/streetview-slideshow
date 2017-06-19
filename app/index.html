@@ -137,25 +137,32 @@
 		<!-- END: FORM SUBMIT -->
 	</form>
 
-	<!-- START SLIDESHOW -->
-	<div class="row collapse">
-		<div class="columns small-12 medium-3">
-			<button type="button" class="button primary large js-start-slideshow" disabled title="Start Slideshow" data-reveal-id="slideshow-dialog">
-				<i class="icon icon-slideshow fa-photo"></i>
-			</button>
-		</div>
-	</div>
-	<!-- END: START SLIDESHOW -->
-
 	<!-- STREETVIEW IMAGES -->
 	<div class="row collapse">
-		<div class="columns">
-			<ul class="js-container-images large-block-grid-5 medium-block-grid-4 small-block-grid-3"></ul>
+		<div class="columns small-12">
+			<ul class="large-block-grid-5 medium-block-grid-4 small-block-grid-3 js-container-images"></ul>
 		</div>
 	</div>
 	<!-- END: STREETVIEW IMAGES -->
 
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTQdSIhC2_UjveiyfEBkU4E0sNzGpYoIc"></script>
+	<div class="row collapse">
+		<div class="columns medium-3">
+			<!-- START SLIDESHOW -->
+			<button type="button" class="button primary large js-start-slideshow" disabled title="Start Slideshow" data-reveal-id="slideshow-dialog">
+				<i class="icon icon-slideshow fa-photo"></i>
+			</button>
+			<!-- END: START SLIDESHOW -->
+		</div>
+		<div class="columns medium-3">
+			<!-- CLEAR IMAGES -->
+			<button type="button" class="button primary large js-clear-images" disabled title="Clear Images">
+				<i class="icon icon-clear-images fa-trash-o"></i>
+			</button>
+			<!-- END: CLEAR IMAGES -->
+		</div>
+	</div>
+
+	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTQdSIhC2_UjveiyfEBkU4E0sNzGpYoIc&libraries=places"></script>
 
 	<!-- build:js scripts/vendor.js -->
 	<!-- bower:js -->
