@@ -3,7 +3,6 @@
   "private": true,
   "dependencies": {
     "jquery": "2.1.4",
-    "fontawesome": "~4.3.0",
     "foundation": "^5.5.3",
     "jquery-ui": "~1.11.1",
     "spin.js": "^2.3.2",
@@ -11,6 +10,10 @@
     "modernizr": "^3.5.0",
     "moment": "^2.18.1",
     "handlebars": "^4.0.10",
-    "lodash": "^4.17.4"
+    "lodash": "^4.17.4",
+    "font-awesome": "fontawesome#^4.7.0"
+  },
+  "resolutions": {
+    "modernizr": "2.8.3"
   }
 }
