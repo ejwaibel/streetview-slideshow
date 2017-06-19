@@ -32,10 +32,8 @@ export const utils = {
 			geocodeCallback = function(address) {
 				updateProgress();
 
-				if (address !== 'RETRY') {
+				if (!address.includes('RETRY')) {
 					utils.generateImage(address);
-
-					return true;
 				}
 
 				// FIXME: Need to do something here
@@ -75,14 +73,10 @@ export const utils = {
 
 					// Only steps in between origin & destination
 					for (i = 1; i < stepsTotal; i++) {
-						// Ensure we don't exceed the 5 queries per second limit
-						timeout = setTimeout(function(step) {
-							geocodeDirection(step)
-								.always(geocodeCallback);
-							// TODO: Add failback for image from directions
-						}, (i + 1) * 750, steps[i]);
+						let step = steps[i];
 
-						self.directionTimers.push(timeout);
+						geocodeDirection(step)
+							.always(geocodeCallback);
 					}
 
 					timer = setInterval(function() {
@@ -328,7 +322,7 @@ export const utils = {
 						$input.val(status);
 
 						// Get another address if status is 'RETRY'
-						if (status === 'RETRY') {
+						if (status.includes('RETRY')) {
 							getRandomAddress(utils.getRandomLatLong());
 						}
 					});
