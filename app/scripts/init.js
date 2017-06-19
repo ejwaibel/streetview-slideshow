@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { config } from './config';
 import { utils } from './utils';
 import { Slider } from './Slider';
+import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export default function init() {
@@ -55,12 +56,24 @@ export default function init() {
 	 */
 	config.buttons.$getImage = $('form .js-get-image');
 	config.buttons.$getImage.on('click', function(e) {
-		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parent(),
+		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
-			address = $input.val();
+			address = $input.val(),
+			streetviewImage = new StreetviewImage();
 
-		utils.generateImage(address);
+		streetviewImage.generateImage(address);
+	});
+
+	config.images.$container = $(config.elements.imagesContainer);
+
+	/**
+	 * Clear all images
+	 */
+	config.buttons.$clearImages = $('.js-clear-images');
+	config.buttons.$clearImages.on('click', function(e) {
+		config.images.$container
+			.find(config.elements.containerImage + ' .js-remove-image')
+			.trigger('click');
 	});
 
 	// Get Directions button
