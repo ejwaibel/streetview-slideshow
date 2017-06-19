@@ -6,6 +6,8 @@ export class StreetviewImage {
 	constructor(opts) {
 		this.options = _.extend({
 			elements: {
+				menu: '.js-image-menu',
+				removeImage: '.js-remove-image',
 				streetviewImage: '.streetview-image'
 			},
 			height: 640,
@@ -15,31 +17,24 @@ export class StreetviewImage {
 		this.$imgContainer = $(StreetviewImage.imgTpl()),
 		this.$streetviewImage = this.$imgContainer
 								.find(this.options.elements.streetviewImage);
-
-		/**
-		 * Remove image icon
-		 */
-		config.images.$container = $(config.elements.imagesContainer);
-		config.images.$container.on('click', '.js-remove-image', utils.onRemoveImageClick);
-
-		/**
-		 * Clear all images
-		 */
-		config.buttons.$clearImages = $('.js-clear-images');
-		config.buttons.$clearImages.on('click', function(e) {
-			config.images.$container
-				.find(config.elements.containerImage + ' .js-remove-image')
-				.trigger('click');
-		});
+		this.$imageMenu = this.$imgContainer.find(this.options.elements.menu);
+		this.$imageMenu
+			.on('click', this.onToggleMenuClick)
+			.on('click', this.options.elements.removeImage, this.onRemoveImageClick)
+		;
 	}
 
 	static imgTpl() {
 		return `
 			<li class="container-streetview-image js-container-image">
-				<i class="icon icon-remove fa fa-remove clickable js-remove-image"></i>
 				<div class="streetview-image">
-					<p class="location-title js-location-title"></p>
+					<ul class="image-menu js-image-menu">
+						<li>
+							<i class="icon icon-remove fa fa-trash clickable js-remove-image"></i>
+						</li>
+					</ul>
 				</div>
+				<p class="location-title js-location-title"></p>
 			</li>
 		`;
 	}
@@ -54,6 +49,10 @@ export class StreetviewImage {
 			.off()
 			.fadeOut()
 			.remove();
+	}
+
+	onToggleMenuClick() {
+		$(this).addClass('open');
 	}
 
 	generateImage(location) {
@@ -84,7 +83,7 @@ export class StreetviewImage {
 		// Setup new <img> element with default attributes and
 		// append it to image container
 		$img = $('<img>', imgAttr)
-				.prependTo(this.$streetviewImage)
+				.appendTo(this.$streetviewImage)
 				.on('load', function() {
 					let img64 = utils.getBase64Image(this).substr(0, 64);
 
@@ -104,7 +103,7 @@ export class StreetviewImage {
 				$img.attr('src', imgUrl);
 			})
 			.fail(() => {
-				$img.attr('src', 'https://blog.sqlauthority.com/i/a/errorstop.png');
+				$img.attr('src', 'http://blog.sqlauthority.com/i/a/errorstop.png');
 			})
 			.always(() => {
 				this.$imgContainer.spin(false);
