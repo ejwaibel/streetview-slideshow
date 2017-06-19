@@ -244,9 +244,9 @@ export const utils = {
 		});
 	},
 	randomAddressClickCallback: function(e) {
-		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
+		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
+			isOrigin = $input.is('#address-origin'),
 			latlong = utils.getRandomLatLong(),
 			addressDfd = $.Deferred(),
 			/**
@@ -272,13 +272,25 @@ export const utils = {
 				return addressDfd.promise();
 			},
 			getRandomAddressCallback = function(data) {
-				$target.disable(false).spin(false);
+				let index = isOrigin ? 0 : 1;
+
+				$target
+					.disable(false)
+					.spin(false);
+
+				config.buttons.$getImage.eq(index).disable(false);
+
 				$input.val(data);
 			};
 
 		$input.val('');
 
-		$target.disable(true).spin(config.spinOptions);
+		$target
+			.disable(true)
+			.spin(config.spinOptions);
+
+		config.buttons.$geolocation.disable(true);
+		config.buttons.$getImage.eq(isOrigin ? 0 : 1).disable(true);
 
 		// Wait for valid address to be returned
 		getRandomAddress(latlong)
