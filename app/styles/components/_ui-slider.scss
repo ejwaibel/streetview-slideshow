@@ -1,9 +1,3 @@
-.ui-widget {
-	&.ui-slider {
-		font-size: 2.5em;
-	}
-}
-
 .slider-title {
 	@include grid-column(
 		// $center: true,
