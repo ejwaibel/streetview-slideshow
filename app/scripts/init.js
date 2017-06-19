@@ -23,15 +23,33 @@ export default function init() {
 	 */
 	$('form').on('submit', utils.getDirectionsCallback);
 
-	/**
-	 * Remove image icon
-	 */
-	config.images.$container = $(config.elements.imagesContainer);
-	config.images.$container.on('click', '.js-remove-image', utils.onRemoveImageClick);
+	// Get current location button
+	config.buttons.$geolocation = $('.js-geolocation').disable(true);
+
+	if (navigator.geolocation) {
+		config.buttons.$geolocation.disable(false);
+		config.buttons.$geolocation.on('click', utils.onGetCurrentLocationClick);
+	}
+
+	// Get random address button
+	config.buttons.$randomAddress = $('.js-random-address');
+	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
 
 	/**
-	 * Setup jQuery UI Buttons
+	 * Get image from address button
 	 */
+	config.buttons.$getImage = $('form .js-get-image');
+	config.buttons.$getImage.on('click', function(e) {
+		var $element = $(e.target),
+			$target = $element.attr('data-selector') ? $element : $element.parent(),
+			$input = $($target.data('selector')),
+			address = $input.val();
+
+		utils.generateImage(address);
+	});
+
+	// Get Directions button
+	config.buttons.$getDirections = $('.js-get-directions');
 
 	// Cancel Directions button
 	config.buttons.$cancelDirections = $('.js-cancel-directions').disable(true);
@@ -50,13 +68,6 @@ export default function init() {
 
 		$this.disable(true);
 	});
-
-	// Get Directions button
-	config.buttons.$getDirections = $('.js-get-directions');
-
-	// Get random address button
-	config.buttons.$randomAddress = $('.js-random-address');
-	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
 
 	// Start slideshow button
 	let slideshowTpl = new Template(config.templates.slideshow);
@@ -77,6 +88,12 @@ export default function init() {
 	});
 
 	/**
+	 * Remove image icon
+	 */
+	config.images.$container = $(config.elements.imagesContainer);
+	config.images.$container.on('click', '.js-remove-image', utils.onRemoveImageClick);
+
+	/**
 	 * Clear all images
 	 */
 	config.buttons.$clearImages = $('.js-clear-images');
@@ -84,19 +101,6 @@ export default function init() {
 		config.images.$container
 			.find(config.elements.containerImage + ' .js-remove-image')
 			.trigger('click');
-	});
-
-	/**
-	 * Get image from address button
-	 */
-	config.buttons.$getImage = $('form .js-get-image');
-	config.buttons.$getImage.on('click', function(e) {
-		var $element = $(e.target),
-			$target = $element.attr('data-selector') ? $element : $element.parent(),
-			$input = $($target.data('selector')),
-			address = $input.val();
-
-		utils.generateImage(address);
 	});
 
 	/**

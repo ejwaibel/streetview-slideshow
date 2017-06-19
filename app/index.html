@@ -59,11 +59,16 @@
 					<label for="address-origin" class="show-for-sr">Origin</label>
 					<div class="row collapse">
 						<div class="columns small-2 medium-1">
-							<button type="button" class="button btn-labeled primary prefix js-random-address" data-selector="#address-origin" title="Random Origin Address">
+							<button type="button" class="button primary prefix js-random-address" data-selector="#address-origin" title="Random Origin Address">
 								<i class="icon icon-refresh fa-refresh"></i>
 							</button>
 						</div>
-						<div class="columns small-8 medium-10">
+						<div class="columns small-2 medium-1">
+							<button type="button" class="button primary prefix js-geolocation" data-selector="#address-origin" title="Current Location">
+								<i class="icon icon-refresh fa-rebel"></i>
+							</button>
+						</div>
+						<div class="columns small-8 medium-9">
 							<input type="text" id="address-origin" name="address-origin" class="form-control" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
 						</div>
 						<div class="columns small-2 medium-1">

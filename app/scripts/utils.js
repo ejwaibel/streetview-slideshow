@@ -208,20 +208,21 @@ export const utils = {
 				var address = results && results.length && results[0] ?
 							results[0].formatted_address : null;
 
+				// TODO: Convert to switch() statement
 				if (status === google.maps.GeocoderStatus.OK) {
 					if (address.search(self.invalidAddress) !== -1 ||
 						address.match(/\,/g).length < 3) {
-						dfd.reject('RETRY');
+						dfd.reject('RETRY - INVALID ADDRESS');
 					} else {
 						dfd.resolve(address);
 					}
 				} else if (status === google.maps.GeocoderStatus.ZERO_RESULTS ||
 						status === google.maps.GeocoderStatus.UNKNOWN_ERROR) {
-					dfd.reject('RETRY');
+					dfd.reject('RETRY - ' + status);
 				} else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
 					setTimeout(function() {
 						self.geocoder.geocode(options, geocodeCallback);
-					}, 1200);
+					}, 500);
 				} else {
 					dfd.reject(status);
 				}
@@ -271,6 +272,27 @@ export const utils = {
 			.fadeOut()
 			.remove();
 	},
+	onGetCurrentLocationClick: function(e) {
+		var $target = $(e.currentTarget),
+			$input = $($target.data('selector'));
+
+		$input.val('');
+
+		$target.disable(true).spin(config.spinOptions);
+
+		navigator.geolocation.getCurrentPosition((pos) => {
+			let latlng = {
+				latitude: pos.coords.latitude,
+				longitude: pos.coords.longitude
+			};
+
+			utils.getFormattedAddress(latlng)
+				.always(function(data) {
+					$target.spin(false);
+					$input.val(data);
+				});
+		});
+	},
 	randomAddressClickCallback: function(e) {
 		var $element = $(e.target),
 			$target = $element.attr('data-selector') ? $element : $element.parents('.button'),
@@ -289,11 +311,12 @@ export const utils = {
 						addressDfd.resolve(results);
 					})
 					.fail(function(status) {
+						$input.val(status);
+
+						// Get another address if status is 'RETRY'
 						if (status === 'RETRY') {
 							getRandomAddress(utils.getRandomLatLong());
 						}
-
-						addressDfd.fail(status);
 					});
 
 				return addressDfd.promise();
