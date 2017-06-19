@@ -93,7 +93,7 @@ var options = {
 				main: ['scss/font-awesome.scss']
 			},
 			'jquery-ui': {
-				main: ['themes/cupertino/jquery-ui.css', 'jquery-ui.js']
+				main: ['themes/humanity/jquery-ui.css', 'jquery-ui.js']
 			}
 		}
 	}
