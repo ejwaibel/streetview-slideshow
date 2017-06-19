@@ -27,11 +27,11 @@
 			}
 
 			&.open {
+				right: 0;
+
 				&::before {
 					content: $fa-var-close;
 				}
-
-				right: 0;
 			}
 
 			.icon {
