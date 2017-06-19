@@ -12,6 +12,22 @@ export const config = {
 			width: 640,
 			height: 640
 		},
+		// jscs:disable
+		invalidAddress: new RegExp(
+			[
+				'(^[\\w\\d\\s]+$)',
+				'(^\\d+-\\d+)',
+				'(^\\w+-\\d+,)',
+				'(unnamed road)',
+				'(po box)',
+				'(service)',
+				'(highway)',
+				'(freeway)',
+				'(development road)'
+			].join('|'),
+			'i'
+		),
+		// jscs:enable
 		streetview: `
 			https://maps.googleapis.com/maps/api/streetview
 				?size={{imageWidth}}x{{imageHeight}}

@@ -5,7 +5,6 @@ import { Template } from './Template';
 
 export const utils = {
 	directionTimers: [],
-	invalidAddress: /(unnamed road)|(^[\w\d\s]+$)|(^\d+\-\d+)|(highway)|(freeway)|(development road)/i,
 	geocoder: new google.maps.Geocoder(),
 	generateDirectionsImages: function() {
 		var self = this,
@@ -197,34 +196,49 @@ export const utils = {
 	 * @return {Deferred} dfd    [description]
 	 */
 	getFormattedAddress: function(latlng) {
-		var self = this,
-			dfd = $.Deferred(),
+		var dfd = $.Deferred(),
 			options = {
 				location: latlng.latitude ?
 						new google.maps.LatLng(latlng.latitude, latlng.longitude) :
 						latlng
 			},
 			geocodeCallback = function(results, status) {
-				var address = results && results.length && results[0] ?
-							results[0].formatted_address : null;
+				var address = '';
 
-				// TODO: Convert to switch() statement
-				if (status === google.maps.GeocoderStatus.OK) {
-					if (address.search(self.invalidAddress) !== -1 ||
-						address.match(/\,/g).length < 3) {
-						dfd.reject('RETRY - INVALID ADDRESS');
-					} else {
-						dfd.resolve(address);
-					}
-				} else if (status === google.maps.GeocoderStatus.ZERO_RESULTS ||
-						status === google.maps.GeocoderStatus.UNKNOWN_ERROR) {
-					dfd.reject('RETRY - ' + status);
-				} else if (status === google.maps.GeocoderStatus.OVER_QUERY_LIMIT) {
-					setTimeout(function() {
-						self.geocoder.geocode(options, geocodeCallback);
-					}, 500);
-				} else {
-					dfd.reject(status);
+				switch (status) {
+					case google.maps.GeocoderStatus.OK:
+						try {
+							address = results[0].formatted_address;
+						} catch (error) {
+							dfd.reject(`RETRY - ${options.location} - ${error}`);
+
+							return;
+						}
+
+						let isBadAddress = config.api.invalidAddress.test(address),
+							isShortAddress = address.lastIndexOf(',') < 3;
+
+						if (isBadAddress || isShortAddress) {
+							dfd.reject(`RETRY - INVALID ADDRESS - ${address}`);
+						} else {
+							dfd.resolve(address);
+						}
+
+						break;
+
+					case google.maps.GeocoderStatus.ZERO_RESULTS:
+					case google.maps.GeocoderStatus.UNKNOWN_ERROR:
+						dfd.reject(`RETRY - ${status}`);
+						break;
+
+					case google.maps.GeocoderStatus.OVER_QUERY_LIMIT:
+						setTimeout(() => {
+							utils.geocoder.geocode(options, geocodeCallback);
+						}, 1000);
+						break;
+
+					default:
+						dfd.reject(status);
 				}
 			};
 
