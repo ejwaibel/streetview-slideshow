@@ -54,7 +54,7 @@ export default function init() {
 	/**
 	 * Get image from address button
 	 */
-	config.buttons.$getImage = $('form .js-get-image');
+	config.buttons.$getImage = $('.js-get-image').disable();
 	config.buttons.$getImage.on('click', function(e) {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
