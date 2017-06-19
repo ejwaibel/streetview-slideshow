@@ -57,9 +57,9 @@ $button-disabled-cursor: $cursor-default-value;
 		&.secondary,
 		&.success {
 			@include button-style(
-				$bg: get-color('dusty-grey'),
+				$bg: lighten(get-color(black), 25),
 				$disabled: true,
-				$bg-hover: get-color('dusty-grey'),
+				$bg-hover: lighten(get-color(black), 25),
 				$border-color: $button-border-color
 			);
 		}
