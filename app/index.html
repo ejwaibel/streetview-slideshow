@@ -23,7 +23,10 @@
 			<div class="streetview-image">
 				<ul class="image-menu js-image-menu">
 					<li>
-						<i class="icon icon-remove fa fa-trash clickable js-remove-image"></i>
+						<i class="icon icon-trash clickable js-image-action" data-action="remove"></i>
+					</li>
+					<li>
+						<i class="icon icon-zoom clickable js-image-action" data-action="fov"></i>
 					</li>
 				</ul>
 			</div>
@@ -42,7 +45,7 @@
 	<div id="slideshow-dialog" class="reveal-modal js-slideshow-dialog full" data-reveal aria-labelledby="slideshowModal" aria-hidden="true" role="dialog">
 		<div class="dialog-content js-dialog-content"></div>
 		<a class="close-reveal-modal" aria-label="Close">
-			<i class="icon icon-close fa fa-close"></i>
+			<i class="icon icon-close"></i>
 		</a>
 	</div>
 	<!-- END: SLIDESHOW DIALOG -->
@@ -58,7 +61,7 @@
 			</li>
 		</ul>
 		<a class="close-reveal-modal" aria-label="Close">
-			<i class="icon icon-close fa-close"></i>
+			<i class="icon icon-close"></i>
 		</a>
 	</div>
 	<!-- END: HELP DIALOG -->
@@ -72,12 +75,12 @@
 					<div class="row collapse">
 						<div class="columns small-2 medium-1">
 							<button type="button" class="button primary prefix js-random-address" data-selector="#address-origin" title="Random Origin Address">
-								<i class="icon icon-refresh fa-refresh"></i>
+								<i class="icon icon-random"></i>
 							</button>
 						</div>
 						<div class="columns small-2 medium-1">
 							<button type="button" class="button primary prefix js-geolocation" data-selector="#address-origin" title="Current Location">
-								<i class="icon icon-refresh fa-rebel"></i>
+								<i class="icon icon-geolocate"></i>
 							</button>
 						</div>
 						<div class="columns small-8 medium-9">
@@ -85,7 +88,7 @@
 						</div>
 						<div class="columns small-2 medium-1">
 							<button type="button" class="button primary prefix js-get-image" data-selector="#address-origin" title="Generate Image">
-								<i class="icon icon-streetview fa-street-view"></i>
+								<i class="icon icon-streetview"></i>
 							</button>
 						</div>
 					</div>
@@ -97,7 +100,7 @@
 					<div class="row collapse">
 						<div class="columns small-2 medium-1">
 							<button type="button" class="button primary prefix js-random-address" data-selector="#address-destination" title="Random Destination Address">
-								<i class="icon icon-refresh fa-refresh"></i>
+								<i class="icon icon-random"></i>
 							</button>
 						</div>
 						<div class="columns small-8 medium-10">
@@ -105,7 +108,7 @@
 						</div>
 						<div class="columns small-2 medium-1">
 							<button type="button" class="button primary prefix js-get-image" data-selector="#address-destination" title="Generate Image">
-								<i class="icon icon-streetview fa-street-view"></i>
+								<i class="icon icon-streetview"></i>
 							</button>
 						</div>
 					</div>
@@ -120,12 +123,12 @@
 				<ul class="accordion" data-accordion>
 					<li class="accordion-navigation">
 						<a href="#streetview-options">
-							<i class="icon icon-expand fa-gear"></i>
+							<i class="icon icon-options"></i>
 							<span class="accordion-navigation-label">Streetview Options</span>
 						</a>
 						<div id="streetview-options" class="js-container-sliders content">
 							<a class="help-link" href="#" title="Help" data-reveal-id="help">
-								<i class="icon help-icon fa-question-circle"></i>
+								<i class="icon icon-help"></i>
 							</a>
 						</div>
 					</li>
@@ -138,8 +141,8 @@
 		<div class="row collapse">
 			<div class="columns small-3 medium-2">
 				<button type="submit" class="button primary js-get-directions" tab-index="3" title="Generate Images from Directions">
-					<i class="icon icon-car fa-car"></i>
-					<i class="icon icon-camera fa-camera"></i>
+					<i class="icon icon-car"></i>
+					<i class="icon icon-streetview"></i>
 				</button>
 			</div>
 			<div class="columns small-6 medium-8">
@@ -147,7 +150,7 @@
 			</div>
 			<div class="columns small-3 medium-2">
 				<button type="button" class="right button alert btn-danger js-cancel-directions" tab-index="4" title="cancel" disabled>
-					<i class="icon fa-ban"></i>
+					<i class="icon icon-cancel"></i>
 				</button>
 			</div>
 		</div>
@@ -166,14 +169,14 @@
 		<div class="columns medium-3">
 			<!-- START SLIDESHOW -->
 			<button type="button" class="button primary large js-start-slideshow" disabled title="Start Slideshow" data-reveal-id="slideshow-dialog">
-				<i class="icon icon-slideshow fa-photo"></i>
+				<i class="icon icon-photo"></i>
 			</button>
 			<!-- END: START SLIDESHOW -->
 		</div>
 		<div class="columns medium-3">
 			<!-- CLEAR IMAGES -->
 			<button type="button" class="button primary large js-clear-images" disabled title="Clear Images">
-				<i class="icon icon-clear-images fa-trash-o"></i>
+				<i class="icon icon-trash"></i>
 			</button>
 			<!-- END: CLEAR IMAGES -->
 		</div>

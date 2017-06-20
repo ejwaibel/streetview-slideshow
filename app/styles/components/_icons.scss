@@ -9,4 +9,44 @@ $fa-font-size-base: 32px;
 	&.icon-close {
 		font-size: 1em;
 	}
+
+	&.icon-cancel::before {
+		content: $fa-var-ban;
+	}
+
+	&.icon-car::before {
+		content: $fa-var-car;
+	}
+
+	&.icon-close::before {
+		content: $fa-var-close;
+	}
+
+	&.icon-geolocate::before {
+		content: $fa-var-rebel;
+	}
+
+	&.icon-help::before {
+		content: $fa-var-question-circle;
+	}
+
+	&.icon-options::before {
+		content: $fa-var-gears;
+	}
+
+	&.icon-photo::before {
+		content: $fa-var-photo;
+	}
+
+	&.icon-random::before {
+		content: $fa-var-random;
+	}
+
+	&.icon-streetview::before {
+		content: $fa-var-street-view;
+	}
+
+	&.icon-trash::before {
+		content: $fa-var-trash;
+	}
 }
