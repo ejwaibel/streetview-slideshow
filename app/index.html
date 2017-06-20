@@ -18,6 +18,18 @@
 
 	<!-- build:js scripts/lib/modernizr.js -->
 	<!-- endbuild -->
+	<script async id="streetview-image-tpl" type="text/x-handlebars-template">
+		<li class="container-streetview-image js-container-image">
+			<div class="streetview-image">
+				<ul class="image-menu js-image-menu">
+					<li>
+						<i class="icon icon-remove fa fa-trash clickable js-remove-image"></i>
+					</li>
+				</ul>
+			</div>
+			<p class="location-title js-location-title"></p>
+		</li>
+	</script>
 </head>
 <body>
 	<!--[if lt IE 10]>
