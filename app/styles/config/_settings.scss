@@ -288,6 +288,138 @@ $accordion-navigation-font-size: rem-calc(20);
 // $accordion-content-padding: ($column-gutter/2);
 $accordion-content-active-bg-color: lighten($body-bg, 10);
 
+// 05. Buttons
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+$include-html-button-classes: $include-html-classes;
+
+// We use these to build padding for buttons.
+$button-tny: rem-calc(10);
+$button-sml: rem-calc(14);
+$button-med: rem-calc(16);
+$button-lrg: rem-calc(18);
+
+// We use this to control the display property.
+$button-display: inline-block;
+$button-margin-bottom: rem-calc(10);
+
+// We use these to control button text styles.
+// $button-font-family: $body-font-family;
+$button-font-color: $body-font-color;
+$button-font-color-alt: $secondary-color;
+// $button-font-tny: rem-calc(11);
+// $button-font-sml: rem-calc(13);
+// $button-font-med: rem-calc(16);
+// $button-font-lrg: rem-calc(20);
+// $button-font-weight: $font-weight-normal;
+// $button-font-align: center;
+
+// We use these to control various hover effects.
+// $button-function-factor: -20%;
+
+// We use these to control button border styles.
+// $button-border-width: 0;
+// $button-border-style: solid;
+// $button-bg-color: $primary-color;
+// $button-bg-hover: scale-color($button-bg-color, $lightness: $button-function-factor);
+// $button-border-color: $button-bg-hover;
+// $secondary-button-bg-hover: scale-color($secondary-color, $lightness: $button-function-factor);
+// $secondary-button-border-color: $secondary-button-bg-hover;
+// $success-button-bg-hover: scale-color($success-color, $lightness: $button-function-factor);
+// $success-button-border-color: $success-button-bg-hover;
+// $alert-button-bg-hover: scale-color($alert-color, $lightness: $button-function-factor);
+// $alert-button-border-color: $alert-button-bg-hover;
+// $warning-button-bg-hover: scale-color($warning-color, $lightness: $button-function-factor);
+// $warning-button-border-color: $warning-button-bg-hover;
+// $info-button-bg-hover: scale-color($info-color, $lightness: $button-function-factor);
+// $info-button-border-color: $info-button-bg-hover;
+
+// We use this to set the default radius used throughout the core.
+$button-radius: 0;
+$button-round: 0;
+
+// We use this to set default opacity and cursor for disabled buttons.
+$button-disabled-opacity: .4;
+$button-disabled-cursor: $cursor-default-value;
+
+// 11. Forms
+// - - - - - - - - - - - - - - - - - - - - - - - - -
+
+// $include-html-form-classes: $include-html-classes;
+
+// We use this to set the base for lots of form spacing and positioning styles
+// $form-spacing: rem-calc(16);
+
+// We use these to style the labels in different ways
+// $form-label-pointer: pointer;
+$form-label-font-size: 1rem;
+$form-label-font-weight: $font-weight-bold;
+// $form-label-line-height: 1.5;
+$form-label-font-color: $primary-color;
+// $form-label-small-transform: capitalize;
+// $form-label-bottom-margin: 0;
+// $input-font-family: inherit;
+$input-font-color: $body-bg;
+$input-font-size: 1rem;
+$input-placeholder-font-color: $secondary-color;
+$input-bg-color: $body-font-color;
+$input-focus-bg-color: scale-color($input-bg-color, $lightness: 50%);
+$input-border-color: $primary-color;
+$input-focus-border-color: scale-color($input-border-color, $lightness: 40%);
+// $input-border-style: solid;
+// $input-border-width: 1px;
+$input-border-radius: 0;
+$input-disabled-bg: get-color('mine-shaft');
+// $input-disabled-cursor: $cursor-default-value;
+// $input-box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);
+// $input-include-glowing-effect: false;
+
+// We use these to style the fieldset border and spacing.
+// $fieldset-border-style: solid;
+// $fieldset-border-width: 1px;
+// $fieldset-border-color: $gainsboro;
+// $fieldset-padding: rem-calc(20);
+// $fieldset-margin: rem-calc(18 0);
+
+// We use these to style the legends when you use them
+$legend-bg: lighten($body-bg, 10%);
+// $legend-font-weight: $font-weight-bold;
+$legend-padding: rem-calc(0 3);
+
+// We use these to style the prefix and postfix input elements
+// $input-prefix-bg: scale-color($white, $lightness: -5%);
+$input-prefix-border-color: $input-border-color;
+// $input-prefix-border-size: 1px;
+// $input-prefix-border-type: solid;
+// $input-prefix-overflow: hidden;
+$input-prefix-font-color: $input-font-color;
+// $input-prefix-font-color-alt: $white;
+
+// We use this setting to turn on/off HTML5 number spinners (the up/down arrows)
+// $input-number-spinners: true;
+
+// We use these to style the error states for inputs and labels
+// $input-error-message-padding: rem-calc(6 9 9);
+// $input-error-message-top: -1px;
+// $input-error-message-font-size: rem-calc(12);
+// $input-error-message-font-weight: $font-weight-normal;
+// $input-error-message-font-style: italic;
+// $input-error-message-font-color: $white;
+// $input-error-message-bg-color: $alert-color;
+// $input-error-message-font-color-alt: $oil;
+
+// We use this to style the glowing effect of inputs when focused
+// $glowing-effect-fade-time: .45s;
+// $glowing-effect-color: $input-focus-border-color;
+
+// We use this to style the transition when inputs are focused and when the glowing effect is disabled.
+// $input-transition-fade-time: 0.15s;
+// $input-transition-fade-timing-function: linear;
+
+// Select variables
+// $select-bg-color: $ghost;
+// $select-hover-bg-color: scale-color($select-bg-color, $lightness: -3%);
+
 // 25. Reveal
 // - - - - - - - - - - - - - - - - - - - - - - - - -
 
