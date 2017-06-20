@@ -2,6 +2,8 @@ import _ from 'lodash';
 import { config } from './config';
 import { utils } from './utils';
 
+import { Template } from './Template';
+
 export class StreetviewImage {
 	constructor(opts) {
 		this.options = _.extend({
@@ -14,7 +16,7 @@ export class StreetviewImage {
 			width: 640
 		}, opts);
 
-		this.$imgContainer = $(StreetviewImage.imgTpl()),
+		this.$imgContainer = $(StreetviewImage.tpl.apply()),
 		this.$streetviewImage = this.$imgContainer
 								.find(this.options.elements.streetviewImage);
 		this.$imageMenu = this.$imgContainer.find(this.options.elements.menu);
@@ -24,22 +26,11 @@ export class StreetviewImage {
 		;
 	}
 
-	static imgTpl() {
-		return `
-			<li class="container-streetview-image js-container-image">
-				<div class="streetview-image">
-					<ul class="image-menu js-image-menu">
-						<li>
-							<i class="icon icon-remove fa fa-trash clickable js-remove-image"></i>
-						</li>
-					</ul>
-				</div>
-				<p class="location-title js-location-title"></p>
-			</li>
-		`;
+	static get tpl() {
+		return new Template($('#streetview-image-tpl').html());
 	}
 
-	static noImageData() {
+	static get noImageData() {
 		return new RegExp('ah4JdLMxVcEySefa6wxEgkBWYRpzNzuMEvoA$');
 	}
 
@@ -87,7 +78,7 @@ export class StreetviewImage {
 				.on('load', function() {
 					let img64 = utils.getBase64Image(this).substr(0, 64);
 
-					if (StreetviewImage.noImageData().test(img64)) {
+					if (StreetviewImage.noImageData.test(img64)) {
 						// utils.onRemoveImageClick.call(this);
 						$(this).attr(
 							'src',
