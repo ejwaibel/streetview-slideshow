@@ -1,8 +1,6 @@
 {
 	"disallowCurlyBraces": [],
-	"disallowDanglingUnderscores": {
-		"allExcept": ["_defaults", "_name", "_super"]
-	},
+	"disallowDanglingUnderscores": false,
 	"disallowEmptyBlocks": true,
 	"disallowIdentifierNames": [],
 	"disallowImplicitTypeConversion": [],
