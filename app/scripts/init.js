@@ -119,9 +119,9 @@ export default function init() {
 	 * Setup jQuery UI Sliders
 	 */
 	config.sliders.heading = new Slider({ title: 'HEADING' });
-	config.sliders.fov = new Slider({ title: 'FOV' }, { max: 120 });
+	config.sliders.fov = new Slider({ title: 'FOV', uiSlider: { max: 120 } });
 	config.sliders.fov.value = config.api.defaults.fov;
-	config.sliders.pitch = new Slider({ title: 'PITCH' }, { max: 90, min: -90 });
+	config.sliders.pitch = new Slider({ title: 'PITCH', uiSlider: { max: 90, min: -90 } });
 	config.sliders.pitch.value = config.api.defaults.pitch;
 
 	// Append each slider to the DOM
