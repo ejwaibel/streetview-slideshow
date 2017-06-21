@@ -73,20 +73,20 @@
 				<div class="columns small-12">
 					<label for="address-origin" class="show-for-sr">Origin</label>
 					<div class="row collapse">
-						<div class="columns small-2 medium-1">
+						<div class="columns small-6 medium-1">
 							<button type="button" class="button primary prefix js-random-address" data-selector="#address-origin" title="Random Origin Address">
 								<i class="icon icon-random"></i>
 							</button>
 						</div>
-						<div class="columns small-2 medium-1">
+						<div class="columns small-6 medium-1">
 							<button type="button" class="button primary prefix js-geolocation" data-selector="#address-origin" title="Current Location">
 								<i class="icon icon-geolocate"></i>
 							</button>
 						</div>
-						<div class="columns small-8 medium-9">
+						<div class="columns small-12 medium-9">
 							<input type="text" id="address-origin" name="address-origin" class="form-control js-address-input" aria-labeledby="Origin" placeholder="Origin" required tab-index="1" autofocus="true" autocomplete="yes">
 						</div>
-						<div class="columns small-2 medium-1">
+						<div class="columns small-12 medium-1">
 							<button type="button" class="button primary prefix js-get-image" data-selector="#address-origin" title="Generate Image">
 								<i class="icon icon-streetview"></i>
 							</button>
@@ -98,15 +98,15 @@
 				<div class="columns small-12">
 					<label for="address-destination" class="show-for-sr">Destination</label>
 					<div class="row collapse">
-						<div class="columns small-2 medium-1">
+						<div class="columns small-12 medium-1">
 							<button type="button" class="button primary prefix js-random-address" data-selector="#address-destination" title="Random Destination Address">
 								<i class="icon icon-random"></i>
 							</button>
 						</div>
-						<div class="columns small-8 medium-10">
+						<div class="columns small-12 medium-10">
 							<input type="text" id="address-destination" name="address-destination" class="form-control js-address-input" aria-label="Destination" placeholder="Destination" required tab-index="2" autocomplete="yes">
 						</div>
-						<div class="columns small-2 medium-1">
+						<div class="columns small-12 medium-1">
 							<button type="button" class="button primary prefix js-get-image" data-selector="#address-destination" title="Generate Image">
 								<i class="icon icon-streetview"></i>
 							</button>
@@ -138,18 +138,18 @@
 		<!-- END: SLIDERS -->
 
 		<!-- FORM SUBMIT -->
-		<div class="row collapse">
-			<div class="columns small-3 medium-2">
-				<button type="submit" class="button primary js-get-directions" tab-index="3" title="Generate Images from Directions">
+		<div class="row medium-collapse">
+			<div class="columns small-12 medium-2 large-1">
+				<button type="submit" class="button primary medium js-get-directions" tab-index="3" title="Generate Images from Directions">
 					<i class="icon icon-car"></i>
-					<i class="icon icon-streetview"></i>
+					<!-- <i class="icon icon-streetview"></i> -->
 				</button>
 			</div>
-			<div class="columns small-6 medium-8">
+			<div class="columns small-12 medium-8 large-10">
 				<div class="progress-bar js-step-progress"></div>
 			</div>
-			<div class="columns small-3 medium-2">
-				<button type="button" class="right button alert btn-danger js-cancel-directions" tab-index="4" title="cancel" disabled>
+			<div class="columns small-12 medium-2 large-1">
+				<button type="button" class="button alert medium btn-danger right js-cancel-directions" tab-index="4" title="cancel" disabled>
 					<i class="icon icon-cancel"></i>
 				</button>
 			</div>
@@ -160,22 +160,22 @@
 	<!-- STREETVIEW IMAGES -->
 	<div class="row collapse">
 		<div class="columns small-12">
-			<ul class="medium-block-grid-4 small-block-grid-3 js-container-images"></ul>
+			<ul class="medium-block-grid-2 large-block-grid-4 js-container-images"></ul>
 		</div>
 	</div>
 	<!-- END: STREETVIEW IMAGES -->
 
 	<div class="row collapse">
-		<div class="columns medium-3">
+		<div class="columns small-6 medium-3">
 			<!-- START SLIDESHOW -->
 			<button type="button" class="button primary large js-start-slideshow" disabled title="Start Slideshow" data-reveal-id="slideshow-dialog">
 				<i class="icon icon-photo"></i>
 			</button>
 			<!-- END: START SLIDESHOW -->
 		</div>
-		<div class="columns medium-3">
+		<div class="columns small-6 medium-3">
 			<!-- CLEAR IMAGES -->
-			<button type="button" class="button primary large js-clear-images" disabled title="Clear Images">
+			<button type="button" class="button primary large right js-clear-images" disabled title="Clear Images">
 				<i class="icon icon-trash"></i>
 			</button>
 			<!-- END: CLEAR IMAGES -->
