@@ -64,7 +64,7 @@ export class StreetviewImage {
 			.prepend(this.sliders.heading.$slider)
 			.append(this.sliders.pitch.$slider);
 
-		this.$streetviewImage
+		this.$el
 			.find(this.options.elements.title)
 				.text(this.location);
 
@@ -80,15 +80,28 @@ export class StreetviewImage {
 	}
 
 	onMenuActionClick(e) {
-		$(this)
-			.parents(config.elements.containerImage)
-			.off()
-			.fadeOut()
-			.remove();
+		let $target = $(e.currentTarget),
+			action = $target.data('action');
+
+		switch (action) {
+			case 'remove':
+				$target
+					.parents(config.elements.containerImage)
+					.off()
+					.fadeOut()
+					.remove();
+
+				break;
+
+			case 'zoomLevel':
+				this.zoomLevel -= 25;
+				this.onUpdateCamera();
+				break;
+		}
 	}
 
 	onToggleMenuClick() {
-		$(this).addClass('open');
+		$(this).toggleClass('open');
 	}
 
 	onUpdateCamera() {
