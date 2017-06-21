@@ -123,7 +123,7 @@ export const utils = {
 
 		return dataURL
 				.replace(/^data:image\/(png|jpg);base64,/, '')
-				.replace(/iVBORw0KGgoAAAANSUhEUgAAAPEAAADxCAYAAAAay1EJAAA/, '');
+				.replace(/iVBORw0KGgoAAAANSUhEUgAAA/, '');
 	},
 	getDirectionsCallback: function(e) {
 		e.preventDefault();

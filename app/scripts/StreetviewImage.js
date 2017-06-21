@@ -54,7 +54,7 @@ export class StreetviewImage {
 	}
 
 	static get noImageData() {
-		return new RegExp('ah4JdLMxVcEySefa6wxEgkBWYRpzNzuMEvoA$');
+		return new RegExp('5xlzFAAAI4ElEQVR4Xu3UAQkAIBRDQe1fUgRzKNjiwZnA3T6bZ');
 	}
 
 	onMenuActionClick(e) {
