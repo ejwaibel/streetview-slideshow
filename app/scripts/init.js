@@ -7,16 +7,41 @@ import { Template } from './Template';
 
 export default function init() {
 	let onGetDirectionsSubmit = function(e) {
-		e.preventDefault();
+			e.preventDefault();
 
-		utils.toggleButtons(true);
-		config.buttons.$getDirections.spin(config.spinOptions);
-		config.buttons.$cancelDirections.disable(false);
+			utils.toggleButtons(true);
+			config.buttons.$getDirections.spin(config.spinOptions);
+			config.buttons.$cancelDirections.disable(false);
 
-		utils.generateDirectionsImages();
+			utils.generateDirectionsImages();
 
-		return;
-	};
+			return;
+		},
+		onGetCurrentLocationClick = function(e) {
+			var $target = $(e.currentTarget),
+				$input = $($target.data('selector'));
+
+			$input.val('');
+
+			$target.disable(true).spin(config.spinOptions);
+
+			navigator.geolocation.getCurrentPosition((pos) => {
+				let latlng = {
+						latitude: pos.coords.latitude,
+						longitude: pos.coords.longitude
+					},
+					onFormattedAddressDone = function(data) {
+						$target.spin(false);
+						$input.val(data);
+						config.buttons.$getImage
+							.eq(0)
+							.disable(false);
+					};
+
+				utils.getFormattedAddress(latlng)
+					.always(onFormattedAddressDone);
+			});
+		};
 
 	config.templates.streetview = new Template(config.streetview.url);
 
@@ -41,7 +66,7 @@ export default function init() {
 
 	if (navigator.geolocation) {
 		config.buttons.$geolocation.disable(false);
-		config.buttons.$geolocation.on('click', utils.onGetCurrentLocationClick);
+		config.buttons.$geolocation.on('click', onGetCurrentLocationClick);
 	}
 
 	// Get random address button

@@ -120,6 +120,16 @@ export const utils = {
 				.replace(/^data:image\/(png|jpg);base64,/, '')
 				.replace(/iVBORw0KGgoAAAANSUhEUgAAA/, '');
 	},
+
+	/**
+	 * [getRandom description]
+	 * @param  {[type]} from [description]
+	 * @param  {[type]} to   [description]
+	 * @return {[type]}      [description]
+	 */
+	getRandom: function(from, to) {
+		return Math.random() * (to - from) + from;
+	},
 	/**
 	 * Converts the given latitude/longitude values into a human
 	 * @param  {Object} latlng [description]
@@ -176,9 +186,6 @@ export const utils = {
 
 		return dfd.promise();
 	},
-	getRandom: function(from, to) {
-		return Math.random() * (to - from) + from;
-	},
 	/**
 	 * Return a random set of latitude/longitude values that are within
 	 * the square bounds for North America
@@ -198,39 +205,18 @@ export const utils = {
 		return {
 			// .toFixed() returns string, so ' * 1' is a trick to convert to number
 			latitude: (
-				this.getRandom(
+				utils.getRandom(
 					latitudeBoundary.min,
 					latitudeBoundary.max)
 				).toFixed(fixed) * 1,
 			longitude: (
-				this.getRandom(
+				utils.getRandom(
 					longitudeBoundary.min,
 					longitudeBoundary.max)
 				).toFixed(fixed) * 1
 		};
 	},
 
-	onGetCurrentLocationClick: function(e) {
-		var $target = $(e.currentTarget),
-			$input = $($target.data('selector'));
-
-		$input.val('');
-
-		$target.disable(true).spin(config.spinOptions);
-
-		navigator.geolocation.getCurrentPosition((pos) => {
-			let latlng = {
-				latitude: pos.coords.latitude,
-				longitude: pos.coords.longitude
-			};
-
-			utils.getFormattedAddress(latlng)
-				.always(function(data) {
-					$target.spin(false);
-					$input.val(data);
-				});
-		});
-	},
 	randomAddressClickCallback: function(e) {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
