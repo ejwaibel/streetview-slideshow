@@ -1,5 +1,22 @@
 import { Template } from './Template';
 
+const _template = new Template(`
+	<div class="row collapse">
+		{{#if setTitle}}
+		<div class="slider-title text-right">
+			<h4>{{title}} = <span class="slider-value js-slider-value"></span></h4>
+		</div>
+		{{/if}}
+		<div class="container-slider js-container-slider">
+			<div class="js-slider">
+				{{#unless setTitle}}
+					<span class="slider-value js-slider-value"></span>
+				{{/unless}}
+			</div>
+		</div>
+	</div>
+`);
+
 export class Slider {
 	constructor(options) {
 		this.elements = {
@@ -23,24 +40,7 @@ export class Slider {
 			}
 		}, options);
 
-		this.tpl = new Template(`
-			<div class="row collapse">
-				{{#if setTitle}}
-				<div class="slider-title text-right">
-					<h4>{{title}} = <span class="slider-value js-slider-value"></span></h4>
-				</div>
-				{{/if}}
-				<div class="container-slider js-container-slider">
-					<div class="js-slider">
-						{{#unless setTitle}}
-							<span class="slider-value js-slider-value"></span>
-						{{/unless}}
-					</div>
-				</div>
-			</div>
-		`);
-
-		this.$el = $(this.tpl.apply(this.options));
+		this.$el = $(_template.apply(this.options));
 
 		this.$slider = this.$el.find(this.elements.slider);
 		this.$sliderContainer = this.$el.find(this.elements.containerSlider);
