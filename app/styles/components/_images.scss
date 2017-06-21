@@ -72,5 +72,27 @@
 				left: 2px;
 			}
 		}
+
+		img {
+			opacity: 1;
+			transition-duration: 1s;
+			transition-property: opacity;
+			transition-timing-function: linear;
+		}
+
+		&.replace-image {
+			.ui-slider,
+			.image-menu {
+				display: none;
+			}
+
+			img {
+				opacity: 0;
+
+				&:first-of-type {
+					position: absolute;
+				}
+			}
+		}
 	}
 }
