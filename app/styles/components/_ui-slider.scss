@@ -17,6 +17,20 @@
 
 	padding-bottom: 1rem;
 	padding-top: 1rem;
+}
+
+.ui-slider {
+	cursor: pointer;
+
+	.ui-slider-handle {
+		&.ui-state-hover {
+			cursor: -webkit-grab;
+		}
+
+		&.ui-state-active {
+			cursor: -webkit-grabbing;
+		}
+	}
 
 	.slider-value {
 		cursor: default;
