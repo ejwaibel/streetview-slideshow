@@ -17,8 +17,15 @@ export class StreetviewImage {
 				title: '.js-location-title'
 			},
 			height: 640,
-			width: 640
+			width: 640,
+			zoomLevel: 120,
+			rotation: 0,
+			pitch: 0
 		}, opts);
+
+		this.pitch = this.options.pitch;
+		this.rotation = this.options.rotation;
+		this.zoomLevel = this.options.zoomLevel;
 
 		this.$el = $(StreetviewImage.tpl.apply()),
 		this.$streetviewImage = this.$el
@@ -26,7 +33,7 @@ export class StreetviewImage {
 		this.$imageMenu = this.$el.find(this.options.elements.menu);
 		this.$imageMenu
 			.on('click', this.onToggleMenuClick)
-			.on('click', this.options.elements.action, this.onMenuActionClick)
+			.on('click', this.options.elements.action, this.onMenuActionClick.bind(this))
 		;
 
 		this.sliders = {

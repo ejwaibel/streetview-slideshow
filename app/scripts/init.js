@@ -61,11 +61,11 @@ export default function init() {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
 			address = $input.val(),
-			streetviewImage = new StreetviewImage(address);
-
-		streetviewImage.rotation = config.sliders.heading.value;
-		streetviewImage.zoomLevel = config.sliders.fov.value;
-		streetviewImage.pitch = config.sliders.pitch.value;
+			streetviewImage = new StreetviewImage(address, {
+				pitch: config.sliders.pitch.value,
+				rotation: config.sliders.heading.value,
+				zoomLevel: config.sliders.fov.value
+			});
 
 		config.images.$container.append(streetviewImage.$el);
 		streetviewImage.generateImage();
