@@ -32,7 +32,9 @@ export class Slider {
 				{{/if}}
 				<div class="container-slider js-container-slider">
 					<div class="js-slider">
-
+						{{#unless setTitle}}
+							<span class="slider-value js-slider-value"></span>
+						{{/unless}}
 					</div>
 				</div>
 			</div>
