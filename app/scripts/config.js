@@ -4,7 +4,7 @@ export const config = {
 	api: {
 		defaults: {
 			heading: 0,
-			fov: 90,
+			fov: 120,
 			pitch: 0
 		},
 		// jscs:disable
