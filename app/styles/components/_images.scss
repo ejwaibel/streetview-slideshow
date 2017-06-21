@@ -1,3 +1,5 @@
+$image-menu-item-size: 2.5rem;
+
 .container-streetview-image {
 	display: inline-block;
 	position: relative;
@@ -11,9 +13,10 @@
 			list-style-type: none;
 			opacity: .7;
 			position: absolute;
-			right: -3rem;
+			right: -$image-menu-item-size;
+			text-align: center;
 			transition: right .25s;
-			width: 15%;
+			width: $image-menu-item-size;
 
 			&::before {
 				@include fa-icon;
@@ -34,12 +37,18 @@
 				}
 			}
 
-			.icon {
-				color: $body-font-color;
-				font-size: 2.5rem;
+			.menu-item {
+				a {
+					display: block;
+				}
 
-				&:hover {
-					color: $info-color;
+				.icon {
+					color: $body-font-color;
+					font-size: $image-menu-item-size;
+
+					&:hover {
+						color: $info-color;
+					}
 				}
 			}
 		}
@@ -81,9 +90,16 @@
 		}
 
 		&.replace-image {
-			.ui-slider,
 			.image-menu {
 				display: none;
+			}
+
+			.ui-slider-horizontal {
+				bottom: -5rem;
+			}
+
+			.ui-slider-vertical {
+				left: -4rem;
 			}
 
 			img {
