@@ -17,7 +17,9 @@ export class Slider {
 				range: 'min',
 				create: this.onCreate.bind(this),
 				change: this.onUpdate.bind(this),
-				slide: this.onUpdate.bind(this)
+				slide: this.onUpdate.bind(this),
+				start: this.onStart.bind(this),
+				stop: this.onStop.bind(this)
 			}
 		}, options);
 
@@ -49,6 +51,14 @@ export class Slider {
 
 	onCreate(event) {
 		this.$sliderValue.text(0);
+	}
+
+	onStart(event, ui) {
+
+	}
+
+	onStop(event, ui) {
+
 	}
 
 	onUpdate(event, ui) {
