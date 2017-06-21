@@ -95,8 +95,6 @@ export const utils = {
 				}
 			});
 		}
-
-		return true;
 	},
 	/**
 	 * Code taken from MatthewCrumley (http://stackoverflow.com/a/934925/298479)
@@ -121,17 +119,6 @@ export const utils = {
 		return dataURL
 				.replace(/^data:image\/(png|jpg);base64,/, '')
 				.replace(/iVBORw0KGgoAAAANSUhEUgAAA/, '');
-	},
-	getDirectionsCallback: function(e) {
-		e.preventDefault();
-
-		utils.toggleButtons(true);
-		config.buttons.$getDirections.spin(config.spinOptions);
-		config.buttons.$cancelDirections.disable(false);
-
-		utils.generateDirectionsImages();
-
-		return;
 	},
 	/**
 	 * Converts the given latitude/longitude values into a human

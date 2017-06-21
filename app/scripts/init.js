@@ -6,6 +6,18 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export default function init() {
+	let onGetDirectionsSubmit = function(e) {
+		e.preventDefault();
+
+		utils.toggleButtons(true);
+		config.buttons.$getDirections.spin(config.spinOptions);
+		config.buttons.$cancelDirections.disable(false);
+
+		utils.generateDirectionsImages();
+
+		return;
+	};
+
 	config.templates.streetview = new Template(config.streetview.url);
 
 	/**
@@ -22,7 +34,7 @@ export default function init() {
 	/**
 	 * Form submit functionality
 	 */
-	$('form').on('submit', utils.getDirectionsCallback);
+	$('form').on('submit', onGetDirectionsSubmit);
 
 	// Get current location button
 	config.buttons.$geolocation = $('.js-geolocation').disable(true);
