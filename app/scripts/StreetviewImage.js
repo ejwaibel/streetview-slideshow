@@ -13,7 +13,8 @@ export class StreetviewImage {
 			elements: {
 				menu: '.js-image-menu',
 				action: '.js-image-action',
-				streetviewImage: '.streetview-image'
+				streetviewImage: '.streetview-image',
+				title: '.js-location-title'
 			},
 			height: 640,
 			width: 640
@@ -30,14 +31,24 @@ export class StreetviewImage {
 
 		this.sliders = {
 			heading: new Slider({
-				setTitle: false
+				setTitle: false,
+				uiSlider: {
+					stop: (event, ui) => {
+						this.rotation = ui.value;
+						this.onUpdateCamera();
+					}
+				}
 			}),
 			pitch: new Slider({
 				setTitle: false,
 				uiSlider: {
 					orientation: 'vertical',
 					min: -90,
-					max: 90
+					max: 90,
+					stop: (event, ui) => {
+						this.pitch = ui.value;
+						this.onUpdateCamera();
+					}
 				}
 			})
 		};
@@ -45,6 +56,10 @@ export class StreetviewImage {
 		this.$streetviewImage
 			.prepend(this.sliders.heading.$slider)
 			.append(this.sliders.pitch.$slider);
+
+		this.$streetviewImage
+			.find(this.options.elements.title)
+				.text(this.location);
 
 		return this;
 	}
@@ -69,28 +84,40 @@ export class StreetviewImage {
 		$(this).addClass('open');
 	}
 
+	onUpdateCamera() {
+		this.isUpdating = true;
+
+		this.generateImage();
+	}
+
 	generateImage() {
 		var imgHeight = this.options.height,
 			imgWidth = this.options.width,
 			imgUrl, $img, i;
 
-		this.$el
-			.spin(config.spinOptions)
-			.find('.js-location-title')
-				.text(this.location);
-
 		imgUrl = config.templates.streetview.apply({
 			location: this.location,
 			imageHeight: imgHeight,
 			imageWidth: imgWidth,
-			heading: config.sliders.heading.value,
-			fov: config.sliders.fov.value,
-			pitch: config.sliders.pitch.value
+			heading: this.rotation || config.api.defaults.heading,
+			fov: this.zoomLevel || config.api.defaults.fov,
+			pitch: this.pitch || config.api.defaults.pitch
 		});
 
 		let imgAttr = {
 			crossOrigin: 'anonymous'
 		};
+
+		if (this.isUpdating) {
+			this.$streetviewImage
+				.height(this.$streetviewImage.find('img').eq(0).height());
+
+			this.$streetviewImage
+				.addClass('replace-image')
+				.spin(config.spinOptions);
+		} else {
+			imgAttr.src = 'images/loading.jpg';
+		}
 
 		// Setup new <img> element with default attributes and
 		// append it to image container
@@ -108,7 +135,7 @@ export class StreetviewImage {
 				});
 
 		// Get the URL to the image and once that finishes, set the same URL on the
-		// image and stop the spinner on image container
+		// image and stop the spinner (if updating)
 		$.get(imgUrl)
 			.done(() => {
 				$img.attr('src', imgUrl);
@@ -117,7 +144,20 @@ export class StreetviewImage {
 				$img.attr('src', 'images/errorstop.png');
 			})
 			.always(() => {
-				this.$el.spin(false);
+				if (this.isUpdating) {
+					this.removeImage();
+				}
+
+				this.isUpdating = false;
+				this.$streetviewImage.spin(false);
 			});
+	}
+
+	removeImage() {
+		this.$streetviewImage
+			.removeClass('replace-image')
+			.find('img')
+				.eq(0)
+				.remove();
 	}
 }

@@ -63,6 +63,10 @@ export default function init() {
 			address = $input.val(),
 			streetviewImage = new StreetviewImage(address);
 
+		streetviewImage.rotation = config.sliders.heading.value;
+		streetviewImage.zoomLevel = config.sliders.fov.value;
+		streetviewImage.pitch = config.sliders.pitch.value;
+
 		config.images.$container.append(streetviewImage.$el);
 		streetviewImage.generateImage();
 	});
