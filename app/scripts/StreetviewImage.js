@@ -149,7 +149,9 @@ export class StreetviewImage {
 				}
 
 				this.isUpdating = false;
-				this.$streetviewImage.spin(false);
+				this.$streetviewImage
+					.height('auto')
+					.spin(false);
 			});
 	}
 
