@@ -13,12 +13,15 @@ export const config = {
 				'(^[\\w\\d\\s]+$)',
 				'(^\\d+-\\d+)',
 				'(^\\w+-\\d+,)',
+				'(^\w+\sCounty)',
+				'(Rd 1Bf)',
 				'(unnamed road)',
 				'(po box)',
-				'(service)',
-				'(highway)',
+				'(service|rte)',
+				'(highway|hwy)',
 				'(freeway)',
-				'(development road)'
+				'(development road)',
+				'(Canada$)'
 			].join('|'),
 			'i'
 		),
