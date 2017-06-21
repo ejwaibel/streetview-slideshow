@@ -2,6 +2,7 @@ import _ from 'lodash';
 import { config } from './config';
 import { utils } from './utils';
 
+import { Slider } from './Slider';
 import { Template } from './Template';
 
 export class StreetviewImage {
@@ -9,7 +10,7 @@ export class StreetviewImage {
 		this.options = _.extend({
 			elements: {
 				menu: '.js-image-menu',
-				removeImage: '.js-remove-image',
+				action: '.js-image-action',
 				streetviewImage: '.streetview-image'
 			},
 			height: 640,
@@ -22,8 +23,26 @@ export class StreetviewImage {
 		this.$imageMenu = this.$imgContainer.find(this.options.elements.menu);
 		this.$imageMenu
 			.on('click', this.onToggleMenuClick)
-			.on('click', this.options.elements.removeImage, this.onRemoveImageClick)
+			.on('click', this.options.elements.action, this.onMenuActionClick)
 		;
+
+		this.sliders = {
+			heading: new Slider({
+				setTitle: false
+			}),
+			pitch: new Slider({
+				setTitle: false,
+				uiSlider: {
+					orientation: 'vertical',
+					min: -90,
+					max: 90
+				}
+			})
+		};
+
+		this.$streetviewImage
+			.prepend(this.sliders.heading.$slider)
+			.append(this.sliders.pitch.$slider);
 	}
 
 	static get tpl() {
@@ -34,7 +53,7 @@ export class StreetviewImage {
 		return new RegExp('ah4JdLMxVcEySefa6wxEgkBWYRpzNzuMEvoA$');
 	}
 
-	onRemoveImageClick() {
+	onMenuActionClick(e) {
 		$(this)
 			.parents(config.elements.containerImage)
 			.off()

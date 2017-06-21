@@ -43,5 +43,34 @@
 				}
 			}
 		}
+
+		.ui-slider {
+			position: absolute;
+			transition-duration: .5s;
+			transition-property: bottom left;
+			z-index: 2;
+
+			&.ui-slider-horizontal {
+				bottom: -2.5rem;
+				right: 0;
+				width: 90%;
+			}
+
+			&.ui-slider-vertical {
+				height: 90%;
+				left: -2rem;
+				top: 0;
+			}
+		}
+
+		&:hover {
+			.ui-slider-horizontal {
+				bottom: 2px;
+			}
+
+			.ui-slider-vertical {
+				left: 2px;
+			}
+		}
 	}
 }
