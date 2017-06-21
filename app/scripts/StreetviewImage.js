@@ -6,7 +6,9 @@ import { Slider } from './Slider';
 import { Template } from './Template';
 
 export class StreetviewImage {
-	constructor(opts) {
+	constructor(location, opts) {
+		this.location = location;
+
 		this.options = _.extend({
 			elements: {
 				menu: '.js-image-menu',
@@ -17,10 +19,10 @@ export class StreetviewImage {
 			width: 640
 		}, opts);
 
-		this.$imgContainer = $(StreetviewImage.tpl.apply()),
-		this.$streetviewImage = this.$imgContainer
+		this.$el = $(StreetviewImage.tpl.apply()),
+		this.$streetviewImage = this.$el
 								.find(this.options.elements.streetviewImage);
-		this.$imageMenu = this.$imgContainer.find(this.options.elements.menu);
+		this.$imageMenu = this.$el.find(this.options.elements.menu);
 		this.$imageMenu
 			.on('click', this.onToggleMenuClick)
 			.on('click', this.options.elements.action, this.onMenuActionClick)
@@ -43,6 +45,8 @@ export class StreetviewImage {
 		this.$streetviewImage
 			.prepend(this.sliders.heading.$slider)
 			.append(this.sliders.pitch.$slider);
+
+		return this;
 	}
 
 	static get tpl() {
@@ -65,19 +69,18 @@ export class StreetviewImage {
 		$(this).addClass('open');
 	}
 
-	generateImage(location) {
+	generateImage() {
 		var imgHeight = this.options.height,
 			imgWidth = this.options.width,
 			imgUrl, $img, i;
 
-		config.images.$container.append(this.$imgContainer);
-		this.$imgContainer
+		this.$el
 			.spin(config.spinOptions)
 			.find('.js-location-title')
-				.text(location);
+				.text(this.location);
 
 		imgUrl = config.templates.streetview.apply({
-			location: location,
+			location: this.location,
 			imageHeight: imgHeight,
 			imageWidth: imgWidth,
 			heading: config.sliders.heading.value,
@@ -86,8 +89,7 @@ export class StreetviewImage {
 		});
 
 		let imgAttr = {
-			crossOrigin: 'anonymous',
-			title: location
+			crossOrigin: 'anonymous'
 		};
 
 		// Setup new <img> element with default attributes and
@@ -98,10 +100,9 @@ export class StreetviewImage {
 					let img64 = utils.getBase64Image(this).substr(0, 64);
 
 					if (StreetviewImage.noImageData.test(img64)) {
-						// utils.onRemoveImageClick.call(this);
 						$(this).attr(
 							'src',
-							`https://unsplash.it/g/${imgWidth}/${imgHeight}?blur&random`
+							`http://unsplash.it/g/${imgWidth}/${imgHeight}?blur&random`
 						);
 					}
 				});
@@ -113,10 +114,10 @@ export class StreetviewImage {
 				$img.attr('src', imgUrl);
 			})
 			.fail(() => {
-				$img.attr('src', 'http://blog.sqlauthority.com/i/a/errorstop.png');
+				$img.attr('src', 'images/errorstop.png');
 			})
 			.always(() => {
-				this.$imgContainer.spin(false);
+				this.$el.spin(false);
 			});
 	}
 }

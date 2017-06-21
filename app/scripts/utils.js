@@ -36,22 +36,24 @@ export const utils = {
 				return utils.getFormattedAddress(start);
 			},
 			geocodeCallback = function(address) {
-				let streetviewImage = new StreetviewImage();
-
 				updateProgress();
 
 				if (!address.includes('RETRY')) {
-					streetviewImage.generateImage(address);
+					let streetviewImage = new StreetviewImage(address);
+
+					config.images.$container.append(streetviewImage.$el);
+					streetviewImage.generateImage();
 				}
 
 				// FIXME: Need to do something here
 				// window.alert(address);
 			},
 			endDirections = function(location) {
-				let streetviewImage = new StreetviewImage();
-
 				if (location === destination) {
-					streetviewImage.generateImage(location);
+					let streetviewImage = new StreetviewImage(location);
+
+					config.images.$container.append(streetviewImage.$el);
+					streetviewImage.generateImage();
 				} else {
 					console.error(location);
 				}
@@ -71,22 +73,24 @@ export const utils = {
 			};
 
 			directionsService.route(directionsRequest, function(result, status) {
-				var streetviewImage = new StreetviewImage(),
-					steps, i, timeout;
-
 				if (status === google.maps.DirectionsStatus.OK) {
-					steps = result.routes[0].legs[0].steps;
+					let streetviewImage = new StreetviewImage(origin),
+						steps = result.routes[0].legs[0].steps;
+
 					stepsTotal = steps.length - 1;
+
 					config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
-					streetviewImage.generateImage(origin);
+					config.images.$container.append(streetviewImage.$el);
+					streetviewImage.generateImage();
+
 					updateProgress();
 
 					// Only steps in between origin & destination
-					for (i = 1; i < stepsTotal; i++) {
-						let step = steps[i];
+					for (let i = 1; i < stepsTotal; i++) {
+						let currStep = steps[i];
 
-						geocodeDirection(step)
+						geocodeDirection(currStep)
 							.always(geocodeCallback);
 					}
 				} else {

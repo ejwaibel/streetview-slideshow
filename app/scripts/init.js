@@ -51,6 +51,8 @@ export default function init() {
 		{ country: ['us'] }
 	);
 
+	config.images.$container = $(config.elements.imagesContainer);
+
 	/**
 	 * Get image from address button
 	 */
@@ -59,12 +61,11 @@ export default function init() {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
 			address = $input.val(),
-			streetviewImage = new StreetviewImage();
+			streetviewImage = new StreetviewImage(address);
 
-		streetviewImage.generateImage(address);
+		config.images.$container.append(streetviewImage.$el);
+		streetviewImage.generateImage();
 	});
-
-	config.images.$container = $(config.elements.imagesContainer);
 
 	/**
 	 * Clear all images
