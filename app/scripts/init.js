@@ -6,7 +6,7 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export default function init() {
-	config.templates.streetview = new Template(config.api.streetview);
+	config.templates.streetview = new Template(config.streetview.url);
 
 	/**
 	 * Setup Foundation components and default values
@@ -125,9 +125,9 @@ export default function init() {
 	 */
 	config.sliders.heading = new Slider({ title: 'HEADING' });
 	config.sliders.fov = new Slider({ title: 'FOV', uiSlider: { max: 120 } });
-	config.sliders.fov.value = config.api.defaults.fov;
+	config.sliders.fov.value = config.streetview.defaults.fov;
 	config.sliders.pitch = new Slider({ title: 'PITCH', uiSlider: { max: 90, min: -90 } });
-	config.sliders.pitch.value = config.api.defaults.pitch;
+	config.sliders.pitch.value = config.streetview.defaults.pitch;
 
 	// Append each slider to the DOM
 	_.forEach(config.sliders, function(slider) {

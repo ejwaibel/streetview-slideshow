@@ -1,41 +1,6 @@
 'use strict';
 
 export const config = {
-	api: {
-		defaults: {
-			heading: 0,
-			fov: 120,
-			pitch: 0
-		},
-		// jscs:disable
-		invalidAddress: new RegExp(
-			[
-				'(^[\\w\\d\\s]+$)',
-				'(^\\d+-\\d+)',
-				'(^\\w+-\\d+,)',
-				'(^\w+\sCounty)',
-				'(Rd 1Bf)',
-				'(unnamed road)',
-				'(po box)',
-				'(service|rte)',
-				'(highway|hwy)',
-				'(freeway)',
-				'(development road)',
-				'(Canada$)'
-			].join('|'),
-			'i'
-		),
-		// jscs:enable
-		streetview: `
-			https://maps.googleapis.com/maps/api/streetview
-				?size={{imageWidth}}x{{imageHeight}}
-				&location={{location}}
-				&heading={{heading}}
-				&fov={{fov}}
-				&pitch={{pitch}}
-				&sensor=false
-		`
-	},
 	buttons: {}, // Initialize
 	carouselOptions: {
 		autoplay: 2000,
@@ -76,6 +41,41 @@ export const config = {
 	},
 	// jscs:enable
 	sliders: {},
+	streetview: {
+		defaults: {
+			heading: 0,
+			fov: 120,
+			pitch: 0
+		},
+		// jscs:disable
+		invalidAddress: new RegExp(
+			[
+				'(^[\\w\\d\\s]+$)',
+				'(^\\d+-\\d+)',
+				'(^\\w+-\\d+,)',
+				'(^\w+\sCounty)',
+				'(Rd 1Bf)',
+				'(unnamed road)',
+				'(po box)',
+				'(service|rte)',
+				'(highway|hwy)',
+				'(freeway)',
+				'(development road)',
+				'(Canada$)'
+			].join('|'),
+			'i'
+		),
+		// jscs:enable
+		url: `
+			https://maps.googleapis.com/maps/api/streetview
+				?size={{imageWidth}}x{{imageHeight}}
+				&location={{location}}
+				&heading={{heading}}
+				&fov={{fov}}
+				&pitch={{pitch}}
+				&sensor=false
+		`
+	},
 	templates: {
 		progressLabel: `
 			<span class="js-steps-label progress-label"></span>

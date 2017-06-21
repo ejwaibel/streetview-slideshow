@@ -1,11 +1,8 @@
-'use strict';
-
 import { config } from './config';
 import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export const utils = {
-	directionTimers: [],
 	geocoder: new google.maps.Geocoder(),
 	generateDirectionsImages: function() {
 		var self = this,
@@ -161,7 +158,7 @@ export const utils = {
 							return;
 						}
 
-						let isBadAddress = config.api.invalidAddress.test(address),
+						let isBadAddress = config.streetview.invalidAddress.test(address),
 							isShortAddress = address.lastIndexOf(',') < 3;
 
 						if (isBadAddress || isShortAddress) {

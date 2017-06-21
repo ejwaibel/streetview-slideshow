@@ -119,9 +119,9 @@ export class StreetviewImage {
 			location: this.location,
 			imageHeight: imgHeight,
 			imageWidth: imgWidth,
-			heading: this.rotation || config.api.defaults.heading,
-			fov: this.zoomLevel || config.api.defaults.fov,
-			pitch: this.pitch || config.api.defaults.pitch
+			heading: this.rotation || config.streetview.defaults.heading,
+			fov: this.zoomLevel || config.streetview.defaults.fov,
+			pitch: this.pitch || config.streetview.defaults.pitch
 		});
 
 		let imgAttr = {
