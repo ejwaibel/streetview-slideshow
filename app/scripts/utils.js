@@ -155,20 +155,40 @@ export const utils = {
 							return;
 						}
 
-						let isBadAddress = config.streetview.invalidAddress.test(address),
-							isShortAddress = address.lastIndexOf(',') < 3;
+						utils.locationHasImage(address)
+							.done((data) => {
+								if (!data.status) {
+									dfd.reject(`RETRY - ${address} - BAD REQUEST`);
+								}
 
-						if (isBadAddress || isShortAddress) {
-							dfd.reject(`RETRY - INVALID ADDRESS - ${address}`);
-						} else {
-							dfd.resolve(address);
-						}
+								let status = data.status;
+
+								switch (status) {
+									case google.maps.GeocoderStatus.OK:
+										dfd.resolve(address);
+										break;
+
+									case google.maps.GeocoderStatus.NOT_FOUND:
+									case google.maps.GeocoderStatus.UNKNOWN_ERROR:
+									case google.maps.GeocoderStatus.ZERO_RESULTS:
+										dfd.reject(`RETRY - BAD IMAGE - ${status}`);
+										break;
+
+									default:
+										dfd.reject(`ERROR - ${status}`);
+										break;
+								}
+							})
+							.fail((data) => {
+								dfd.reject('ERROR - See Console For Details');
+								console.error(data);
+							});
 
 						break;
 
 					case google.maps.GeocoderStatus.ZERO_RESULTS:
 					case google.maps.GeocoderStatus.UNKNOWN_ERROR:
-						dfd.reject(`RETRY - ${status}`);
+						dfd.reject(`RETRY - ${address} - ${status}`);
 						break;
 
 					case google.maps.GeocoderStatus.OVER_QUERY_LIMIT:
@@ -216,7 +236,12 @@ export const utils = {
 				).toFixed(fixed) * 1
 		};
 	},
+	locationHasImage: function(location) {
+		let url = config.templates.streetviewMetadata
+					.apply({ location: location });
 
+		return $.getJSON(url);
+	},
 	randomAddressClickCallback: function(e) {
 		var $target = $(e.currentTarget),
 			$input = $($target.data('selector')),
@@ -240,6 +265,8 @@ export const utils = {
 						// Get another address if status is 'RETRY'
 						if (status.includes('RETRY')) {
 							getRandomAddress(utils.getRandomLatLong());
+						} else {
+							addressDfd.reject(status);
 						}
 					});
 

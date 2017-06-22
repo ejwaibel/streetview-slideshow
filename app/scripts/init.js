@@ -43,7 +43,8 @@ export default function init() {
 			});
 		};
 
-	config.templates.streetview = new Template(config.streetview.url);
+	config.templates.streetviewImage = new Template(config.streetview.imageUrl);
+	config.templates.streetviewMetadata = new Template(config.streetview.metadataUrl);
 
 	/**
 	 * Setup Foundation components and default values

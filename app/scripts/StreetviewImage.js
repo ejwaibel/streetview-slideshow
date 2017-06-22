@@ -115,7 +115,7 @@ export class StreetviewImage {
 			imgWidth = this.options.width,
 			imgUrl, $img, i;
 
-		imgUrl = config.templates.streetview.apply({
+		imgUrl = config.templates.streetviewImage.apply({
 			location: this.location,
 			imageHeight: imgHeight,
 			imageWidth: imgWidth,

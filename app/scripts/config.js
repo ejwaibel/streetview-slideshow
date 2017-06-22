@@ -47,33 +47,18 @@ export const config = {
 			fov: 120,
 			pitch: 0
 		},
-		// jscs:disable
-		invalidAddress: new RegExp(
-			[
-				'(^[\\w\\d\\s]+$)',
-				'(^\\d+-\\d+)',
-				'(^\\w+-\\d+,)',
-				'(^\w+\sCounty)',
-				'(Rd 1Bf)',
-				'(unnamed road)',
-				'(po box)',
-				'(service|rte)',
-				'(highway|hwy)',
-				'(freeway)',
-				'(development road)',
-				'(Canada$)'
-			].join('|'),
-			'i'
-		),
-		// jscs:enable
-		url: `
-			https://maps.googleapis.com/maps/api/streetview
-				?size={{imageWidth}}x{{imageHeight}}
+		imageUrl: `
+			https://maps.googleapis.com/maps/api/streetview?
+				size={{imageWidth}}x{{imageHeight}}
 				&location={{location}}
 				&heading={{heading}}
 				&fov={{fov}}
 				&pitch={{pitch}}
-				&sensor=false
+		`,
+		metadataUrl: `
+			https://maps.googleapis.com/maps/api/streetview/metadata?
+				location={{location}}
+				&key=AIzaSyAej9k-fWbn3QBodX7BBMhnZCwKNAjyxm4
 		`
 	},
 	templates: {
