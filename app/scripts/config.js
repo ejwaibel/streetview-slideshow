@@ -22,6 +22,9 @@ export const config = {
 		stepProgress: '.js-step-progress'
 	},
 	images: {},
+	log: {
+		level: 'INFO'
+	},
 	// jscs:disable
 	spinOptions: {
 		lines: 15				// The number of lines to draw

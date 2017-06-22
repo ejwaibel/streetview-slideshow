@@ -60,6 +60,8 @@ export default function init() {
 	config.templates.streetviewImage = new Template(config.mapsApi.imageUrl);
 	config.templates.streetviewMetadata = new Template(config.mapsApi.metadataUrl);
 
+	log.setLevel(config.log.level);
+
 	/**
 	 * Setup Foundation components and default values
 	 */

@@ -1,3 +1,4 @@
+// import * as log from 'loglevel';
 import { config } from './config';
 import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
@@ -145,7 +146,7 @@ export const utils = {
 			geocodeCallback = function(results, status) {
 				var address = '';
 
-				console.log(results);
+				log.info(results);
 
 				switch (status) {
 					case config.mapsApi.statusCodes.OK:
@@ -227,7 +228,7 @@ export const utils = {
 				}
 			};
 
-		console.log(latlng);
+		log.info(latlng);
 		this.geocoder.geocode(options, geocodeCallback);
 
 		return dfd.promise();
