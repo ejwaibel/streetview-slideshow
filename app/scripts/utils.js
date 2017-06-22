@@ -10,8 +10,55 @@ export const utils = {
 		config.images.$container.append(streetviewImage.$el);
 		streetviewImage.generateImage();
 	},
+	decodeString(url, extras) {
+		return window.decodeURIComponent(url);
+	},
 	encodeString(url, extras) {
 		return window.encodeURIComponent(url.replace('\'', '%27'));
+	},
+	/**
+	 * Converts the provided query string to an object containing the params.
+	 * If no query string is passed, it will use window.location.search.
+	 *
+	 * @memberOf gmwp.util
+	 * @param {string} [queryString] Optional query string to be converted
+	 * @return {object} params Object of key/value pairs for each query parameter
+	 */
+	getQueryParams: function(queryString) {
+		var query = (queryString || window.location.search).substring(1) || '',
+			urlStart = query.indexOf('?'),
+			p = null,
+			pair = null,
+			params = null;
+
+		query = urlStart !== -1 ? query.slice(urlStart + 1) : query;
+
+		params = _
+				.chain(query.split('&'))
+				.map(function(param) {
+					p = param.split('=');
+					pair = [p[0], utils.decodeString(p[1] || '')];
+
+					return pair;
+				})
+				.fromPairs()
+				.value();
+
+		return !_.isEmpty(query) && params || null;
+	},
+
+	/**
+	 * Get value by parameter name from a query string.
+	 *
+	 * @memberOf gmwp.util
+	 * @param {string} param Name of query parameter
+	 * @param {string} [queryString] Optional query string to search
+	 * @return {*} value of param if found, otherwise null
+	 */
+	getQueryParam: function(param, queryString) {
+		var params = this.getQueryParams(queryString);
+
+		return _.get(params, param) || null;
 	},
 	directionsService: new google.maps.DirectionsService(),
 	geocoder: new google.maps.Geocoder(),
