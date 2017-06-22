@@ -17,6 +17,19 @@ export default function init() {
 
 			return;
 		},
+		onGetImageClick = function(e) {
+			var $target = $(e.currentTarget),
+				$input = $($target.data('selector')),
+				address = $input.val(),
+				streetviewImage = new StreetviewImage(address, {
+					pitch: config.sliders.pitch.value,
+					rotation: config.sliders.heading.value,
+					zoomLevel: config.sliders.fov.value
+				});
+
+			config.images.$container.append(streetviewImage.$el);
+			streetviewImage.generateImage();
+		},
 		onGetCurrentLocationClick = function(e) {
 			var $target = $(e.currentTarget),
 				$input = $($target.data('selector'));
@@ -95,19 +108,7 @@ export default function init() {
 	 * Get image from address button
 	 */
 	config.buttons.$getImage = $('.js-get-image').disable();
-	config.buttons.$getImage.on('click', function(e) {
-		var $target = $(e.currentTarget),
-			$input = $($target.data('selector')),
-			address = $input.val(),
-			streetviewImage = new StreetviewImage(address, {
-				pitch: config.sliders.pitch.value,
-				rotation: config.sliders.heading.value,
-				zoomLevel: config.sliders.fov.value
-			});
-
-		config.images.$container.append(streetviewImage.$el);
-		streetviewImage.generateImage();
-	});
+	config.buttons.$getImage.on('click', onGetImageClick);
 
 	/**
 	 * Clear all images
