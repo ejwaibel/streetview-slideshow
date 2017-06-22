@@ -59,7 +59,15 @@ export const config = {
 			https://maps.googleapis.com/maps/api/streetview/metadata?
 				location={{location}}
 				&key=AIzaSyAej9k-fWbn3QBodX7BBMhnZCwKNAjyxm4
-		`
+		`,
+		retryMsg: 'RETRY - {{address}} - {{msg}} - {{status}}',
+		statusCodes: {
+			OK: google.maps.GeocoderStatus.OK,
+			NOT_FOUND: 'NOT_FOUND',
+			OVER_QUERY_LIMIT: google.maps.GeocoderStatus.OVER_QUERY_LIMIT,
+			UNKNOWN_ERROR: google.maps.GeocoderStatus.UNKNOWN_ERROR,
+			ZERO_RESULTS: google.maps.GeocoderStatus.ZERO_RESULTS
+		}
 	},
 	templates: {
 		progressLabel: `

@@ -145,12 +145,20 @@ export const utils = {
 			geocodeCallback = function(results, status) {
 				var address = '';
 
+				console.log(results);
+
 				switch (status) {
-					case google.maps.GeocoderStatus.OK:
+					case config.mapsApi.statusCodes.OK:
 						try {
 							address = results[0].formatted_address;
 						} catch (error) {
-							dfd.reject(`RETRY - ${options.location} - ${error}`);
+							dfd.reject(
+								config.templates.retryMsg.apply({
+									address: options.location,
+									msg: 'UNKNOWN ADDRESS',
+									status: error
+								})
+							);
 
 							return;
 						}
@@ -158,20 +166,31 @@ export const utils = {
 						utils.locationHasImage(address)
 							.done((data) => {
 								if (!data.status) {
-									dfd.reject(`RETRY - ${address} - BAD REQUEST`);
+									dfd.reject(
+										config.templates.retryMsg.apply({
+											address,
+											msg: 'BAD REQUEST'
+										})
+									);
 								}
 
 								let status = data.status;
 
 								switch (status) {
-									case google.maps.GeocoderStatus.OK:
+									case config.mapsApi.statusCodes.OK:
 										dfd.resolve(address);
 										break;
 
-									case google.maps.GeocoderStatus.NOT_FOUND:
-									case google.maps.GeocoderStatus.UNKNOWN_ERROR:
-									case google.maps.GeocoderStatus.ZERO_RESULTS:
-										dfd.reject(`RETRY - BAD IMAGE - ${status}`);
+									case config.mapsApi.statusCodes.NOT_FOUND:
+									case config.mapsApi.statusCodes.UKNOWN_ERROR:
+									case config.mapsApi.statusCodes.ZERO_RESULTS:
+										dfd.reject(
+											config.templates.retryMsg.apply({
+												address,
+												msg: 'BAD IMAGE',
+												status
+											})
+										);
 										break;
 
 									default:
@@ -186,12 +205,18 @@ export const utils = {
 
 						break;
 
-					case google.maps.GeocoderStatus.ZERO_RESULTS:
-					case google.maps.GeocoderStatus.UNKNOWN_ERROR:
-						dfd.reject(`RETRY - ${address} - ${status}`);
+					case config.mapsApi.statusCodes.ZERO_RESULTS:
+					case config.mapsApi.statusCodes.UKNOWN_ERROR:
+						dfd.reject(
+							config.templates.retryMsg.apply({
+								address,
+								msg: 'NO IDEA',
+								status
+							})
+						);
 						break;
 
-					case google.maps.GeocoderStatus.OVER_QUERY_LIMIT:
+					case config.mapsApi.statusCodes.OVER_QUERY_LIMIT:
 						setTimeout(() => {
 							utils.geocoder.geocode(options, geocodeCallback);
 						}, 1000);
@@ -202,6 +227,7 @@ export const utils = {
 				}
 			};
 
+		console.log(latlng);
 		this.geocoder.geocode(options, geocodeCallback);
 
 		return dfd.promise();
@@ -213,12 +239,12 @@ export const utils = {
 	 */
 	getRandomLatLong: function() {
 		var latitudeBoundary = {
-				min: 28.70,
-				max: 48.85
+				min: 30.09,
+				max: 50.02
 			},
 			longitudeBoundary = {
-				min: -127.50,
-				max: -55.90
+				min: -125.50,
+				max: -70.90
 			},
 			fixed = 5;
 
