@@ -30,7 +30,7 @@ export class Slider {
 			uiSlider: {
 				animate: true,
 				min: 0,
-				max: 180,
+				max: 360,
 				range: 'min',
 				create: this.onCreate.bind(this),
 				change: this.onUpdate.bind(this),
