@@ -35,7 +35,9 @@ export default function init() {
 
 			$input.val('');
 
-			$target.disable(true).spin(config.spinOptions);
+			$target
+				.disable(true)
+				.spin(config.spinOptions);
 
 			navigator.geolocation.getCurrentPosition((pos) => {
 				let latlng = {
@@ -109,7 +111,7 @@ export default function init() {
 	/**
 	 * Get image from address button
 	 */
-	config.buttons.$getImage = $('.js-get-image').disable();
+	config.buttons.$getImage = $('.js-get-image').disable(true);
 	config.buttons.$getImage.on('click', onGetImageClick);
 
 	/**
@@ -146,7 +148,7 @@ export default function init() {
 	// Start slideshow button
 	let slideshowTpl = new Template(config.templates.slideshow);
 
-	config.buttons.$startSlideshow = $('.js-start-slideshow');
+	config.buttons.$startSlideshow = $('.js-start-slideshow').disable(true);
 	config.buttons.$startSlideshow.on('click', function(e) {
 		let $images = $('.streetview-image').clone(),
 			slides = $images.map(function(index, el) {
