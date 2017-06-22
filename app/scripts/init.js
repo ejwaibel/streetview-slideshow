@@ -56,8 +56,9 @@ export default function init() {
 			});
 		};
 
-	config.templates.streetviewImage = new Template(config.streetview.imageUrl);
-	config.templates.streetviewMetadata = new Template(config.streetview.metadataUrl);
+	config.templates.retryMsg = new Template(config.mapsApi.retryMsg);
+	config.templates.streetviewImage = new Template(config.mapsApi.imageUrl);
+	config.templates.streetviewMetadata = new Template(config.mapsApi.metadataUrl);
 
 	/**
 	 * Setup Foundation components and default values
@@ -164,9 +165,9 @@ export default function init() {
 	 */
 	config.sliders.heading = new Slider({ title: 'HEADING' });
 	config.sliders.fov = new Slider({ title: 'FOV', uiSlider: { max: 120 } });
-	config.sliders.fov.value = config.streetview.defaults.fov;
+	config.sliders.fov.value = config.mapsApi.defaults.fov;
 	config.sliders.pitch = new Slider({ title: 'PITCH', uiSlider: { max: 90, min: -90 } });
-	config.sliders.pitch.value = config.streetview.defaults.pitch;
+	config.sliders.pitch.value = config.mapsApi.defaults.pitch;
 
 	// Append each slider to the DOM
 	_.forEach(config.sliders, function(slider) {

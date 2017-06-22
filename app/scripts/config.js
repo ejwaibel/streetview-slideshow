@@ -41,7 +41,7 @@ export const config = {
 	},
 	// jscs:enable
 	sliders: {},
-	streetview: {
+	mapsApi: {
 		defaults: {
 			heading: 0,
 			fov: 120,
