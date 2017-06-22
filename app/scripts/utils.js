@@ -96,8 +96,8 @@ export const utils = {
 
 				return utils.getFormattedAddress(start);
 			},
-			getAddressFromDirection = function(step) {
-				let dfd = $.Deferred();
+			getAddressFromDirection = function(step, waitDfd) {
+				let dfd = waitDfd || $.Deferred();
 
 				geocodeDirection(step)
 					.done(function(address) {
@@ -115,7 +115,7 @@ export const utils = {
 							if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
 								// Try again with same latlng after waiting 5s
 								setTimeout(function() {
-									getAddressFromDirection(latlng);
+									getAddressFromDirection(step, dfd);
 								}, 5000);
 
 								return;
@@ -133,6 +133,23 @@ export const utils = {
 
 				// Convert Array into Iterator
 				return new Set(steps);
+			},
+			getNextImage = function(stepIt) {
+				let currStep = stepIt.next();
+
+				if (!currStep.done) {
+					getAddressFromDirection(currStep.value)
+						.done(function() {
+							// Wait between each image to prevent API query limit error
+							setTimeout(function() {
+								getNextImage(stepIt);
+							}, 1500);
+						})
+						.fail(function(status, latlng) {
+							log.warn(`ERROR - ${latlng} - ${status}`);
+							log.info('addressFromFail', this);
+						});
+				}
 			};
 
 		utils.directionsService.route(request, function(result, status) {
@@ -145,26 +162,7 @@ export const utils = {
 
 				config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
-				// utils.appendImage(origin);
-
-				// updateProgress();
-
-				currStep = stepIt.next();
-
-				getAddressFromDirection(currStep.value)
-					.done(function() {
-						log.info('addressFromDone', this);
-					})
-					.fail(function() {
-						log.info('addressFromFail', this);
-					});
-
-				// for (let i = 1; i < stepsTotal - 1; i++) {
-				// 	let currStep = steps[i];
-
-				// 	geocodeDirection(currStep)
-				// 		.always(geocodeCallback);
-				// }
+				getNextImage(stepIt);
 			} else {
 				endDirections(status);
 			}
@@ -176,7 +174,7 @@ export const utils = {
 			destination = $('#address-destination').val();
 
 		if (origin && destination) {
-			config.buttons.$startSlideshow.removeAttr('disabled');
+			config.buttons.$startSlideshow.disable(false);
 
 			let request = {
 				origin: origin,
@@ -386,8 +384,6 @@ export const utils = {
 				utils.locationHasImage(address)
 					.done(locationImageSuccess)
 					.fail(locationImageFail);
-
-				// addressDfd.resolve(results);
 			},
 			formattedAddressFail = function(status, latlng) {
 				$input.val(status);
@@ -426,7 +422,9 @@ export const utils = {
 					.disable(false)
 					.spin(false);
 
-				config.buttons.$getImage.eq(index).disable(false);
+				config.buttons.$getImage
+					.eq(index)
+					.disable(false);
 
 				$input.val(data);
 			};
