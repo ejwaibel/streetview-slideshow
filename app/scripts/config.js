@@ -63,7 +63,7 @@ export const config = {
 				location={{location}}
 				&key=AIzaSyAej9k-fWbn3QBodX7BBMhnZCwKNAjyxm4
 		`,
-		retryMsg: 'RETRY - {{address}} - {{msg}} - {{status}}',
+		retryMsg: 'RETRY - {{location}} - {{msg}} - {{status}}',
 		statusCodes: {
 			OK: google.maps.GeocoderStatus.OK,
 			NOT_FOUND: 'NOT_FOUND',
