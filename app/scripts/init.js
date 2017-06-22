@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import { config } from './config';
 import { utils } from './utils';
 import { Slider } from './Slider';
