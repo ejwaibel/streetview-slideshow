@@ -4,18 +4,34 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export const utils = {
+	appendImage(address) {
+		let streetviewImage = new StreetviewImage(address);
+
+		config.images.$container.append(streetviewImage.$el);
+		streetviewImage.generateImage();
+	},
+	encodeString(url, extras) {
+		return window.encodeURIComponent(url.replace('\'', '%27'));
+	},
+	directionsService: new google.maps.DirectionsService(),
 	geocoder: new google.maps.Geocoder(),
-	generateDirectionsImages: function() {
-		var self = this,
-			origin = $('#address-origin').val(),
-			destination = $('#address-destination').val(),
-			directionsService = new google.maps.DirectionsService(),
-			$stepCount = $(config.elements.stepCount),
-			$stepTotal = $(config.elements.stepTotal),
+	generateDirections: function(request) {
+		let origin = request.origin,
+			destination = request.destination,
 			stepsCount = 0,
 			stepsTotal = 0,
-			directionsRequest,
-			timer,
+			endDirections = function(location) {
+				if (location === destination) {
+					utils.appendImage(location);
+				} else {
+					console.error(location);
+				}
+
+				utils.toggleButtons(false);
+
+				config.buttons.$getDirections.spin(false);
+				config.buttons.$cancelDirections.disable(true);
+			},
 			updateProgress = function() {
 				stepsCount++;
 
@@ -28,73 +44,61 @@ export const utils = {
 					endDirections(destination);
 				}
 			},
-			geocodeDirection = function(step) {
-				var start = step.start_location;
-
-				return utils.getFormattedAddress(start);
-			},
 			geocodeCallback = function(address) {
 				updateProgress();
 
 				if (!address.includes('RETRY')) {
-					let streetviewImage = new StreetviewImage(address);
-
-					config.images.$container.append(streetviewImage.$el);
-					streetviewImage.generateImage();
+					utils.appendImage(address);
 				}
 
 				// FIXME: Need to do something here
 				// window.alert(address);
 			},
-			endDirections = function(location) {
-				if (location === destination) {
-					let streetviewImage = new StreetviewImage(location);
+			geocodeDirection = function(step) {
+				var start = step.start_location;
 
-					config.images.$container.append(streetviewImage.$el);
-					streetviewImage.generateImage();
-				} else {
-					console.error(location);
-				}
-
-				utils.toggleButtons(false);
-				config.buttons.$getDirections.spin(false);
-				config.buttons.$cancelDirections.disable(true);
+				return utils.getFormattedAddress(start);
 			};
+
+		utils.directionsService.route(request, function(result, status) {
+			if (status === google.maps.DirectionsStatus.OK) {
+				let steps = result.routes[0].legs[0].steps;
+
+				stepsTotal = steps.length - 1;
+
+				config.$stepsProgress.progressbar('option', 'max', stepsTotal);
+
+				utils.appendImage(origin);
+
+				updateProgress();
+
+				// Only steps in between origin & destination
+				for (let i = 1; i < stepsTotal; i++) {
+					let currStep = steps[i];
+
+					geocodeDirection(currStep)
+						.always(geocodeCallback);
+				}
+			} else {
+				endDirections(status);
+			}
+		});
+	},
+	generateDirectionsImages: function() {
+		var self = this,
+			origin = $('#address-origin').val(),
+			destination = $('#address-destination').val();
 
 		if (origin && destination) {
 			config.buttons.$startSlideshow.removeAttr('disabled');
 
-			directionsRequest = {
+			let request = {
 				origin: origin,
 				destination: destination,
 				travelMode: google.maps.TravelMode.DRIVING
 			};
 
-			directionsService.route(directionsRequest, function(result, status) {
-				if (status === google.maps.DirectionsStatus.OK) {
-					let streetviewImage = new StreetviewImage(origin),
-						steps = result.routes[0].legs[0].steps;
-
-					stepsTotal = steps.length - 1;
-
-					config.$stepsProgress.progressbar('option', 'max', stepsTotal);
-
-					config.images.$container.append(streetviewImage.$el);
-					streetviewImage.generateImage();
-
-					updateProgress();
-
-					// Only steps in between origin & destination
-					for (let i = 1; i < stepsTotal; i++) {
-						let currStep = steps[i];
-
-						geocodeDirection(currStep)
-							.always(geocodeCallback);
-					}
-				} else {
-					endDirections(status);
-				}
-			});
+			utils.generateDirections(request);
 		}
 	},
 	/**
@@ -148,6 +152,16 @@ export const utils = {
 
 				log.info(results);
 
+				if (!results) {
+					log.info(
+						config.templates.retryMsg.apply({
+							address: options.location,
+							msg: 'ERROR',
+							status
+						})
+					);
+				}
+
 				switch (status) {
 					case config.mapsApi.statusCodes.OK:
 						try {
@@ -195,7 +209,7 @@ export const utils = {
 										break;
 
 									default:
-										dfd.reject(`ERROR - ${status}`);
+										dfd.reject(`ERROR - ${address} - ${status}`);
 										break;
 								}
 							})
@@ -208,23 +222,19 @@ export const utils = {
 
 					case config.mapsApi.statusCodes.ZERO_RESULTS:
 					case config.mapsApi.statusCodes.UKNOWN_ERROR:
+					case config.mapsApi.statusCodes.OVER_QUERY_LIMIT:
 						dfd.reject(
 							config.templates.retryMsg.apply({
 								address,
-								msg: 'NO IDEA',
+								msg: 'ERROR',
 								status
 							})
 						);
 						break;
 
-					case config.mapsApi.statusCodes.OVER_QUERY_LIMIT:
-						setTimeout(() => {
-							utils.geocoder.geocode(options, geocodeCallback);
-						}, 1000);
-						break;
-
 					default:
 						dfd.reject(status);
+						break;
 				}
 			};
 
@@ -265,7 +275,9 @@ export const utils = {
 	},
 	locationHasImage: function(location) {
 		let url = config.templates.streetviewMetadata
-					.apply({ location: location });
+					.apply({
+						location: utils.encodeString(location)
+					});
 
 		return $.getJSON(url);
 	},
@@ -291,7 +303,14 @@ export const utils = {
 
 						// Get another address if status is 'RETRY'
 						if (status.includes('RETRY')) {
-							getRandomAddress(utils.getRandomLatLong());
+							if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
+								// Try again with same latlng after waiting 5s
+								setTimeout(function() {
+									getRandomAddress(latlng);
+								}, 5000);
+							} else {
+								getRandomAddress(utils.getRandomLatLong());
+							}
 						} else {
 							addressDfd.reject(status);
 						}
@@ -326,12 +345,8 @@ export const utils = {
 			.fail(getRandomAddressCallback);
 	},
 	toggleButtons: function(action) {
-		Object.getOwnPropertyNames(config.buttons).forEach(function(key) {
-			if (config.buttons.hasOwnProperty(key)) {
-				config.buttons[key].disable(action);
-			};
+		_.forOwn(config.buttons, function(value, key) {
+			config.buttons[key].disable(action);
 		});
-
-		return true;
 	}
 };
