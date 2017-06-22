@@ -91,41 +91,80 @@ export const utils = {
 					endDirections(destination);
 				}
 			},
-			geocodeCallback = function(address) {
-				updateProgress();
-
-				if (!address.includes('RETRY')) {
-					utils.appendImage(address);
-				}
-
-				// FIXME: Need to do something here
-				// window.alert(address);
-			},
 			geocodeDirection = function(step) {
 				var start = step.start_location;
 
 				return utils.getFormattedAddress(start);
+			},
+			getAddressFromDirection = function(step) {
+				let dfd = $.Deferred();
+
+				geocodeDirection(step)
+					.done(function(address) {
+						dfd.resolve(address);
+
+						utils.appendImage(address);
+
+						updateProgress();
+					})
+					.fail(function(status, latlng) {
+						log.info('geocode', this);
+						let address = utils.getQueryParam('location', this.url);
+
+						if (status.includes('RETRY')) {
+							if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
+								// Try again with same latlng after waiting 5s
+								setTimeout(function() {
+									getAddressFromDirection(latlng);
+								}, 5000);
+
+								return;
+							}
+
+							dfd.reject(status, latlng);
+						}
+					});
+
+				return dfd.promise();
+			},
+			getSteps = function(result) {
+				// TODO: Determine best 'step' to return
+				let steps = result.routes[0].legs[0].steps;
+
+				// Convert Array into Iterator
+				return new Set(steps);
 			};
 
 		utils.directionsService.route(request, function(result, status) {
-			if (status === google.maps.DirectionsStatus.OK) {
-				let steps = result.routes[0].legs[0].steps;
+			if (status === config.mapsApi.statusCodes.OK) {
+				let steps = getSteps(result),
+					stepIt = steps.values(),
+					currStep;
 
-				stepsTotal = steps.length - 1;
+				stepsTotal = steps.size;
 
 				config.$stepsProgress.progressbar('option', 'max', stepsTotal);
 
-				utils.appendImage(origin);
+				// utils.appendImage(origin);
 
-				updateProgress();
+				// updateProgress();
 
-				// Only steps in between origin & destination
-				for (let i = 1; i < stepsTotal; i++) {
-					let currStep = steps[i];
+				currStep = stepIt.next();
 
-					geocodeDirection(currStep)
-						.always(geocodeCallback);
-				}
+				getAddressFromDirection(currStep.value)
+					.done(function() {
+						log.info('addressFromDone', this);
+					})
+					.fail(function() {
+						log.info('addressFromFail', this);
+					});
+
+				// for (let i = 1; i < stepsTotal - 1; i++) {
+				// 	let currStep = steps[i];
+
+				// 	geocodeDirection(currStep)
+				// 		.always(geocodeCallback);
+				// }
 			} else {
 				endDirections(status);
 			}
@@ -194,6 +233,7 @@ export const utils = {
 						new google.maps.LatLng(latlng.latitude, latlng.longitude) :
 						latlng
 			},
+			location = `${latlng.latitude}, ${latlng.longitude}`,
 			geocodeCallback = function(results, status) {
 				var address = '';
 
@@ -202,7 +242,7 @@ export const utils = {
 				if (!results) {
 					log.info(
 						config.templates.retryMsg.apply({
-							address: options.location,
+							location,
 							msg: 'ERROR',
 							status
 						})
@@ -216,54 +256,15 @@ export const utils = {
 						} catch (error) {
 							dfd.reject(
 								config.templates.retryMsg.apply({
-									address: options.location,
+									location,
 									msg: 'UNKNOWN ADDRESS',
 									status: error
-								})
+								}),
+								latlng
 							);
-
-							return;
 						}
 
-						utils.locationHasImage(address)
-							.done((data) => {
-								if (!data.status) {
-									dfd.reject(
-										config.templates.retryMsg.apply({
-											address,
-											msg: 'BAD REQUEST'
-										})
-									);
-								}
-
-								let status = data.status;
-
-								switch (status) {
-									case config.mapsApi.statusCodes.OK:
-										dfd.resolve(address);
-										break;
-
-									case config.mapsApi.statusCodes.NOT_FOUND:
-									case config.mapsApi.statusCodes.UKNOWN_ERROR:
-									case config.mapsApi.statusCodes.ZERO_RESULTS:
-										dfd.reject(
-											config.templates.retryMsg.apply({
-												address,
-												msg: 'BAD IMAGE',
-												status
-											})
-										);
-										break;
-
-									default:
-										dfd.reject(`ERROR - ${address} - ${status}`);
-										break;
-								}
-							})
-							.fail((data) => {
-								dfd.reject('ERROR - See Console For Details');
-								console.error(data);
-							});
+						dfd.resolve(address);
 
 						break;
 
@@ -272,15 +273,16 @@ export const utils = {
 					case config.mapsApi.statusCodes.OVER_QUERY_LIMIT:
 						dfd.reject(
 							config.templates.retryMsg.apply({
-								address,
+								location,
 								msg: 'ERROR',
 								status
-							})
+							}),
+							latlng
 						);
 						break;
 
 					default:
-						dfd.reject(status);
+						dfd.reject(status, latlng);
 						break;
 				}
 			};
@@ -334,6 +336,76 @@ export const utils = {
 			isOrigin = $input.is('#address-origin'),
 			latlong = utils.getRandomLatLong(),
 			addressDfd = $.Deferred(),
+			locationImageSuccess = function(results, status, xhr) {
+				let location = utils.getQueryParam('location', this.url);
+
+				if (!results.status) {
+					$input.val(
+						config.templates.retryMsg.apply({
+							location,
+							msg: 'BAD REQUEST'
+						})
+					);
+
+					getRandomAddress(utils.getRandomLatLong());
+				}
+
+				status = results.status;
+
+				switch (status) {
+					case config.mapsApi.statusCodes.OK:
+						addressDfd.resolve(location);
+						break;
+
+					case config.mapsApi.statusCodes.NOT_FOUND:
+					case config.mapsApi.statusCodes.UKNOWN_ERROR:
+					case config.mapsApi.statusCodes.ZERO_RESULTS:
+						$input.val(
+							config.templates.retryMsg.apply({
+								location,
+								msg: 'BAD IMAGE',
+								status
+							})
+						);
+
+						getRandomAddress(utils.getRandomLatLong());
+
+						break;
+
+					default:
+						$input.val(`ERROR - ${location} - ${status}`);
+						getRandomAddress(utils.getRandomLatLong());
+						break;
+				}
+			},
+			locationImageFail = function(data) {
+				addressDfd.reject('ERROR - See Console For Details');
+				log.error(data);
+			},
+			formattedAddressSuccess = function(address) {
+				utils.locationHasImage(address)
+					.done(locationImageSuccess)
+					.fail(locationImageFail);
+
+				// addressDfd.resolve(results);
+			},
+			formattedAddressFail = function(status, latlng) {
+				$input.val(status);
+
+				// Get another address if status is 'RETRY'
+				if (status.includes('RETRY')) {
+					if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
+						// Try again with same latlng after waiting 5s
+						setTimeout(function() {
+							getRandomAddress(latlng);
+						}, 5000);
+					} else {
+						getRandomAddress(utils.getRandomLatLong());
+					}
+				} else {
+					addressDfd.reject(status, latlng);
+				}
+			},
 			/**
 			 * Converts the given latitude/longitude values into a human
 			 * readable address. Continues to loop if the values given
@@ -342,26 +414,8 @@ export const utils = {
 			 */
 			getRandomAddress = function(latlng) {
 				utils.getFormattedAddress(latlng)
-					.done(function(results) {
-						addressDfd.resolve(results);
-					})
-					.fail(function(status) {
-						$input.val(status);
-
-						// Get another address if status is 'RETRY'
-						if (status.includes('RETRY')) {
-							if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
-								// Try again with same latlng after waiting 5s
-								setTimeout(function() {
-									getRandomAddress(latlng);
-								}, 5000);
-							} else {
-								getRandomAddress(utils.getRandomLatLong());
-							}
-						} else {
-							addressDfd.reject(status);
-						}
-					});
+					.done(formattedAddressSuccess)
+					.fail(formattedAddressFail);
 
 				return addressDfd.promise();
 			},
