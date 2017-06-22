@@ -116,7 +116,7 @@ export class StreetviewImage {
 			imgUrl, $img, i;
 
 		imgUrl = config.templates.streetviewImage.apply({
-			location: this.location,
+			location: utils.encodeString(this.location),
 			imageHeight: imgHeight,
 			imageWidth: imgWidth,
 			heading: this.rotation || config.mapsApi.defaults.heading,
