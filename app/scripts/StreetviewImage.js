@@ -26,9 +26,11 @@ export class StreetviewImage {
 		this.rotation = this.options.rotation;
 		this.zoomLevel = this.options.zoomLevel;
 
-		this.$el = $(StreetviewImage.tpl.apply()),
+		this.$el = $(StreetviewImage.tpl.apply());
+
 		this.$streetviewImage = this.$el
 								.find(this.options.elements.streetviewImage);
+
 		this.$imageMenu = this.$el.find(this.options.elements.menu);
 		this.$imageMenu
 			.on('click', this.onToggleMenuClick)
@@ -78,17 +80,26 @@ export class StreetviewImage {
 		return new RegExp('5xlzFAAAI4ElEQVR4Xu3UAQkAIBRDQe1fUgRzKNjiwZnA3T6bZ');
 	}
 
+	destroy() {
+		this.$imageMenu.off();
+
+		this.sliders.heading.destroy();
+		this.sliders.pitch.destroy();
+
+		this.$el
+			.fadeOut()
+			.remove();
+	}
+
 	onMenuActionClick(e) {
 		let $target = $(e.currentTarget),
 			action = $target.data('action');
 
+		e.preventDefault();
+
 		switch (action) {
 			case 'remove':
-				$target
-					.parents(config.elements.containerImage)
-					.off()
-					.fadeOut()
-					.remove();
+				this.destroy();
 
 				break;
 
