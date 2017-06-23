@@ -48,6 +48,7 @@ export const config = {
 	sliders: {},
 	mapsApi: {
 		cancelDirections: false,
+		gettingDirections: false,
 		defaults: {
 			heading: 0,
 			fov: 120,
