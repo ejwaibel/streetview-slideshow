@@ -21,7 +21,9 @@ export const config = {
 		imagesContainer: '.js-container-images',
 		stepProgress: '.js-step-progress'
 	},
-	images: {},
+	images: {
+		list: []
+	},
 	log: {
 		level: 'INFO'
 	},
@@ -45,6 +47,7 @@ export const config = {
 	// jscs:enable
 	sliders: {},
 	mapsApi: {
+		cancelDirections: false,
 		defaults: {
 			heading: 0,
 			fov: 120,
