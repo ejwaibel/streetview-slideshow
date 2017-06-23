@@ -288,6 +288,16 @@ export const utils = {
 
 				switch (status) {
 					case config.mapsApi.statusCodes.OK:
+						if (results.length < 3) {
+							dfd.reject(
+								config.templates.retryMsg.apply({
+									location,
+									msg: 'INVALID ADDRESS',
+									status: 'ERROR'
+								}),
+								latlng
+							);
+						}
 						try {
 							address = results[0].formatted_address;
 						} catch (error) {
@@ -425,18 +435,17 @@ export const utils = {
 					.fail(locationImageFail);
 			},
 			formattedAddressFail = function(status, latlng) {
+				var addressObj = latlng;
+
 				$input.val(status);
 
 				// Get another address if status is 'RETRY'
 				if (status.includes('RETRY')) {
-					if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
-						// Try again with same latlng after waiting 5s
-						setTimeout(function() {
-							getRandomAddress(latlng);
-						}, 5000);
-					} else {
-						getRandomAddress(utils.getRandomLatLong());
+					if (!status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
+						addressObj = utils.getRandomLatLong();
 					}
+
+					getRandomAddress(addressObj);
 				} else {
 					addressDfd.reject(status, latlng);
 				}
@@ -448,9 +457,11 @@ export const utils = {
 			 * @param  {Object} latlng
 			 */
 			getRandomAddress = function(latlng) {
-				utils.getFormattedAddress(latlng)
-					.done(formattedAddressSuccess)
-					.fail(formattedAddressFail);
+				setTimeout(function() {
+					utils.getFormattedAddress(latlng)
+						.done(formattedAddressSuccess)
+						.fail(formattedAddressFail);
+				}, 2000);
 
 				return addressDfd.promise();
 			},
