@@ -4,8 +4,10 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export const utils = {
-	appendImage(address) {
+	appendImage(address, options) {
 		let streetviewImage = new StreetviewImage(address);
+
+		config.images.list.push(streetviewImage);
 
 		config.images.$container.append(streetviewImage.$el);
 		streetviewImage.generateImage();
@@ -71,7 +73,7 @@ export const utils = {
 				if (location === destination) {
 					utils.appendImage(location);
 				} else {
-					console.error(location);
+					log.error(location);
 				}
 
 				utils.toggleButtons(false);
@@ -96,7 +98,7 @@ export const utils = {
 
 				return utils.getFormattedAddress(start);
 			},
-			getAddressFromDirection = function(step, waitDfd) {
+			getImageFromDirection = function(step, waitDfd) {
 				let dfd = waitDfd || $.Deferred();
 
 				geocodeDirection(step)
@@ -115,7 +117,7 @@ export const utils = {
 							if (status.includes(config.mapsApi.statusCodes.OVER_QUERY_LIMIT)) {
 								// Try again with same latlng after waiting 5s
 								setTimeout(function() {
-									getAddressFromDirection(step, dfd);
+									getImageFromDirection(step, dfd);
 								}, 5000);
 
 								return;
@@ -137,8 +139,8 @@ export const utils = {
 			getNextImage = function(stepIt) {
 				let currStep = stepIt.next();
 
-				if (!currStep.done) {
-					getAddressFromDirection(currStep.value)
+				if (!currStep.done && !config.mapsApi.cancelDirections) {
+					getImageFromDirection(currStep.value)
 						.done(function() {
 							// Wait between each image to prevent API query limit error
 							setTimeout(function() {
@@ -149,6 +151,8 @@ export const utils = {
 							log.warn(`ERROR - ${latlng} - ${status}`);
 							log.info('addressFromFail', this);
 						});
+				} else {
+					config.mapsApi.cancelDirections = false;
 				}
 			};
 
