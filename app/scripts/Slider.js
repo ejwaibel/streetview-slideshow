@@ -51,6 +51,11 @@ export class Slider {
 		return this;
 	}
 
+	destroy() {
+		this.$slider.slider('destroy');
+		this.$el.off().remove();
+	}
+
 	onCreate(event) {
 		this.$sliderValue.text(0);
 	}
