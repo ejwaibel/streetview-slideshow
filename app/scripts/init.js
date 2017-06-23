@@ -15,12 +15,21 @@ export default function init() {
 
 			$this.disable(true);
 		},
+		onClearImagesClick = function(e) {
+			let tmpImages = Array.from(config.images.list);
+
+			_.each(tmpImages, function(sI) {
+				utils.removeImage(sI.id);
+			});
+		},
 		onGetDirectionsSubmit = function(e) {
 			e.preventDefault();
 
 			utils.toggleButtons(true);
 			config.buttons.$getDirections.spin(config.spinOptions);
 			config.buttons.$cancelDirections.disable(false);
+
+			config.mapsApi.gettingDirections = true;
 
 			utils.generateDirectionsImages();
 
@@ -63,6 +72,19 @@ export default function init() {
 				utils.getFormattedAddress(latlng)
 					.always(onFormattedAddressDone);
 			});
+		},
+		onStartSlideshowClick = function(e) {
+			let $images = $('.streetview-image').clone(),
+				slides = $images.map(function(index, el) {
+					return el.outerHTML;
+				}).toArray(),
+				$scroller = $(slideshowTpl.apply({ slides: slides }));
+
+			e.preventDefault();
+
+			config.$dialogContent
+				.empty()
+				.append($scroller);
 		};
 
 	config.templates.retryMsg = new Template(config.mapsApi.retryMsg);
@@ -125,11 +147,7 @@ export default function init() {
 	 * Clear all images
 	 */
 	config.buttons.$clearImages = $('.js-clear-images');
-	config.buttons.$clearImages.on('click', function(e) {
-		_.each(config.images, function(sI) {
-			sI.destroy();
-		});
-	});
+	config.buttons.$clearImages.on('click', onClearImagesClick);
 
 	// Get Directions button
 	config.buttons.$getDirections = $('.js-get-directions');
@@ -142,21 +160,25 @@ export default function init() {
 	let slideshowTpl = new Template(config.templates.slideshow);
 
 	config.buttons.$startSlideshow = $('.js-start-slideshow').disable(true);
-	config.buttons.$startSlideshow.on('click', function(e) {
-		let $images = $('.streetview-image').clone(),
-			slides = $images.map(function(index, el) {
-				return el.outerHTML;
-			}).toArray(),
-			$scroller = $(slideshowTpl.apply({ slides: slides }));
-
-		e.preventDefault();
-
-		config.$dialogContent
-			.empty()
-			.append($scroller);
-	});
+	config.buttons.$startSlideshow.on('click', onStartSlideshowClick);
 
 	config.images.$container = $(config.elements.imagesContainer);
+
+	let observer = new utils.MutationObserver(function(mutations, observer) {
+		// log.info(mutations, observer);
+		let numImages = config.images.list.length,
+			disabled = config.mapsApi.gettingDirections ? true : false;
+
+		if (numImages === 0) {
+			disabled = true;
+		}
+
+		config.buttons.$clearImages.disable(disabled);
+	});
+
+	observer.observe(config.images.$container[0], {
+		childList: true
+	});
 
 	/**
 	 * Setup jQuery UI Sliders
