@@ -42,7 +42,7 @@ export const utils = {
 	 * Converts the provided query string to an object containing the params.
 	 * If no query string is passed, it will use window.location.search.
 	 *
-	 * @memberOf gmwp.util
+	 * @memberOf util
 	 * @param {string} [queryString] Optional query string to be converted
 	 * @return {object} params Object of key/value pairs for each query parameter
 	 */
@@ -68,11 +68,10 @@ export const utils = {
 
 		return !_.isEmpty(query) && params || null;
 	},
-
 	/**
 	 * Get value by parameter name from a query string.
 	 *
-	 * @memberOf gmwp.util
+	 * @memberOf util
 	 * @param {string} param Name of query parameter
 	 * @param {string} [queryString] Optional query string to search
 	 * @return {*} value of param if found, otherwise null
@@ -82,6 +81,21 @@ export const utils = {
 
 		return _.get(params, param) || null;
 	},
+	getUuid: function(isShort = false) {
+		let uuid = 'xxxxxxxx-xxxx-4xxx';
+
+		if (!isShort) {
+			uuid += '-yxxx-xxxxxxxxxxxx';
+		}
+
+		return uuid.replace(/[xy]/g, function(c) {
+			var r = Math.random() * 16 | 0,
+				v = c == 'x' ? r : (r & 0x3 | 0x8);
+
+			return v.toString(16);
+		});
+	},
+	MutationObserver: window.MutationObserver || window.WebKitMutationObserver,
 	directionsService: new google.maps.DirectionsService(),
 	geocoder: new google.maps.Geocoder(),
 	generateDirections: function(request) {
@@ -91,7 +105,7 @@ export const utils = {
 			stepsTotal = 0,
 			endDirections = function(location) {
 				if (location === destination) {
-					utils.appendImage(location);
+					utils.addImage(location);
 				} else {
 					log.error(location);
 				}
@@ -125,7 +139,7 @@ export const utils = {
 					.done(function(address) {
 						dfd.resolve(address);
 
-						utils.appendImage(address);
+						utils.addImage(address);
 
 						updateProgress();
 					})
@@ -173,6 +187,7 @@ export const utils = {
 						});
 				} else {
 					config.mapsApi.cancelDirections = false;
+					config.mapsApi.gettingDirections = false;
 				}
 			};
 
