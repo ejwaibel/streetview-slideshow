@@ -4,13 +4,33 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export const utils = {
-	appendImage(address, options) {
+	addImage(address, options) {
 		let streetviewImage = new StreetviewImage(address);
 
-		config.images.list.push(streetviewImage);
+		config.images.list.push({
+			id: streetviewImage.id,
+			value: streetviewImage
+		});
 
 		config.images.$container.append(streetviewImage.$el);
 		streetviewImage.generateImage();
+	},
+	removeImage(id) {
+		if (!id) {
+			return false;
+		}
+
+		let removed = _.remove(config.images.list, function(o) {
+				return o.id === id;
+			});
+
+		if (removed.length) {
+			removed[0].value.destroy();
+
+			return true;
+		}
+
+		return false;
 	},
 	decodeString(url, extras) {
 		return window.decodeURIComponent(url);

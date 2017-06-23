@@ -40,7 +40,7 @@ export default function init() {
 				$input = $($target.data('selector')),
 				address = $input.val();
 
-			utils.appendImage(address, {
+			utils.addImage(address, {
 				pitch: config.sliders.pitch.value,
 				rotation: config.sliders.heading.value,
 				zoomLevel: config.sliders.fov.value
