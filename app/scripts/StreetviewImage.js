@@ -6,6 +6,8 @@ import { Template } from './Template';
 
 export class StreetviewImage {
 	constructor(location, opts) {
+		this.id = utils.getUuid();
+
 		this.location = location;
 
 		this.options = _.extend({
@@ -83,12 +85,11 @@ export class StreetviewImage {
 	destroy() {
 		this.$imageMenu.off();
 
-		this.sliders.heading.destroy();
-		this.sliders.pitch.destroy();
-
 		this.$el
 			.fadeOut()
 			.remove();
+
+		utils.removeImage(this.id);
 	}
 
 	onMenuActionClick(e) {
