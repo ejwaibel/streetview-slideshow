@@ -5,7 +5,17 @@ import { StreetviewImage } from './StreetviewImage';
 import { Template } from './Template';
 
 export default function init() {
-	let onGetDirectionsSubmit = function(e) {
+	let onCancelDirectionsClick = function() {
+			var $this = $(this);
+
+			config.mapsApi.cancelDirections = true;
+
+			config.buttons.$getDirections.spin(false);
+			utils.toggleButtons(false);
+
+			$this.disable(true);
+		},
+		onGetDirectionsSubmit = function(e) {
 			e.preventDefault();
 
 			utils.toggleButtons(true);
@@ -19,15 +29,13 @@ export default function init() {
 		onGetImageClick = function(e) {
 			var $target = $(e.currentTarget),
 				$input = $($target.data('selector')),
-				address = $input.val(),
-				streetviewImage = new StreetviewImage(address, {
-					pitch: config.sliders.pitch.value,
-					rotation: config.sliders.heading.value,
-					zoomLevel: config.sliders.fov.value
-				});
+				address = $input.val();
 
-			config.images.$container.append(streetviewImage.$el);
-			streetviewImage.generateImage();
+			utils.appendImage(address, {
+				pitch: config.sliders.pitch.value,
+				rotation: config.sliders.heading.value,
+				zoomLevel: config.sliders.fov.value
+			});
 		},
 		onGetCurrentLocationClick = function(e) {
 			var $target = $(e.currentTarget),
@@ -91,22 +99,21 @@ export default function init() {
 	config.buttons.$randomAddress = $('.js-random-address');
 	config.buttons.$randomAddress.on('click', utils.randomAddressClickCallback);
 
-	// Create the autocomplete object, restricting the search to geographical
-	// location types.
+	// Create the autocomplete object, restricting the search to
+	// geographical location types.
 	new google.maps.places.Autocomplete(
 		$('#address-origin')[0],
 		{ type: 'geocode' }
 	).setComponentRestrictions(
 		{ country: ['us'] }
 	);
+
 	new google.maps.places.Autocomplete(
 		$('#address-destination')[0],
 		{ type: 'geocode' }
 	).setComponentRestrictions(
 		{ country: ['us'] }
 	);
-
-	config.images.$container = $(config.elements.imagesContainer);
 
 	/**
 	 * Get image from address button
@@ -119,9 +126,9 @@ export default function init() {
 	 */
 	config.buttons.$clearImages = $('.js-clear-images');
 	config.buttons.$clearImages.on('click', function(e) {
-		config.images.$container
-			.find(config.elements.containerImage + ' .js-remove-image')
-			.trigger('click');
+		_.each(config.images, function(sI) {
+			sI.destroy();
+		});
 	});
 
 	// Get Directions button
@@ -129,21 +136,7 @@ export default function init() {
 
 	// Cancel Directions button
 	config.buttons.$cancelDirections = $('.js-cancel-directions').disable(true);
-	config.buttons.$cancelDirections.on('click', function() {
-		var $this = $(this);
-
-		// Stop all running directions setTimeout calls
-		_.forEach(utils.directionTimers, function(val) {
-			clearTimeout(val);
-		});
-
-		utils.directionTimers = [];
-
-		config.buttons.$getDirections.spin(false);
-		utils.toggleButtons(false);
-
-		$this.disable(true);
-	});
+	config.buttons.$cancelDirections.on('click', onCancelDirectionsClick);
 
 	// Start slideshow button
 	let slideshowTpl = new Template(config.templates.slideshow);
@@ -162,6 +155,8 @@ export default function init() {
 			.empty()
 			.append($scroller);
 	});
+
+	config.images.$container = $(config.elements.imagesContainer);
 
 	/**
 	 * Setup jQuery UI Sliders
