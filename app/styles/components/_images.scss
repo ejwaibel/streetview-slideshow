@@ -9,9 +9,9 @@ $image-menu-item-size: 2.5rem;
 		position: relative;
 
 		.image-menu {
-			background-color: $primary-color;
+			background-color: $body-font-color;
 			list-style-type: none;
-			opacity: .7;
+			opacity: .4;
 			position: absolute;
 			right: -$image-menu-item-size;
 			text-align: center;
@@ -43,7 +43,7 @@ $image-menu-item-size: 2.5rem;
 				}
 
 				.icon {
-					color: $body-font-color;
+					color: $body-bg;
 					font-size: $image-menu-item-size;
 
 					&:hover {
