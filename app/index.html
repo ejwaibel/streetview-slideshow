@@ -22,21 +22,13 @@
 		<li class="container-streetview-image js-container-image">
 			<div class="streetview-image">
 				<ul class="image-menu js-image-menu">
+					{{#each items}}
 					<li class="menu-item">
-						<a href="#" class="js-image-action" data-action="remove">
-							<i class="icon icon-trash"></i>
+						<a href="#" class="js-image-action" data-action="{{action}}">
+							<i class="icon icon-{{iconName}}"></i>
 						</a>
 					</li>
-					<li class="menu-item">
-						<a href="#" class="js-image-action" data-action="zoomLevel">
-							<i class="icon icon-zoom"></i>
-						</a>
-					</li>
-					<li class="menu-item">
-						<a href="#" class="js-image-action" data-action="expand">
-							<i class="icon icon-expand"></i>
-						</a>
-					</li>
+					{{/each}}
 				</ul>
 			</div>
 			<p class="location-title js-location-title"></p>

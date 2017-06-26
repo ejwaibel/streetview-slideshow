@@ -21,6 +21,19 @@ export class StreetviewImage {
 				height: 700,
 				width: 700
 			},
+			menuItems: [{
+				action: 'remove',
+				iconName: 'trash'
+			}, {
+				action: 'zoomLevel',
+				iconName: 'zoom'
+			}, {
+				action: 'expand',
+				iconName: 'expand'
+			}, {
+				action: 'stitch',
+				iconName: 'map-marker'
+			}],
 			height: 640,
 			width: 640,
 			zoomLevel: 120,
@@ -32,7 +45,10 @@ export class StreetviewImage {
 		this.rotation = this.options.rotation;
 		this.zoomLevel = this.options.zoomLevel;
 
-		this.$el = $(StreetviewImage.tpl.apply());
+		this.$el = $(StreetviewImage.tpl.apply({
+				items: this.options.menuItems
+			})
+		);
 
 		this.$streetviewImage = this.$el
 								.find(this.options.elements.streetviewImage);
