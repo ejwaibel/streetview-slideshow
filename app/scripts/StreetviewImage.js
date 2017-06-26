@@ -17,6 +17,10 @@ export class StreetviewImage {
 				streetviewImage: '.streetview-image',
 				title: '.js-location-title'
 			},
+			uiDialog: {
+				height: 700,
+				width: 700
+			},
 			height: 640,
 			width: 640,
 			zoomLevel: 120,
@@ -99,6 +103,10 @@ export class StreetviewImage {
 		e.preventDefault();
 
 		switch (action) {
+			case 'expand':
+				this.expandImage();
+				break;
+
 			case 'remove':
 				this.destroy();
 
@@ -119,6 +127,24 @@ export class StreetviewImage {
 		this.isUpdating = true;
 
 		this.generateImage();
+	}
+
+	expandImage() {
+		let tmpStreetview = new StreetviewImage(this.location, this.options),
+			$fullsizeImage = tmpStreetview.$el;
+
+		tmpStreetview.generateImage();
+		$fullsizeImage.find(this.options.elements.menu).hide();
+
+		$('<div>')
+			.append($fullsizeImage)
+			.dialog($.extend(
+				{},
+				this.options.uiDialog,
+				{
+					title: this.location
+				})
+			);
 	}
 
 	generateImage() {
