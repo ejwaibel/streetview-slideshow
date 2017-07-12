@@ -90,7 +90,7 @@ var options = {
 		// ignorePath: /^(\.\.\/)*\.\./,
 		overrides: {
 			'jquery-ui': {
-				main: ['themes/humanity/jquery-ui.css', 'jquery-ui.js']
+				main: ['themes/vader/jquery-ui.css', 'jquery-ui.js']
 			}
 		}
 	}
