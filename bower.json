@@ -4,7 +4,7 @@
   "dependencies": {
     "jquery": "2.1.4",
     "foundation": "^5.5.3",
-    "jquery-ui": "~1.11.1",
+    "jquery-ui": "~1.12",
     "spin.js": "^2.3.2",
     "swiper": "^3.4.2",
     "modernizr": "^3.5.0",
